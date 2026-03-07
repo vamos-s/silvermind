@@ -31,25 +31,37 @@ export default function SequenceCompletionPage() {
 
   const generateNumberPattern = (length: number): { pattern: string[], next: string } => {
     const patterns = [
-      // Arithmetic progression
+      // Simple arithmetic progression (easy to spot)
       () => {
-        const start = Math.floor(Math.random() * 10) + 1
-        const step = Math.floor(Math.random() * 3) + 1
+        const start = Math.floor(Math.random() * 5) + 1
+        const step = Math.floor(Math.random() * 2) + 1
         const seq = Array.from({ length: length - 1 }, (_, i) => (start + i * step).toString())
         return { pattern: seq, next: (start + (length - 1) * step).toString() }
       },
-      // Even/Odd
+      // Counting by 2, 5, or 10
       () => {
-        const isEven = Math.random() > 0.5
-        const start = isEven ? 2 : 1
-        const seq = Array.from({ length: length - 1 }, (_, i) => (start + i * 2).toString())
-        return { pattern: seq, next: (start + (length - 1) * 2).toString() }
+        const multiples = [2, 5, 10]
+        const step = multiples[Math.floor(Math.random() * multiples.length)]
+        const start = step
+        const seq = Array.from({ length: length - 1 }, (_, i) => (start + i * step).toString())
+        return { pattern: seq, next: (start + (length - 1) * step).toString() }
       },
-      // Multiples
+      // Squares: 1, 4, 9, 16...
       () => {
-        const multiple = Math.floor(Math.random() * 5) + 2
-        const seq = Array.from({ length: length - 1 }, (_, i) => ((i + 1) * multiple).toString())
-        return { pattern: seq, next: (length * multiple).toString() }
+        const start = Math.floor(Math.random() * 3) + 1
+        const seq = Array.from({ length: length - 1 }, (_, i) => Math.pow(i + start, 2).toString())
+        return { pattern: seq, next: Math.pow(length - 1 + start, 2).toString() }
+      },
+      // Doubles: 2, 4, 8, 16...
+      () => {
+        const start = Math.floor(Math.random() * 2) + 1
+        const seq = Array.from({ length: length - 1 }, (_, i) => Math.pow(2, i + start).toString())
+        return { pattern: seq, next: Math.pow(2, length - 1 + start).toString() }
+      },
+      // Triangular numbers: 1, 3, 6, 10...
+      () => {
+        const seq = Array.from({ length: length - 1 }, (_, i) => ((i + 1) * (i + 2) / 2).toString())
+        return { pattern: seq, next: (length * (length + 1) / 2).toString() }
       },
     ]
     const patternFunc = patterns[Math.floor(Math.random() * patterns.length)]
@@ -120,12 +132,22 @@ export default function SequenceCompletionPage() {
     setPattern(result.pattern)
     setCorrectAnswer(result.next)
 
-    // Generate wrong options
+    // Generate logical wrong options
     const wrongOptions: string[] = []
     while (wrongOptions.length < 3) {
       let wrong: string
       if (type === 0) {
-        wrong = (parseInt(result.next) + Math.floor(Math.random() * 5) - 2).toString()
+        // For numbers, generate logical distractors
+        const nextNum = parseInt(result.next)
+        const distractorOffsets = [
+          nextNum - 1,
+          nextNum + 1,
+          nextNum - 2,
+          nextNum + 2,
+          Math.floor(nextNum / 2),
+          Math.floor(nextNum * 1.5),
+        ]
+        wrong = distractorOffsets[Math.floor(Math.random() * distractorOffsets.length)].toString()
       } else {
         const pool = type === 1 ? ['🔴', '🔵', '🟢', '🟡', '🟣'] : ['⬜', '⬛', '🔺', '🔷', '⭐', '❌']
         wrong = pool[Math.floor(Math.random() * pool.length)]
@@ -227,7 +249,7 @@ export default function SequenceCompletionPage() {
                 initial={{ scale: 0, y: 20 }}
                 animate={{ scale: 1, y: 0 }}
                 transition={{ delay: i * 0.1 }}
-                className="text-5xl"
+                className="text-5xl text-gray-800 font-bold"
               >
                 {item}
               </motion.div>
@@ -236,7 +258,7 @@ export default function SequenceCompletionPage() {
               initial={{ scale: 0 }}
               animate={{ scale: 1 }}
               transition={{ delay: pattern.length * 0.1 }}
-              className="text-5xl text-gray-400"
+              className="text-5xl text-purple-500 font-bold"
             >
               ?
             </motion.div>
