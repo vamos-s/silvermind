@@ -1,0 +1,64 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                  String    @id @default(uuid())
+  email               String?   @unique
+  createdAt           DateTime  @default(now())
+  language            String    @default("en")
+  preferredDifficulty String   @default("easy")
+  totalScore          Int       @default(0)
+  gamesPlayed         Int       @default(0)
+  sessions            GameSession[]
+  achievements        UserAchievement[]
+}
+
+model Game {
+  id             String   @id @default(uuid())
+  slug           String   @unique
+  category       String
+  titleI18n      Json
+  descriptionI18n Json
+  minDifficulty  String   @default("easy")
+  maxDifficulty  String   @default("hard")
+  icon           String?
+  sessions       GameSession[]
+}
+
+model GameSession {
+  id             String   @id @default(uuid())
+  userId         String?
+  user           User?    @relation(fields: [userId], references: [id])
+  gameId         String
+  game           Game     @relation(fields: [gameId], references: [id])
+  difficulty     String
+  score          Int
+  completedAt    DateTime @default(now())
+  durationSeconds Int
+}
+
+model Achievement {
+  id              String    @id @default(uuid())
+  slug            String    @unique
+  titleI18n       Json
+  descriptionI18n Json
+  icon            String?
+  requirement     Json
+  users           UserAchievement[]
+}
+
+model UserAchievement {
+  userId         String
+  user           User        @relation(fields: [userId], references: [id])
+  achievementId  String
+  achievement    Achievement @relation(fields: [achievementId], references: [id])
+  unlockedAt     DateTime    @default(now())
+
+  @@id([userId, achievementId])
+}
