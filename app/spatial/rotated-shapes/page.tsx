@@ -6,7 +6,7 @@ import { motion } from 'framer-motion'
 import Link from 'next/link'
 import { useGameStore } from '@/lib/store'
 
-type Shape = { id: number, type: string, rotation: number, color: string }
+type Shape = { id: number, type: string, path: string, rotation: number, color: string }
 
 export default function RotatedShapesPage() {
   const { t } = useTranslation()
