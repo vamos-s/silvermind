@@ -27,13 +27,50 @@ export default function MazeNavigationPage() {
   const [score, setScore] = useState(0)
   const [gameOver, setGameOver] = useState(false)
   const [victory, setVictory] = useState(false)
+  const [timeLeft, setTimeLeft] = useState(60)
+  const [minMoves, setMinMoves] = useState(0)
 
   const getMazeSize = () => {
-    switch (currentDifficulty) {
-      case 'easy': return 5
-      case 'medium': return 7
-      case 'hard': return 9
+    // Size increases with both difficulty and level
+    const baseSize = {
+      easy: 7,
+      medium: 9,
+      hard: 11
+    }[currentDifficulty]
+    // Cap at reasonable size (19x19)
+    return Math.min(baseSize + Math.floor(level / 2), 19)
+  }
+
+  // BFS to find shortest path (minimum moves)
+  const findShortestPath = (mazeGrid: CellType[][], start: [number, number], end: [number, number]): number => {
+    const queue: [[number, number], number][] = [[start, 0]]
+    const visited = new Set<string>()
+    visited.add(`${start[0]},${start[1]}`)
+
+    while (queue.length > 0) {
+      const [[x, y], dist] = queue.shift()!
+
+      if (x === end[0] && y === end[1]) {
+        return dist
+      }
+
+      const directions = [[0, -1], [0, 1], [-1, 0], [1, 0]]
+      for (const [dx, dy] of directions) {
+        const nx = x + dx
+        const ny = y + dy
+        const key = `${nx},${ny}`
+
+        if (nx >= 0 && nx < mazeGrid.length &&
+            ny >= 0 && ny < mazeGrid.length &&
+            mazeGrid[ny][nx] !== 'wall' &&
+            !visited.has(key)) {
+          visited.add(key)
+          queue.push([[nx, ny], dist + 1])
+        }
+      }
     }
+
+    return 999 // Shouldn't happen if maze is valid
   }
 
   const generateMaze = () => {
@@ -45,16 +82,15 @@ export default function MazeNavigationPage() {
       newMaze.push(Array(size).fill('wall'))
     }
 
-    // Simple maze generation using recursive backtracking
+    // Recursive backtracking maze generator for more winding paths
     const visited = new Set<string>()
-    const stack: [number, number][] = []
-
     const getKey = (x: number, y: number) => `${x},${y}`
 
-    const carve = (x: number, y: number) => {
+    const carve = (x: number, y: number): void => {
       visited.add(getKey(x, y))
       newMaze[y][x] = 'empty'
 
+      // Try all 4 directions, prioritizing unvisited ones
       const directions = [
         [0, -2], [0, 2], [-2, 0], [2, 0]
       ].sort(() => Math.random() - 0.5)
@@ -63,31 +99,49 @@ export default function MazeNavigationPage() {
         const nx = x + dx
         const ny = y + dy
 
-        if (nx >= 0 && nx < size && ny >= 0 && ny < size && !visited.has(getKey(nx, ny))) {
+        if (nx >= 1 && nx < size - 1 && ny >= 1 && ny < size - 1 && !visited.has(getKey(nx, ny))) {
           newMaze[y + dy / 2][x + dx / 2] = 'empty'
           carve(nx, ny)
         }
       }
     }
 
-    carve(1, 1)
-    newMaze[1][1] = 'start'
-    setPlayerPos([1, 1])
+    // Start from odd position for better maze structure
+    const startX = 1
+    const startY = 1
+    carve(startX, startY)
+    newMaze[startY][startX] = 'start'
+    setPlayerPos([startX, startY])
 
-    // Set end position at bottom right
+    // Place end at bottom right (or nearest empty cell)
     let endX = size - 2
     let endY = size - 2
-    while (newMaze[endY][endX] === 'wall') {
-      endX = Math.floor(Math.random() * (size - 2)) + 1
-      endY = Math.floor(Math.random() * (size - 2)) + 1
+    let attempts = 0
+    while (newMaze[endY][endX] === 'wall' && attempts < 50) {
+      endX = Math.floor(Math.random() * (size - 4)) + 2
+      endY = Math.floor(Math.random() * (size - 4)) + 2
+      attempts++
     }
     newMaze[endY][endX] = 'end'
     setEndPos([endX, endY])
+
+    // Calculate minimum moves for scoring
+    const minPath = findShortestPath(newMaze, [startX, startY], [endX, endY])
+    setMinMoves(minPath)
 
     setMaze(newMaze)
     setMoves(0)
     setGameOver(false)
     setVictory(false)
+
+    // Set time limit based on level (harder = less time)
+    const baseTime = {
+      easy: 90,
+      medium: 60,
+      hard: 45
+    }[currentDifficulty]
+    // Decrease time as levels increase, but cap at minimum
+    setTimeLeft(Math.max(baseTime - level * 2, 20))
   }
 
   const movePlayer = (direction: string) => {
@@ -122,7 +176,9 @@ export default function MazeNavigationPage() {
         if (maze[newY][newX] === 'end') {
           setVictory(true)
           setGameOver(true)
-          const levelScore = Math.max(0, (getMazeSize() * 10 - moves) * level)
+          // Bonus for efficiency (fewer moves than minimum is impossible, so just penalize extra moves)
+          const efficiencyBonus = Math.max(0, minMoves * 10 - (moves - minMoves) * 2)
+          const levelScore = (getMazeSize() * level * 2 + efficiencyBonus + timeLeft * level)
           setScore(score + levelScore)
           addSession({
             id: Date.now().toString(),
@@ -136,6 +192,32 @@ export default function MazeNavigationPage() {
       }
     }
   }
+
+  // Timer countdown
+  useEffect(() => {
+    if (gameOver || victory) return
+
+    const timer = setInterval(() => {
+      setTimeLeft(prev => {
+        if (prev <= 1) {
+          setGameOver(true)
+          setVictory(false)
+          addSession({
+            id: Date.now().toString(),
+            gameId: 'maze-navigation',
+            difficulty: currentDifficulty,
+            score: score,
+            completedAt: new Date(),
+            durationSeconds: 60 * level
+          })
+          return 0
+        }
+        return prev - 1
+      })
+    }, 1000)
+
+    return () => clearInterval(timer)
+  }, [gameOver, victory, score, level])
 
   useEffect(() => {
     generateMaze()
@@ -171,6 +253,13 @@ export default function MazeNavigationPage() {
     return () => window.removeEventListener('keydown', handleKeyDown)
   }, [playerPos, maze, gameOver])
 
+  // Regenerate maze when level changes
+  useEffect(() => {
+    if (level > 1) {
+      generateMaze()
+    }
+  }, [level])
+
   const getCellContent = (type: CellType) => {
     switch (type) {
       case 'wall':
@@ -200,7 +289,7 @@ export default function MazeNavigationPage() {
     }
   }
 
-  if (gameOver && victory) {
+  if (gameOver) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-purple-50 to-pink-50 flex items-center justify-center">
         <motion.div
@@ -208,29 +297,37 @@ export default function MazeNavigationPage() {
           animate={{ scale: 1, opacity: 1 }}
           className="bg-white rounded-2xl p-8 shadow-xl text-center max-w-md"
         >
-          <h2 className="text-3xl font-bold text-green-600 mb-4">🎉 Victory!</h2>
+          <h2 className={`text-3xl font-bold ${victory ? 'text-green-600' : 'text-red-600'} mb-4`}>
+            {victory ? '🎉 Victory!' : '⏰ Time\'s Up!'}
+          </h2>
           <p className="text-xl text-gray-600 mb-2">Score: {score}</p>
           <p className="text-lg text-gray-500 mb-2">Moves: {moves}</p>
           <p className="text-lg text-gray-500 mb-6">Level: {level}</p>
+          {victory ? (
+            <>
+              <button
+                onClick={() => {
+                  setLevel(level + 1)
+                  generateMaze()
+                }}
+                className="bg-green-500 text-white px-8 py-3 rounded-xl text-xl font-bold hover:bg-green-600 transition mb-4"
+              >
+                Next Level
+              </button>
+              <br />
+            </>
+          ) : null}
           <button
             onClick={() => {
-              setLevel(level + 1)
+              if (!victory) {
+                setScore(0)
+                setLevel(1)
+              }
               generateMaze()
             }}
-            className="bg-green-500 text-white px-8 py-3 rounded-xl text-xl font-bold hover:bg-green-600 transition mb-4"
+            className={`px-8 py-3 rounded-xl text-xl font-bold transition ${victory ? 'bg-purple-500 hover:bg-purple-600' : 'bg-red-500 hover:bg-red-600'} text-white`}
           >
-            Next Level
-          </button>
-          <br />
-          <button
-            onClick={() => {
-              setScore(0)
-              setLevel(1)
-              generateMaze()
-            }}
-            className="bg-purple-500 text-white px-8 py-3 rounded-xl text-xl font-bold hover:bg-purple-600 transition"
-          >
-            Restart
+            {victory ? 'Restart' : 'Try Again'}
           </button>
           <Link href="/pattern" className="block mt-4 text-purple-500 hover:underline">
             ← Back to Games
@@ -251,12 +348,15 @@ export default function MazeNavigationPage() {
 
       <main className="container mx-auto px-4 py-8">
         <div className="max-w-lg mx-auto text-center mb-8">
-          <div className="flex justify-center gap-8 text-2xl mb-4">
+          <div className="flex justify-center gap-4 text-2xl mb-4 flex-wrap">
             <p className="font-bold text-purple-600">Score: {score}</p>
             <p className="font-bold text-pink-600">Level: {level}</p>
             <p className="font-bold text-blue-600">Moves: {moves}</p>
+            <p className={`font-bold ${timeLeft < 15 ? 'text-red-500 animate-pulse' : 'text-green-600'}`}>
+              Time: {timeLeft}s
+            </p>
           </div>
-          <p className="text-lg text-gray-600">Use arrow keys or buttons to navigate</p>
+          <p className="text-lg text-gray-600">Use arrow keys or buttons to navigate. Reach the goal before time runs out!</p>
         </div>
 
         <div className="bg-gray-800 p-4 rounded-2xl shadow-xl max-w-lg mx-auto mb-6">
