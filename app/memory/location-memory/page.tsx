@@ -13,6 +13,7 @@ export default function LocationMemoryPage() {
   const { currentDifficulty, addSession } = useGameStore()
 
   const [grid, setGrid] = useState<{emoji: string, visible: boolean, found: boolean}[]>([])
+  const [targetEmoji, setTargetEmoji] = useState<string>('')
   const [score, setScore] = useState(0)
   const [level, setLevel] = useState(1)
   const [gameOver, setGameOver] = useState(false)
@@ -36,9 +37,13 @@ export default function LocationMemoryPage() {
 
   const startLevel = () => {
     const size = getGridSize()
-    const numItems = Math.floor(size / 3) + Math.floor(level / 2)
+    const numItems = Math.min(Math.floor(size / 3) + Math.floor(level / 2), EMOJIS.length)
     const shuffled = [...EMOJIS].sort(() => Math.random() - 0.5)
     const selected = shuffled.slice(0, numItems)
+
+    // Pick a target emoji from the selected ones
+    const target = selected[Math.floor(Math.random() * selected.length)]
+    setTargetEmoji(target)
 
     const positions = Array.from({ length: size }, (_, i) => ({
       index: i,
@@ -64,40 +69,31 @@ export default function LocationMemoryPage() {
     if (cell.emoji === '' || cell.found || cell.visible) return
 
     // Reveal the cell
-    setGrid(prev => prev.map((c, i) => 
+    setGrid(prev => prev.map((c, i) =>
       i === index ? { ...c, visible: true } : c
     ))
 
-    // Check if this is an item location
-    if (cell.emoji !== '') {
-      setGrid(prev => prev.map((c, i) => 
+    // Check if this is the target emoji
+    if (cell.emoji === targetEmoji) {
+      setGrid(prev => prev.map((c, i) =>
         i === index ? { ...c, found: true } : c
       ))
 
-      const foundCount = grid.filter(c => c.found || (c.emoji !== '' && grid.indexOf(c) === index)).length
-      const totalItems = grid.filter(c => c.emoji !== '').length
-
-      if (foundCount === totalItems) {
-        setScore(score + level * 10)
-        setLevel(level + 1)
-        setTimeout(startLevel, 1500)
-      }
+      // Success! Next level
+      setScore(score + level * 10)
+      setLevel(level + 1)
+      setTimeout(startLevel, 1500)
     } else {
-      // Wrong click
-      const foundCount = grid.filter(c => c.found).length
-      const totalItems = grid.filter(c => c.emoji !== '').length
-
-      if (foundCount < totalItems) {
-        setGameOver(true)
-        addSession({
-          id: Date.now().toString(),
-          gameId: 'location-memory',
-          difficulty: currentDifficulty,
-          score: score,
-          completedAt: new Date(),
-          durationSeconds: 30 * level
-        })
-      }
+      // Wrong click - game over
+      setGameOver(true)
+      addSession({
+        id: Date.now().toString(),
+        gameId: 'location-memory',
+        difficulty: currentDifficulty,
+        score: score,
+        completedAt: new Date(),
+        durationSeconds: 30 * level
+      })
     }
   }
 
@@ -151,9 +147,13 @@ export default function LocationMemoryPage() {
             <p className="font-bold text-blue-600">Score: {score}</p>
             <p className="font-bold text-purple-600">Level: {level}</p>
           </div>
-          <p className="text-xl text-gray-600">
-            {isMemorizing ? 'Remember the positions!' : 'Find the items!'}
-          </p>
+          {isMemorizing ? (
+            <p className="text-xl text-gray-600">Remember where the items are!</p>
+          ) : (
+            <div className="text-xl text-gray-600">
+              Find the <span className="text-4xl">{targetEmoji}</span>!
+            </div>
+          )}
         </div>
 
         <div className={`grid ${gridCols} gap-4 max-w-lg mx-auto`}>
@@ -178,12 +178,6 @@ export default function LocationMemoryPage() {
               {cell.visible && cell.emoji}
             </motion.button>
           ))}
-        </div>
-
-        <div className="text-center mt-6">
-          <p className="text-lg text-gray-600">
-            Found: {grid.filter(c => c.found).length} / {grid.filter(c => c.emoji !== '').length}
-          </p>
         </div>
       </main>
     </div>
