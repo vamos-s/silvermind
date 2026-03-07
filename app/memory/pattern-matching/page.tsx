@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
-import { motion, AnimatePresence } from 'framer-motion'
+import { motion } from 'framer-motion'
 import Link from 'next/link'
 import { useGameStore } from '@/lib/store'
 
@@ -22,9 +22,25 @@ export default function PatternMatchingPage() {
 
   const getSequenceLength = () => {
     switch (currentDifficulty) {
-      case 'easy': return Math.min(3 + Math.floor(level / 2), 6)
-      case 'medium': return Math.min(4 + Math.floor(level / 2), 8)
-      case 'hard': return Math.min(5 + Math.floor(level / 2), 10)
+      case 'easy': return Math.min(3 + level, 8)
+      case 'medium': return Math.min(4 + level, 10)
+      case 'hard': return Math.min(5 + level, 12)
+    }
+  }
+
+  const getFlashDuration = () => {
+    switch (currentDifficulty) {
+      case 'easy': return 600
+      case 'medium': return 400
+      case 'hard': return 300
+    }
+  }
+
+  const getFlashInterval = () => {
+    switch (currentDifficulty) {
+      case 'easy': return 800
+      case 'medium': return 600
+      case 'hard': return 400
     }
   }
 
@@ -46,9 +62,9 @@ export default function PatternMatchingPage() {
         return
       }
       setFlashIndex(newSequence[index])
-      setTimeout(() => setFlashIndex(null), 400)
+      setTimeout(() => setFlashIndex(null), getFlashDuration())
       index++
-    }, 1000)
+    }, getFlashInterval())
   }
 
   const handleColorClick = (colorIndex: number) => {
@@ -137,7 +153,12 @@ export default function PatternMatchingPage() {
               key={color}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              animate={flashIndex === index ? { scale: 1.2, opacity: 0.8 } : {}}
+              animate={flashIndex === index ? {
+                scale: 1.15,
+                boxShadow: '0 0 30px rgba(0,0,0,0.5)',
+                filter: 'brightness(1.3)'
+              } : {}}
+              transition={{ duration: 0.15 }}
               onClick={() => handleColorClick(index)}
               disabled={isShowingPattern || gameOver}
               className={`${color} aspect-square rounded-2xl shadow-lg transition-all ${

@@ -27,14 +27,14 @@ export default function NumberRecallPage() {
 
   const getDisplayTime = () => {
     switch (currentDifficulty) {
-      case 'easy': return 3000 + level * 500
-      case 'medium': return 2500 + level * 300
-      case 'hard': return 2000 + level * 200
+      case 'easy': return 2000 + level * 300
+      case 'medium': return 1500 + level * 200
+      case 'hard': return 1000 + level * 150
     }
   }
 
   const startLevel = () => {
-    const newSequence = Array.from({ length: getSequenceLength() }, () => 
+    const newSequence = Array.from({ length: getSequenceLength() }, () =>
       Math.floor(Math.random() * 10)
     )
     setSequence(newSequence)
@@ -142,9 +142,13 @@ export default function NumberRecallPage() {
           <div className="max-w-md mx-auto">
             <div className="bg-white rounded-xl p-6 shadow-lg mb-6">
               <p className="text-center text-xl text-gray-600 mb-4">Your answer:</p>
-              <div className="bg-gray-100 rounded-lg p-4 text-center text-4xl font-bold tracking-widest h-16 flex items-center justify-center">
-                {playerInput || '_'.repeat(sequence.length)}
-              </div>
+              <input
+                type="text"
+                value={playerInput}
+                readOnly
+                className="w-full bg-gray-100 rounded-lg p-4 text-center text-4xl font-bold tracking-widest h-16 text-gray-800 border-2 border-transparent"
+                placeholder={'_'.repeat(sequence.length)}
+              />
             </div>
 
             <div className="grid grid-cols-3 gap-4">
