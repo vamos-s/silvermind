@@ -46,9 +46,9 @@ export default function PatternMatchingPage() {
         return
       }
       setFlashIndex(newSequence[index])
-      setTimeout(() => setFlashIndex(null), 600)
+      setTimeout(() => setFlashIndex(null), 400)
       index++
-    }, 800)
+    }, 1000)
   }
 
   const handleColorClick = (colorIndex: number) => {
