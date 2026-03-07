@@ -19,9 +19,9 @@ export default function NumberRecallPage() {
 
   const getSequenceLength = () => {
     switch (currentDifficulty) {
-      case 'easy': return Math.min(3 + Math.floor(level / 2), 6)
-      case 'medium': return Math.min(4 + Math.floor(level / 2), 8)
-      case 'hard': return Math.min(5 + Math.floor(level / 2), 10)
+      case 'easy': return 3 + Math.floor(level / 2)
+      case 'medium': return 4 + Math.floor(level / 2)
+      case 'hard': return 5 + Math.floor(level / 2)
     }
   }
 
