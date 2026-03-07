@@ -22,35 +22,54 @@ export default function SudokuPage() {
   const [victory, setVictory] = useState(false)
 
   const getGridSize = () => {
-    switch (currentDifficulty) {
-      case 'easy': return 4
-      case 'medium': return 6
-      case 'hard': return 6
-    }
+    // Scale with level: 4x4 → 6x6 → 9x9
+    if (level <= 3) return 4
+    if (level <= 6) return 6
+    return 9
   }
 
-  const getEmptyCells = () => {
-    switch (currentDifficulty) {
-      case 'easy': return 4
-      case 'medium': return 8
-      case 'hard': return 12
-    }
+  const getEmptyCells = (size: number) => {
+    // More empty cells for higher levels and difficulties
+    const baseMultiplier = {
+      easy: 0.3,
+      medium: 0.45,
+      hard: 0.6
+    }[currentDifficulty]
+
+    // Add level bonus (harder at higher levels)
+    const levelBonus = Math.min(level * 0.02, 0.15)
+
+    const emptyRatio = baseMultiplier + levelBonus
+    return Math.floor(size * size * emptyRatio)
+  }
+
+  const getSubGridSize = (size: number): [number, number] => {
+    // Return [rows, cols] for subgrid
+    if (size === 4) return [2, 2]
+    if (size === 6) return [2, 3]
+    if (size === 9) return [3, 3]
+    return [2, 2] // default
   }
 
   const generateSudoku = () => {
     const size = getGridSize()
-    const subSize = Math.sqrt(size)
+    const [subRows, subCols] = getSubGridSize(size)
 
     // Initialize empty grid
     const newGrid: CellValue[][] = Array(size).fill(null).map(() => Array(size).fill(null))
 
     // Fill diagonal boxes (independent)
-    for (let boxRow = 0; boxRow < size; boxRow += subSize) {
-      const numbers = Array.from({ length: size }, (_, i) => i + 1).sort(() => Math.random() - 0.5)
-      let numIdx = 0
-      for (let i = 0; i < subSize; i++) {
-        for (let j = 0; j < subSize; j++) {
-          newGrid[boxRow + i][boxRow + j] = numbers[numIdx++]
+    for (let boxRow = 0; boxRow < size; boxRow += subRows) {
+      for (let boxCol = 0; boxCol < size; boxCol += subCols) {
+        // Only fill diagonal boxes (boxRow === boxCol)
+        if (boxRow !== boxCol) continue
+
+        const numbers = Array.from({ length: size }, (_, i) => i + 1).sort(() => Math.random() - 0.5)
+        let numIdx = 0
+        for (let i = 0; i < subRows; i++) {
+          for (let j = 0; j < subCols; j++) {
+            newGrid[boxRow + i][boxCol + j] = numbers[numIdx++]
+          }
         }
       }
     }
@@ -61,8 +80,8 @@ export default function SudokuPage() {
     // Create copy for solution
     const solutionCopy = newGrid.map(row => [...row])
 
-    // Remove some cells based on difficulty
-    const emptyCount = getEmptyCells()
+    // Remove some cells based on difficulty and level
+    const emptyCount = getEmptyCells(size)
     const positions: [number, number][] = []
     for (let i = 0; i < size; i++) {
       for (let j = 0; j < size; j++) {
@@ -85,7 +104,7 @@ export default function SudokuPage() {
   }
 
   const solveSudoku = (grid: CellValue[][], size: number): boolean => {
-    const subSize = Math.sqrt(size)
+    const [subRows, subCols] = getSubGridSize(size)
 
     const findEmpty = (): [number, number] | null => {
       for (let i = 0; i < size; i++) {
@@ -107,11 +126,11 @@ export default function SudokuPage() {
         if (grid[i][col] === num) return false
       }
 
-      // Check subgrid
-      const startRow = Math.floor(row / subSize) * subSize
-      const startCol = Math.floor(col / subSize) * subSize
-      for (let i = 0; i < subSize; i++) {
-        for (let j = 0; j < subSize; j++) {
+      // Check subgrid (variable size: 2x2, 2x3, or 3x3)
+      const startRow = Math.floor(row / subRows) * subRows
+      const startCol = Math.floor(col / subCols) * subCols
+      for (let i = 0; i < subRows; i++) {
+        for (let j = 0; j < subCols; j++) {
           if (grid[startRow + i][startCol + j] === num) return false
         }
       }
@@ -195,7 +214,15 @@ export default function SudokuPage() {
     generateSudoku()
   }, [])
 
+  // Regenerate when level changes
+  useEffect(() => {
+    if (level > 1) {
+      generateSudoku()
+    }
+  }, [level])
+
   const size = getGridSize()
+  const [subRows, subCols] = getSubGridSize(size)
 
   if (gameOver && victory) {
     return (
@@ -292,9 +319,9 @@ export default function SudokuPage() {
           >
             {grid.map((row, r) =>
               row.map((cell, c) => {
-                const subSize = Math.sqrt(size)
-                const isSubGridBorder = (c + 1) % subSize === 0 && c < size - 1
-                const isRowBorder = (r + 1) % subSize === 0 && r < size - 1
+                // Variable subgrid borders: 2x2, 2x3, or 3x3
+                const isSubGridBorder = (c + 1) % subCols === 0 && c < size - 1
+                const isRowBorder = (r + 1) % subRows === 0 && r < size - 1
 
                 return (
                   <motion.button
@@ -322,6 +349,9 @@ export default function SudokuPage() {
               })
             )}
           </div>
+          <p className="text-center text-sm text-gray-500 mt-4">
+            {size}x{size} Grid (Level {level})
+          </p>
         </div>
 
         <div className="bg-white rounded-xl p-6 shadow-lg max-w-md mx-auto">
