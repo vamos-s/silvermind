@@ -19,6 +19,7 @@ export default function RotatedShapesPage() {
   const [gameOver, setGameOver] = useState(false)
   const [showResult, setShowResult] = useState(false)
   const [isCorrect, setIsCorrect] = useState(false)
+  const [timeLeft, setTimeLeft] = useState(3)
 
   const getOptionCount = () => {
     switch (currentDifficulty) {
@@ -121,6 +122,7 @@ export default function RotatedShapesPage() {
 
     setOptions(newOptions.sort(() => Math.random() - 0.5))
     setShowResult(false)
+    setTimeLeft(3) // Reset timer to 3 seconds
   }
 
   const handleAnswer = (shape: Shape) => {
@@ -156,6 +158,25 @@ export default function RotatedShapesPage() {
     generateQuestion()
   }, [])
 
+  // Timer countdown effect
+  useEffect(() => {
+    if (timeLeft > 0 && !showResult && !gameOver) {
+      const timer = setTimeout(() => setTimeLeft(timeLeft - 1), 1000)
+      return () => clearTimeout(timer)
+    } else if (timeLeft === 0 && !showResult && !gameOver) {
+      // Time's up - game over
+      setGameOver(true)
+      addSession({
+        id: Date.now().toString(),
+        gameId: 'rotated-shapes',
+        difficulty: currentDifficulty,
+        score: score,
+        completedAt: new Date(),
+        durationSeconds: 3 * level
+      })
+    }
+  }, [timeLeft, showResult, gameOver, score, level, currentDifficulty])
+
   if (gameOver) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-red-50 to-pink-50 flex items-center justify-center">
@@ -171,6 +192,7 @@ export default function RotatedShapesPage() {
             onClick={() => {
               setScore(0)
               setLevel(1)
+              setTimeLeft(3)
               generateQuestion()
               setGameOver(false)
             }}
@@ -216,6 +238,9 @@ export default function RotatedShapesPage() {
           <div className="flex justify-center gap-8 text-2xl mb-4">
             <p className="font-bold text-red-600">Score: {score}</p>
             <p className="font-bold text-pink-600">Level: {level}</p>
+            <p className={`font-bold ${timeLeft <= 1 ? 'text-red-600' : 'text-blue-600'}`}>
+              ⏱️ {timeLeft}s
+            </p>
           </div>
           <p className="text-xl text-gray-600">Which shape matches?</p>
         </div>
