@@ -8,6 +8,7 @@ const games = [
   { id: 'timing-game', icon: '⏱️', title: 'Timing Game', description: 'Click when the color changes' },
   { id: 'target-detection', icon: '🎯', title: 'Target Detection', description: 'Find the targets quickly' },
   { id: 'color-match', icon: '🌈', title: 'Color Match', description: 'Match the color or word' },
+  { id: 'quick-reaction', icon: '⚡', title: 'Quick Reaction', description: 'Test your reaction speed' },
 ]
 
 export default function ReactionPage() {
