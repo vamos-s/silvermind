@@ -9,6 +9,7 @@ const games = [
   { id: 'number-recall', icon: '🔢', title: 'Number Recall', description: 'Remember number sequences' },
   { id: 'sequence-memory', icon: '🔔', title: 'Sequence Memory', description: 'Watch and repeat the sequence' },
   { id: 'word-recall', icon: '📝', title: 'Word Recall', description: 'Remember and type the words' },
+  { id: 'card-flip', icon: '🃏', title: 'Card Flip', description: 'Match the pairs of cards' },
   { id: 'location-memory', icon: '📍', title: 'Location Memory', description: 'Remember item positions' },
 ]
 

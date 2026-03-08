@@ -5,7 +5,7 @@ import { motion } from 'framer-motion'
 import Link from 'next/link'
 
 const categories = [
-  { id: 'memory', icon: '🧠', color: 'bg-blue-500', games: 5 },
+  { id: 'memory', icon: '🧠', color: 'bg-blue-500', games: 6 },
   { id: 'pattern', icon: '🔮', color: 'bg-purple-500', games: 4 },
   { id: 'logic', icon: '🧩', color: 'bg-green-500', games: 4 },
   { id: 'reaction', icon: '⚡', color: 'bg-yellow-500', games: 4 },
