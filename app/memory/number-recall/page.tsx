@@ -143,7 +143,7 @@ export default function NumberRecallPage() {
               <h3 className="font-bold text-gray-800 mb-2">{t('numberRecall.levelInfo', 'Level Settings')}:</h3>
               <ul className="text-gray-700 space-y-1 font-medium">
                 <li>• {t('numberRecall.sequenceLength', 'Sequence Length')}: {getSequenceLength()}</li>
-                <li>• {t('numberRecall.displayTime', 'Display Time')}: {Math.round(getDisplayTime() / 100)} / 10{s}</li>
+                <li>• {t('numberRecall.displayTime', 'Display Time')}: {Math.round(getDisplayTime() / 100) / 10}s</li>
               </ul>
             </div>
             <button
