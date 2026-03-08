@@ -6,41 +6,65 @@ import { motion } from 'framer-motion'
 import Link from 'next/link'
 import { useGameStore } from '@/lib/store'
 
+const MAX_LEVELS = 10
+
+const LEVEL_SETTINGS = [
+  { rounds: 5, minDelay: 2500, maxDelay: 5000, targetTime: 500 },  // Level 1
+  { rounds: 5, minDelay: 2400, maxDelay: 4800, targetTime: 480 },  // Level 2
+  { rounds: 6, minDelay: 2300, maxDelay: 4600, targetTime: 460 },  // Level 3
+  { rounds: 6, minDelay: 2200, maxDelay: 4400, targetTime: 440 },  // Level 4
+  { rounds: 7, minDelay: 2100, maxDelay: 4200, targetTime: 420 },  // Level 5
+  { rounds: 7, minDelay: 2000, maxDelay: 4000, targetTime: 400 },  // Level 6
+  { rounds: 8, minDelay: 1900, maxDelay: 3800, targetTime: 380 },  // Level 7
+  { rounds: 8, minDelay: 1800, maxDelay: 3600, targetTime: 360 },  // Level 8
+  { rounds: 9, minDelay: 1700, maxDelay: 3400, targetTime: 340 },  // Level 9
+  { rounds: 10, minDelay: 1500, maxDelay: 3000, targetTime: 320 }, // Level 10
+]
+
 export default function TimingGamePage() {
   const { t } = useTranslation()
-  const { currentDifficulty, addSession } = useGameStore()
+  const { addSession } = useGameStore()
 
-  const [gameState, setGameState] = useState<'waiting' | 'ready' | 'finished'>('waiting')
+  const [gameState, setGameState] = useState<'menu' | 'waiting' | 'ready' | 'finished' | 'levelComplete' | 'gameOver' | 'victory'>('menu')
   const [startTime, setStartTime] = useState(0)
   const [reactionTime, setReactionTime] = useState(0)
-  const [round, setRound] = useState(1)
+  const [round, setRound] = useState(0)
   const [reactionTimes, setReactionTimes] = useState<number[]>([])
   const [score, setScore] = useState(0)
-  const [gameOver, setGameOver] = useState(false)
+  const [totalScore, setTotalScore] = useState(0)
+  const [level, setLevel] = useState(1)
 
-  const getRounds = () => {
-    switch (currentDifficulty) {
-      case 'easy': return 5
-      case 'medium': return 8
-      case 'hard': return 10
-    }
+  const settings = LEVEL_SETTINGS[Math.min(level - 1, LEVEL_SETTINGS.length - 1)]
+
+  const calculateRoundScore = (time: number) => {
+    if (time < 0) return 0 // Too early
+    const ratio = settings.targetTime / time
+    return Math.round(ratio * 100)
   }
 
-  const getRandomDelay = () => {
-    switch (currentDifficulty) {
-      case 'easy': return 2000 + Math.random() * 3000
-      case 'medium': return 1500 + Math.random() * 4000
-      case 'hard': return 1000 + Math.random() * 5000
-    }
+  const startGame = () => {
+    setScore(0)
+    setTotalScore(0)
+    setLevel(1)
+    startLevel()
+  }
+
+  const startLevel = () => {
+    setRound(0)
+    setReactionTimes([])
+    setScore(0)
+    setGameState('menu')
+    setTimeout(() => startRound(), 100)
   }
 
   const startRound = () => {
+    setRound(prev => prev + 1)
     setGameState('waiting')
     setReactionTime(0)
 
-    const delay = getRandomDelay()
+    const delay = settings.minDelay + Math.random() * (settings.maxDelay - settings.minDelay)
     setTimeout(() => {
-      if (!gameOver) {
+      if (gameState === 'waiting') {
         setGameState('ready')
         setStartTime(Date.now())
       }
@@ -53,88 +77,105 @@ export default function TimingGamePage() {
       const time = endTime - startTime
       setReactionTime(time)
       setGameState('finished')
-      setReactionTimes([...reactionTimes, time])
 
-      // Calculate score (faster = more points)
-      const roundScore = Math.max(0, Math.floor(1000 - time / 5))
-      setScore(score + roundScore)
+      const roundScore = calculateRoundScore(time)
+      const newTimes = [...reactionTimes, time]
+      setReactionTimes(newTimes)
+      setScore(prev => prev + roundScore)
 
-      if (round < getRounds()) {
-        setRound(round + 1)
+      if (round < settings.rounds) {
         setTimeout(() => {
-          if (!gameOver) startRound()
+          startRound()
         }, 1500)
       } else {
-        setGameOver(true)
-        addSession({
-          id: Date.now().toString(),
-          gameId: 'timing-game',
-          difficulty: currentDifficulty,
-          score: score + roundScore,
-          completedAt: new Date(),
-          durationSeconds: 60
-        })
+        setGameState('levelComplete')
       }
     } else if (gameState === 'waiting') {
       // Clicked too early
+      setReactionTime(-1)
       setGameState('finished')
-      setReactionTime(-1) // -1 means clicked too early
       setReactionTimes([...reactionTimes, -1])
 
-      if (round < getRounds()) {
-        setRound(round + 1)
+      if (round < settings.rounds) {
         setTimeout(() => {
-          if (!gameOver) startRound()
+          startRound()
         }, 1500)
       } else {
-        setGameOver(true)
-        addSession({
-          id: Date.now().toString(),
-          gameId: 'timing-game',
-          difficulty: currentDifficulty,
-          score: score,
-          completedAt: new Date(),
-          durationSeconds: 60
-        })
+        setGameState('levelComplete')
+      }
+    } else if (gameState === 'finished') {
+      // Continue to next
+      if (round < settings.rounds) {
+        startRound()
+      } else {
+        setGameState('levelComplete')
       }
     }
   }
 
-  useEffect(() => {
-    startRound()
-  }, [])
+  const nextLevel = () => {
+    setTotalScore(prev => prev + score)
 
-  if (gameOver) {
-    const avgTime = reactionTimes.filter(t => t > 0).reduce((a, b) => a + b, 0) / reactionTimes.filter(t => t > 0).length
+    if (level >= MAX_LEVELS) {
+      addSession({
+        id: Date.now().toString(),
+        gameId: 'timing-game',
+        difficulty: 'hard',
+        score: totalScore + score,
+        completedAt: new Date(),
+        durationSeconds: 0
+      })
+      setGameState('victory')
+    } else {
+      setLevel(prev => prev + 1)
+      setGameState('menu')
+      setTimeout(() => startLevel(), 100)
+    }
+  }
 
+  const avgTime = reactionTimes.filter(t => t > 0).reduce((a, b) => a + b, 0) / reactionTimes.filter(t => t > 0).length || 0
+
+  if (gameState === 'menu') {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-yellow-50 to-orange-50 flex items-center justify-center">
-        <motion.div
-          initial={{ scale: 0.8, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          className="bg-white rounded-2xl p-8 shadow-xl text-center max-w-md"
-        >
-          <h2 className="text-3xl font-bold text-gray-800 mb-4">Game Over!</h2>
-          <p className="text-xl text-gray-600 mb-2">Final Score: {score}</p>
-          <p className="text-lg text-gray-500 mb-6">
-            Avg Reaction: {avgTime > 0 ? `${Math.round(avgTime)}ms` : 'N/A'}
-          </p>
-          <button
-            onClick={() => {
-              setScore(0)
-              setRound(1)
-              setReactionTimes([])
-              startRound()
-              setGameOver(false)
-            }}
-            className="bg-yellow-500 text-white px-8 py-3 rounded-xl text-xl font-bold hover:bg-yellow-600 transition"
-          >
-            Play Again
-          </button>
-          <Link href="/reaction" className="block mt-4 text-yellow-500 hover:underline">
-            ← Back to Games
+      <div className="min-h-screen bg-gradient-to-br from-yellow-50 to-orange-50 p-4 md:p-8">
+        <div className="max-w-lg mx-auto">
+          <Link href="/reaction" className="text-gray-700 hover:text-gray-900 font-medium mb-6 block">
+            ← {t('back', 'Back')}
           </Link>
-        </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="bg-white rounded-2xl shadow-lg p-8 text-center"
+          >
+            <h1 className="text-4xl font-bold text-gray-800 mb-2">⏱️ Timing Game</h1>
+            <h2 className="text-3xl font-bold text-gray-800 mb-2">
+              Level {level}
+            </h2>
+            {level > 1 && (
+              <p className="text-lg text-gray-700 mb-4 font-medium">
+                Total Score: <span className="text-yellow-600 font-bold">{totalScore}</span>
+              </p>
+            )}
+            <p className="text-lg text-gray-600 mb-6">
+              Wait for the screen to turn GREEN, then click as fast as you can!
+            </p>
+            <div className="bg-yellow-50 rounded-xl p-4 mb-6 text-left">
+              <h3 className="font-bold text-gray-800 mb-2">Level Settings:</h3>
+              <ul className="text-gray-700 space-y-1 font-medium">
+                <li>• Rounds: {settings.rounds}</li>
+                <li>• Delay: {settings.minDelay / 1000}-{settings.maxDelay / 1000}s</li>
+                <li>• Target Time: {settings.targetTime}ms</li>
+              </ul>
+            </div>
+            <button
+              onClick={startRound}
+              className="bg-gradient-to-r from-yellow-500 to-orange-500 text-white text-2xl font-bold py-4 px-12 rounded-xl hover:from-yellow-600 hover:to-orange-600 shadow-lg transition-all w-full"
+            >
+              {t('start', 'Start')}
+            </button>
+          </motion.div>
+        </div>
       </div>
     )
   }
@@ -150,9 +191,28 @@ export default function TimingGamePage() {
 
       <main className="container mx-auto px-4 py-8">
         <div className="max-w-lg mx-auto text-center mb-8">
-          <div className="flex justify-center gap-8 text-2xl mb-4">
-            <p className="font-bold text-yellow-600">Score: {score}</p>
-            <p className="font-bold text-orange-600">Round: {round}/{getRounds()}</p>
+          <div className="bg-white rounded-2xl shadow-lg p-4 mb-6">
+            <div className="flex justify-around text-center">
+              <div>
+                <p className="text-gray-700 text-sm font-medium">Level</p>
+                <p className="text-3xl font-bold text-yellow-600">{level}/{MAX_LEVELS}</p>
+              </div>
+              <div>
+                <p className="text-gray-700 text-sm font-medium">Round</p>
+                <p className="text-3xl font-bold text-orange-600">{round}/{settings.rounds}</p>
+              </div>
+              <div>
+                <p className="text-gray-700 text-sm font-medium">Score</p>
+                <p className="text-3xl font-bold text-yellow-600">{score}</p>
+              </div>
+            </div>
+            <div className="mt-4 bg-gray-200 rounded-full h-3 overflow-hidden">
+              <motion.div
+                initial={{ width: 0 }}
+                animate={{ width: `${(round / settings.rounds) * 100}%` }}
+                className="bg-gradient-to-r from-yellow-500 to-orange-500 h-full"
+              />
+            </div>
           </div>
         </div>
 
@@ -198,6 +258,75 @@ export default function TimingGamePage() {
             ))}
           </div>
         </div>
+
+        {/* Level Complete */}
+        {gameState === 'levelComplete' && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50"
+          >
+            <div className="bg-white rounded-2xl shadow-2xl p-8 max-w-md w-full">
+              <div className="text-6xl mb-4 text-center">✅</div>
+              <h2 className="text-4xl font-bold text-yellow-600 mb-4 text-center">Level {level} Complete!</h2>
+              <div className="bg-yellow-50 rounded-xl p-6 mb-6">
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <p className="text-gray-700 text-sm font-medium">Level Score</p>
+                    <p className="text-3xl font-bold text-yellow-600">{score}</p>
+                  </div>
+                  <div>
+                    <p className="text-gray-700 text-sm font-medium">Total Score</p>
+                    <p className="text-3xl font-bold text-orange-600">{totalScore + score}</p>
+                  </div>
+                </div>
+                <div className="mt-4 text-center">
+                  <p className="text-gray-600">Avg Time: {avgTime > 0 ? `${Math.round(avgTime)}ms` : 'N/A'}</p>
+                  <p className="text-gray-600">Target: {settings.targetTime}ms</p>
+                </div>
+              </div>
+              <button
+                onClick={nextLevel}
+                className="bg-gradient-to-r from-yellow-500 to-orange-500 text-white text-2xl font-bold py-4 px-12 rounded-xl hover:from-yellow-600 hover:to-orange-600 shadow-lg transition-all w-full mb-3"
+              >
+                {level < MAX_LEVELS ? `Next Level ${level + 1}` : 'View Final Score'}
+              </button>
+              <button
+                onClick={startGame}
+                className="text-gray-600 hover:text-gray-800 font-medium w-full text-center"
+              >
+                Restart from Level 1
+              </button>
+            </div>
+          </motion.div>
+        )}
+
+        {/* Victory */}
+        {gameState === 'victory' && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50"
+          >
+            <div className="bg-white rounded-2xl shadow-2xl p-8 max-w-md w-full">
+              <div className="text-6xl mb-4 text-center">🎉</div>
+              <h2 className="text-4xl font-bold text-yellow-600 mb-4 text-center">Congratulations!</h2>
+              <p className="text-xl text-gray-700 text-center mb-6">
+                You completed all {MAX_LEVELS} levels!
+              </p>
+              <div className="bg-yellow-50 rounded-xl p-6 mb-6">
+                <p className="text-gray-700 text-sm font-medium text-center">Final Score</p>
+                <p className="text-5xl font-bold text-yellow-600 text-center">{totalScore + score}</p>
+              </div>
+              <button
+                onClick={startGame}
+                className="bg-gradient-to-r from-yellow-500 to-orange-500 text-white text-2xl font-bold py-4 px-12 rounded-xl hover:from-yellow-600 hover:to-orange-600 shadow-lg transition-all w-full"
+              >
+                Play Again
+              </button>
+            </div>
+          </motion.div>
+        )}
       </main>
     </div>
   )
