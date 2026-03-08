@@ -134,7 +134,11 @@ export default function NumberRecallPage() {
             className="bg-white rounded-2xl p-12 shadow-xl max-w-md mx-auto text-center"
           >
             <p className="text-xl text-gray-600 mb-6">Remember this sequence:</p>
-            <p className="text-6xl font-bold text-blue-600 tracking-widest">
+            <p className={`font-bold text-blue-600 tracking-widest ${
+              sequence.length <= 6 ? 'text-6xl' :
+              sequence.length <= 10 ? 'text-4xl' :
+              'text-2xl'
+            }`}>
               {sequence.join('')}
             </p>
           </motion.div>
@@ -146,7 +150,11 @@ export default function NumberRecallPage() {
                 type="text"
                 value={playerInput}
                 readOnly
-                className="w-full bg-gray-100 rounded-lg p-4 text-center text-4xl font-bold tracking-widest h-16 text-gray-800 border-2 border-transparent"
+                className={`w-full bg-gray-100 rounded-lg p-4 text-center font-bold tracking-widest text-gray-800 border-2 border-transparent ${
+                  sequence.length <= 6 ? 'text-4xl h-16' :
+                  sequence.length <= 10 ? 'text-2xl h-14' :
+                  'text-xl h-12'
+                }`}
                 placeholder={'_'.repeat(sequence.length)}
               />
             </div>
