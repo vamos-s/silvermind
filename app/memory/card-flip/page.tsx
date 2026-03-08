@@ -35,13 +35,14 @@ export default function CardFlipPage() {
   const { t } = useTranslation()
   const { currentDifficulty, addSession } = useGameStore()
 
-  const [gameState, setGameState] = useState<'menu' | 'playing' | 'victory' | 'gameover'>('menu')
+  const [gameState, setGameState] = useState<'menu' | 'preview' | 'playing' | 'victory' | 'gameover'>('menu')
   const [cards, setCards] = useState<Card[]>([])
   const [flippedCards, setFlippedCards] = useState<number[]>([])
   const [moves, setMoves] = useState(0)
   const [matchedPairs, setMatchedPairs] = useState(0)
   const [timeLeft, setTimeLeft] = useState(0)
   const [totalPairs, setTotalPairs] = useState(0)
+  const [isChecking, setIsChecking] = useState(false)
 
   const settings = DIFFICULTY_SETTINGS[currentDifficulty as keyof typeof DIFFICULTY_SETTINGS] || DIFFICULTY_SETTINGS.easy
   const multiplier = DIFFICULTY_MULTIPLIERS[currentDifficulty as keyof typeof DIFFICULTY_MULTIPLIERS] || 1
@@ -73,18 +74,31 @@ export default function CardFlipPage() {
     setMatchedPairs(0)
     setTimeLeft(settings.timeLimit)
     setTotalPairs(newCards.length / 2)
-    setGameState('playing')
+    setIsChecking(false)
+
+    // Show all cards first
+    setCards(newCards.map(card => ({ ...card, isFlipped: true })))
+    setGameState('preview')
+
+    // Hide cards after 3 seconds and start the game
+    setTimeout(() => {
+      setCards(prev => prev.map(card => ({ ...card, isFlipped: false })))
+      setGameState('playing')
+    }, 3000)
   }, [createCards, settings])
 
   const flipCard = useCallback((cardId: number) => {
+    if (isChecking) return // Prevent clicking while checking a match
     if (flippedCards.length >= 2) return
-    if (flippedCards.includes(cardId)) return
+    if (flippedCards.includes(cardId)) return // Can't click the same card twice
     if (cards[cardId].isMatched) return
+    if (cards[cardId].isFlipped) return // Already flipped
 
     const newFlipped = [...flippedCards, cardId]
     setFlippedCards(newFlipped)
 
     if (newFlipped.length === 2) {
+      setIsChecking(true)
       setMoves(prev => prev + 1)
 
       const [firstId, secondId] = newFlipped
@@ -93,39 +107,43 @@ export default function CardFlipPage() {
 
       if (firstCard.emoji === secondCard.emoji) {
         // Match found
-        setCards(prev =>
-          prev.map(card =>
-            card.id === firstId || card.id === secondId
-              ? { ...card, isMatched: true }
-              : card
+        setTimeout(() => {
+          setCards(prev =>
+            prev.map(card =>
+              card.id === firstId || card.id === secondId
+                ? { ...card, isMatched: true, isFlipped: true }
+                : card
+            )
           )
-        )
-        setFlippedCards([])
-        setMatchedPairs(prev => prev + 1)
+          setFlippedCards([])
+          setMatchedPairs(prev => prev + 1)
+          setIsChecking(false)
 
-        // Check for victory
-        if (matchedPairs + 1 === totalPairs) {
-          const score = Math.round(
-            ((1000 - moves * 10) * multiplier) + (timeLeft * multiplier)
-          )
-          addSession({
-            id: Date.now().toString(),
-            gameId: 'card-flip',
-            difficulty: currentDifficulty,
-            score: Math.max(score, 0),
-            completedAt: new Date(),
-            durationSeconds: settings.timeLimit - timeLeft
-          })
-          setGameState('victory')
-        }
+          // Check for victory
+          if (matchedPairs + 1 === totalPairs) {
+            const score = Math.round(
+              ((1000 - moves * 10) * multiplier) + (timeLeft * multiplier)
+            )
+            addSession({
+              id: Date.now().toString(),
+              gameId: 'card-flip',
+              difficulty: currentDifficulty,
+              score: Math.max(score, 0),
+              completedAt: new Date(),
+              durationSeconds: settings.timeLimit - timeLeft
+            })
+            setGameState('victory')
+          }
+        }, 500)
       } else {
         // No match - flip back after delay
         setTimeout(() => {
           setFlippedCards([])
+          setIsChecking(false)
         }, 1000)
       }
     }
-  }, [flippedCards, cards, matchedPairs, totalPairs, timeLeft, currentDifficulty, multiplier, settings, addSession])
+  }, [flippedCards, cards, matchedPairs, totalPairs, timeLeft, currentDifficulty, multiplier, settings, addSession, isChecking])
 
   useEffect(() => {
     let timer: NodeJS.Timeout | null = null
@@ -181,7 +199,73 @@ export default function CardFlipPage() {
         </header>
 
         {/* Menu */}
-        {gameState === 'menu' && (
+        {(gameState === 'menu' || gameState === 'preview') && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="bg-white rounded-2xl shadow-lg p-8 text-center"
+          >
+            {gameState === 'menu' && (
+              <>
+                <h2 className="text-3xl font-bold text-gray-800 mb-4">
+                  {t('cardFlip.ready', 'Ready to test your memory?')}
+                </h2>
+                <p className="text-lg text-gray-600 mb-6">
+                  {t('cardFlip.instructions', 'Find all matching pairs of cards before time runs out!')}
+                </p>
+                <div className="bg-purple-50 rounded-xl p-4 mb-6 text-left">
+                  <h3 className="font-bold text-gray-800 mb-2">{t('cardFlip.difficultyInfo', 'Difficulty Settings')}:</h3>
+                  <ul className="text-gray-700 space-y-1">
+                    <li>• {t('cardFlip.gridSize', 'Grid')}: {settings.rows} × {settings.cols}</li>
+                    <li>• {t('cardFlip.pairs', 'Pairs')}: {(settings.rows * settings.cols) / 2}</li>
+                    <li>• {t('cardFlip.timeLimit', 'Time Limit')}: {Math.floor(settings.timeLimit / 60)}:{(settings.timeLimit % 60).toString().padStart(2, '0')}</li>
+                  </ul>
+                </div>
+                <button
+                  onClick={startGame}
+                  className="bg-gradient-to-r from-purple-500 to-pink-500 text-white text-2xl font-bold py-4 px-12 rounded-xl hover:from-purple-600 hover:to-pink-600 shadow-lg transition-all w-full"
+                >
+                  {t('start', 'Start')}
+                </button>
+              </>
+            )}
+
+            {gameState === 'preview' && (
+              <>
+                <h2 className="text-3xl font-bold text-purple-600 mb-4">
+                  {t('cardFlip.memorize', 'Memorize!')}
+                </h2>
+                <p className="text-lg text-gray-600 mb-6">
+                  {t('cardFlip.memorizeText', 'Remember the card positions!')}
+                </p>
+                {/* Show all cards during preview */}
+                <div
+                  className="grid gap-3 mb-6"
+                  style={{
+                    gridTemplateColumns: `repeat(${settings.cols}, 1fr)`,
+                  }}
+                >
+                  {cards.map((card) => (
+                    <motion.div
+                      key={card.id}
+                      className={getCardSize()}
+                      initial={{ opacity: 0, scale: 0.5 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      transition={{ delay: card.id * 0.05 }}
+                      style={{ perspective: '1000px' }}
+                    >
+                      <div
+                        className="w-full h-full relative bg-white rounded-xl shadow-lg flex items-center justify-center border-4 border-purple-300"
+                      >
+                        <span className="text-4xl md:text-5xl">{card.emoji}</span>
+                      </div>
+                    </motion.div>
+                  ))}
+                </div>
+              </>
+            )}
+          </motion.div>
+        )}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -264,7 +348,7 @@ export default function CardFlipPage() {
                 >
                   <motion.button
                     onClick={() => flipCard(card.id)}
-                    disabled={card.isFlipped || card.isMatched || flippedCards.length >= 2}
+                    disabled={card.isFlipped || card.isMatched || flippedCards.length >= 2 || isChecking}
                     initial={false}
                     animate={{
                       rotateY: card.isFlipped || card.isMatched || flippedCards.includes(card.id) ? 180 : 0,
