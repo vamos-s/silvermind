@@ -6,7 +6,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import Link from 'next/link'
 import { useGameStore } from '@/lib/store'
 
-const MAX_LEVELS = 10
+const MAX_LEVELS = 30
 
 export default function NumberRecallPage() {
   const { t } = useTranslation()
@@ -20,15 +20,19 @@ export default function NumberRecallPage() {
   const [level, setLevel] = useState(1)
 
   const getSequenceLength = () => {
-    if (level <= 3) return 3 + level - 1 // 3, 4, 5
-    if (level <= 6) return 5 + (level - 3) // 6, 7, 8
-    return 8 + (level - 6) // 9, 10, 11...
+    if (level <= 5) return 3 + level - 1 // 3, 4, 5, 6, 7
+    if (level <= 10) return 7 + (level - 5) // 8, 9, 10, 11, 12
+    if (level <= 15) return 12 + (level - 10) // 13, 14, 15, 16, 17
+    if (level <= 20) return 17 + (level - 15) // 18, 19, 20, 21, 22
+    return 22 + (level - 20) // 23, 24, 25, 26, 27, 28, 29, 30
   }
 
   const getDisplayTime = () => {
-    if (level <= 3) return 3000 - (level - 1) * 500 // 3000, 2500, 2000
-    if (level <= 6) return 2000 - (level - 4) * 300 // 2000, 1700, 1400
-    return 1400 - (level - 7) * 200 // 1200, 1000, 800...
+    if (level <= 5) return 3000 - (level - 1) * 300 // 3000, 2700, 2400, 2100, 1800
+    if (level <= 10) return 1800 - (level - 6) * 200 // 1600, 1400, 1200, 1000, 800
+    if (level <= 15) return 800 - (level - 11) * 100 // 700, 600, 500, 400, 300
+    if (level <= 20) return 300 - (level - 16) * 40 // 260, 220, 180, 140, 100
+    return 100 - (level - 21) * 10 // 90, 80, 70, 60, 50, 40, 30, 20
   }
 
   const getLevelScore = () => {

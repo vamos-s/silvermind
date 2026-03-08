@@ -6,19 +6,39 @@ import { motion, AnimatePresence } from 'framer-motion'
 import Link from 'next/link'
 import { useGameStore } from '@/lib/store'
 
-const MAX_LEVELS = 10
+const MAX_LEVELS = 30
 
 const LEVEL_SETTINGS = [
   { gridSize: 3, sequenceStart: 3 },  // Level 1: 3×3, start with 3
   { gridSize: 3, sequenceStart: 4 },  // Level 2: 3×3, start with 4
-  { gridSize: 4, sequenceStart: 4 },  // Level 3: 4×4, start with 4
-  { gridSize: 4, sequenceStart: 5 },  // Level 4: 4×4, start with 5
-  { gridSize: 5, sequenceStart: 5 },  // Level 5: 5×5, start with 5
-  { gridSize: 5, sequenceStart: 6 },  // Level 6: 5×5, start with 6
-  { gridSize: 6, sequenceStart: 6 },  // Level 7: 6×6, start with 6
-  { gridSize: 6, sequenceStart: 7 },  // Level 8: 6×6, start with 7
-  { gridSize: 6, sequenceStart: 8 },  // Level 9: 6×6, start with 8
-  { gridSize: 6, sequenceStart: 9 },  // Level 10: 6×6, start with 9
+  { gridSize: 3, sequenceStart: 5 },  // Level 3: 3×3, start with 5
+  { gridSize: 3, sequenceStart: 6 },  // Level 4: 3×3, start with 6
+  { gridSize: 3, sequenceStart: 7 },  // Level 5: 3×3, start with 7
+  { gridSize: 4, sequenceStart: 8 },  // Level 6: 4×4, start with 8
+  { gridSize: 4, sequenceStart: 9 },  // Level 7: 4×4, start with 9
+  { gridSize: 4, sequenceStart: 10 },  // Level 8: 4×4, start with 10
+  { gridSize: 4, sequenceStart: 11 },  // Level 9: 4×4, start with 11
+  { gridSize: 4, sequenceStart: 12 },  // Level 10: 4×4, start with 12
+  { gridSize: 5, sequenceStart: 13 },  // Level 11: 5×5, start with 13
+  { gridSize: 5, sequenceStart: 14 },  // Level 12: 5×5, start with 14
+  { gridSize: 5, sequenceStart: 15 },  // Level 13: 5×5, start with 15
+  { gridSize: 5, sequenceStart: 16 },  // Level 14: 5×5, start with 16
+  { gridSize: 5, sequenceStart: 17 },  // Level 15: 5×5, start with 17
+  { gridSize: 6, sequenceStart: 18 },  // Level 16: 6×6, start with 18
+  { gridSize: 6, sequenceStart: 19 },  // Level 17: 6×6, start with 19
+  { gridSize: 6, sequenceStart: 20 },  // Level 18: 6×6, start with 20
+  { gridSize: 6, sequenceStart: 21 },  // Level 19: 6×6, start with 21
+  { gridSize: 6, sequenceStart: 22 },  // Level 20: 6×6, start with 22
+  { gridSize: 7, sequenceStart: 23 },  // Level 21: 7×7, start with 23
+  { gridSize: 7, sequenceStart: 24 },  // Level 22: 7×7, start with 24
+  { gridSize: 7, sequenceStart: 25 },  // Level 23: 7×7, start with 25
+  { gridSize: 7, sequenceStart: 26 },  // Level 24: 7×7, start with 26
+  { gridSize: 7, sequenceStart: 27 },  // Level 25: 7×7, start with 27
+  { gridSize: 8, sequenceStart: 28 },  // Level 26: 8×8, start with 28
+  { gridSize: 8, sequenceStart: 29 },  // Level 27: 8×8, start with 29
+  { gridSize: 8, sequenceStart: 30 },  // Level 28: 8×8, start with 30
+  { gridSize: 8, sequenceStart: 31 },  // Level 29: 8×8, start with 31
+  { gridSize: 8, sequenceStart: 32 },  // Level 30: 8×8, start with 32
 ]
 
 export default function SequenceMemoryPage() {

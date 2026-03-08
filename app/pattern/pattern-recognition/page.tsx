@@ -39,19 +39,50 @@ const SIZE_MAP: Record<'small' | 'medium' | 'large', string> = {
   large: 'w-20 h-20 md:w-24 md:h-24',
 }
 
-const MAX_LEVELS = 10
+const MAX_LEVELS = 30
 
 const LEVEL_SETTINGS = [
+  // Levels 1-5: Easy introduction
   { patternLength: 3, questions: 5, timePerQuestion: 30, shapes: 3, colors: 3 },  // Level 1
   { patternLength: 3, questions: 5, timePerQuestion: 28, shapes: 3, colors: 4 },  // Level 2
   { patternLength: 3, questions: 5, timePerQuestion: 26, shapes: 4, colors: 4 },  // Level 3
-  { patternLength: 4, questions: 6, timePerQuestion: 24, shapes: 4, colors: 4 },  // Level 4
+  { patternLength: 3, questions: 6, timePerQuestion: 24, shapes: 4, colors: 4 },  // Level 4
   { patternLength: 4, questions: 6, timePerQuestion: 22, shapes: 4, colors: 5 },  // Level 5
+
+  // Levels 6-10: Medium challenge
   { patternLength: 4, questions: 7, timePerQuestion: 20, shapes: 4, colors: 5 },  // Level 6
-  { patternLength: 5, questions: 7, timePerQuestion: 18, shapes: 4, colors: 6 },  // Level 7
-  { patternLength: 5, questions: 8, timePerQuestion: 16, shapes: 4, colors: 6 },  // Level 8
-  { patternLength: 5, questions: 9, timePerQuestion: 15, shapes: 4, colors: 6 },  // Level 9
-  { patternLength: 5, questions: 10, timePerQuestion: 14, shapes: 4, colors: 6 }, // Level 10
+  { patternLength: 4, questions: 7, timePerQuestion: 18, shapes: 4, colors: 6 },  // Level 7
+  { patternLength: 5, questions: 8, timePerQuestion: 17, shapes: 4, colors: 6 },  // Level 8
+  { patternLength: 5, questions: 9, timePerQuestion: 16, shapes: 4, colors: 6 },  // Level 9
+  { patternLength: 5, questions: 10, timePerQuestion: 15, shapes: 4, colors: 6 }, // Level 10
+
+  // Levels 11-15: Harder progression
+  { patternLength: 5, questions: 10, timePerQuestion: 14, shapes: 4, colors: 6 }, // Level 11
+  { patternLength: 6, questions: 10, timePerQuestion: 13, shapes: 4, colors: 6 }, // Level 12
+  { patternLength: 6, questions: 11, timePerQuestion: 12, shapes: 4, colors: 6 }, // Level 13
+  { patternLength: 6, questions: 12, timePerQuestion: 11, shapes: 4, colors: 6 }, // Level 14
+  { patternLength: 7, questions: 12, timePerQuestion: 10, shapes: 4, colors: 6 }, // Level 15
+
+  // Levels 16-20: Advanced challenge
+  { patternLength: 7, questions: 13, timePerQuestion: 10, shapes: 4, colors: 6 }, // Level 16
+  { patternLength: 7, questions: 14, timePerQuestion: 9, shapes: 4, colors: 6 },  // Level 17
+  { patternLength: 8, questions: 14, timePerQuestion: 9, shapes: 4, colors: 6 },  // Level 18
+  { patternLength: 8, questions: 15, timePerQuestion: 8, shapes: 4, colors: 6 },  // Level 19
+  { patternLength: 8, questions: 16, timePerQuestion: 8, shapes: 4, colors: 6 },  // Level 20
+
+  // Levels 21-25: Expert level
+  { patternLength: 8, questions: 16, timePerQuestion: 7, shapes: 4, colors: 6 },  // Level 21
+  { patternLength: 9, questions: 16, timePerQuestion: 7, shapes: 4, colors: 6 },  // Level 22
+  { patternLength: 9, questions: 17, timePerQuestion: 6, shapes: 4, colors: 6 },  // Level 23
+  { patternLength: 9, questions: 18, timePerQuestion: 6, shapes: 4, colors: 6 },  // Level 24
+  { patternLength: 10, questions: 18, timePerQuestion: 5, shapes: 4, colors: 6 }, // Level 25
+
+  // Levels 26-30: Master level
+  { patternLength: 10, questions: 19, timePerQuestion: 5, shapes: 4, colors: 6 }, // Level 26
+  { patternLength: 10, questions: 20, timePerQuestion: 4, shapes: 4, colors: 6 }, // Level 27
+  { patternLength: 10, questions: 20, timePerQuestion: 4, shapes: 4, colors: 6 }, // Level 28
+  { patternLength: 10, questions: 20, timePerQuestion: 3, shapes: 4, colors: 6 }, // Level 29
+  { patternLength: 10, questions: 20, timePerQuestion: 3, shapes: 4, colors: 6 }, // Level 30
 ]
 
 export default function PatternRecognitionPage() {
