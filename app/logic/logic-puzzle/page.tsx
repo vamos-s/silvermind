@@ -27,171 +27,103 @@ const COLORS = [
   { name: 'Orange', bg: 'bg-orange-400', border: 'border-orange-600', text: 'text-orange-800' },
 ]
 
-const PUZZLES: Record<string, Puzzle[]> = {
-  easy: [
-    {
-      id: 1,
-      boxes: [
-        { id: 'red', color: 'Red', size: 1 },
-        { id: 'blue', color: 'Blue', size: 2 },
-        { id: 'green', color: 'Green', size: 3 },
-      ],
-      clues: [
-        'The red box is the smallest.',
-        'The blue box is larger than the red box.',
-      ],
-    },
-    {
-      id: 2,
-      boxes: [
-        { id: 'yellow', color: 'Yellow', size: 1 },
-        { id: 'green', color: 'Green', size: 2 },
-        { id: 'blue', color: 'Blue', size: 3 },
-      ],
-      clues: [
-        'The green box is in the middle.',
-        'The yellow box is smaller than the green box.',
-      ],
-    },
-    {
-      id: 3,
-      boxes: [
-        { id: 'purple', color: 'Purple', size: 1 },
-        { id: 'orange', color: 'Orange', size: 2 },
-        { id: 'red', color: 'Red', size: 3 },
-      ],
-      clues: [
-        'The red box is the largest.',
-        'The purple box is not the largest.',
-      ],
-    },
-  ],
-  medium: [
-    {
-      id: 4,
-      boxes: [
-        { id: 'red', color: 'Red', size: 1 },
-        { id: 'blue', color: 'Blue', size: 2 },
-        { id: 'green', color: 'Green', size: 3 },
-        { id: 'yellow', color: 'Yellow', size: 4 },
-      ],
-      clues: [
-        'The yellow box is the largest.',
-        'The blue box is larger than the red box.',
-        'The green box is between blue and yellow.',
-      ],
-    },
-    {
-      id: 5,
-      boxes: [
-        { id: 'purple', color: 'Purple', size: 1 },
-        { id: 'orange', color: 'Orange', size: 2 },
-        { id: 'green', color: 'Green', size: 3 },
-        { id: 'blue', color: 'Blue', size: 4 },
-      ],
-      clues: [
-        'The purple box is the smallest.',
-        'The orange box is larger than purple but smaller than green.',
-        'The blue box is the largest.',
-      ],
-    },
-    {
-      id: 6,
-      boxes: [
-        { id: 'yellow', color: 'Yellow', size: 1 },
-        { id: 'red', color: 'Red', size: 2 },
-        { id: 'blue', color: 'Blue', size: 3 },
-        { id: 'green', color: 'Green', size: 4 },
-      ],
-      clues: [
-        'The yellow box is not the largest.',
-        'The green box is larger than the red box.',
-        'The blue box is between red and green.',
-      ],
-    },
-  ],
-  hard: [
-    {
-      id: 7,
-      boxes: [
-        { id: 'red', color: 'Red', size: 1 },
-        { id: 'blue', color: 'Blue', size: 2 },
-        { id: 'green', color: 'Green', size: 3 },
-        { id: 'yellow', color: 'Yellow', size: 4 },
-        { id: 'purple', color: 'Purple', size: 5 },
-      ],
-      clues: [
-        'The purple box is the largest.',
-        'The yellow box is larger than the green box.',
-        'The blue box is between red and green.',
-        'The yellow box is not the second largest.',
-      ],
-    },
-    {
-      id: 8,
-      boxes: [
-        { id: 'orange', color: 'Orange', size: 1 },
-        { id: 'green', color: 'Green', size: 2 },
-        { id: 'blue', color: 'Blue', size: 3 },
-        { id: 'red', color: 'Red', size: 4 },
-        { id: 'yellow', color: 'Yellow', size: 5 },
-      ],
-      clues: [
-        'The orange box is the smallest.',
-        'The red box is larger than the blue box.',
-        'The yellow box is the largest.',
-        'The green box is between orange and blue.',
-      ],
-    },
-    {
-      id: 9,
-      boxes: [
-        { id: 'red', color: 'Red', size: 1 },
-        { id: 'purple', color: 'Purple', size: 2 },
-        { id: 'blue', color: 'Blue', size: 3 },
-        { id: 'green', color: 'Green', size: 4 },
-        { id: 'orange', color: 'Orange', size: 5 },
-      ],
-      clues: [
-        'The red box is the smallest.',
-        'The green box is larger than the blue box.',
-        'The orange box is the largest.',
-        'The purple box is between red and blue.',
-      ],
-    },
-  ],
-}
+const LEVELS = [
+  { boxCount: 3, clueCount: 2 },
+  { boxCount: 3, clueCount: 2 },
+  { boxCount: 3, clueCount: 2 },
+  { boxCount: 4, clueCount: 3 },
+  { boxCount: 4, clueCount: 3 },
+  { boxCount: 4, clueCount: 3 },
+  { boxCount: 5, clueCount: 4 },
+  { boxCount: 5, clueCount: 4 },
+  { boxCount: 5, clueCount: 4 },
+  { boxCount: 5, clueCount: 4 },
+]
+
+const MAX_LEVELS = 10
 
 export default function LogicPuzzlePage() {
   const { t } = useTranslation()
-  const { currentDifficulty, addSession } = useGameStore()
+  const { addSession } = useGameStore()
 
   const [gameState, setGameState] = useState<'menu' | 'playing' | 'result'>('menu')
-  const [currentPuzzleIndex, setCurrentPuzzleIndex] = useState(0)
+  const [level, setLevel] = useState(1)
+  const [totalScore, setTotalScore] = useState(0)
   const [userBoxes, setUserBoxes] = useState<Box[]>([])
   const [puzzle, setPuzzle] = useState<Puzzle | null>(null)
   const [attempts, setAttempts] = useState(0)
   const [showAnswer, setShowAnswer] = useState(false)
   const [isCorrect, setIsCorrect] = useState(false)
 
-  const puzzles = PUZZLES[currentDifficulty] || PUZZLES.easy
+  const settings = LEVELS[Math.min(level - 1, LEVELS.length - 1)]
+
+  const generatePuzzle = () => {
+    const shuffledColors = [...COLORS].sort(() => Math.random() - 0.5)
+    const selectedColors = shuffledColors.slice(0, settings.boxCount)
+    const sizes = Array.from({ length: settings.boxCount }, (_, i) => i + 1)
+      .sort(() => Math.random() - 0.5)
+
+    const boxes = selectedColors.map((color, i) => ({
+      id: color.name.toLowerCase(),
+      color: color.name,
+      size: sizes[i],
+    }))
+
+    // Generate clues based on the actual solution
+    const clues: string[] = []
+    const sortedBoxes = [...boxes].sort((a, b) => a.size - b.size)
+
+    // Add variety of clue types
+    if (settings.clueCount >= 1) {
+      clues.push(`The ${sortedBoxes[0].color.toLowerCase()} box is smallest.`)
+    }
+    if (settings.clueCount >= 2) {
+      clues.push(`The ${sortedBoxes[sortedBoxes.length - 1].color.toLowerCase()} box is largest.`)
+    }
+    if (settings.clueCount >= 3) {
+      const midIndex = Math.floor(sortedBoxes.length / 2)
+      clues.push(`The ${sortedBoxes[midIndex].color.toLowerCase()} box is in the middle.`)
+    }
+    if (settings.clueCount >= 4) {
+      const largerIndex = Math.floor(Math.random() * (sortedBoxes.length - 1))
+      clues.push(`The ${sortedBoxes[largerIndex + 1].color.toLowerCase()} box is larger than the ${sortedBoxes[largerIndex].color.toLowerCase()} box.`)
+    }
+
+    return { id: level, boxes, clues }
+  }
 
   const startGame = () => {
-    const puzzle = puzzles[currentPuzzleIndex]
-    // Shuffle the boxes for the user
-    const shuffledBoxes = [...puzzle.boxes].sort(() => Math.random() - 0.5)
-    setPuzzle(puzzle)
-    setUserBoxes(shuffledBoxes)
+    setLevel(1)
+    setTotalScore(0)
+    startLevel()
+  }
+
+  const startLevel = () => {
+    const newPuzzle = generatePuzzle()
+    setPuzzle(newPuzzle)
+    setUserBoxes([...newPuzzle.boxes].sort(() => Math.random() - 0.5))
     setAttempts(0)
     setShowAnswer(false)
     setIsCorrect(false)
     setGameState('playing')
   }
 
-  const nextPuzzle = () => {
-    const nextIndex = (currentPuzzleIndex + 1) % puzzles.length
-    setCurrentPuzzleIndex(nextIndex)
-    startGame()
+  const nextLevel = () => {
+    if (level >= MAX_LEVELS) {
+      addSession({
+        id: Date.now().toString(),
+        gameId: 'logic-puzzle',
+        difficulty: 'hard',
+        score: totalScore,
+        completedAt: new Date(),
+        durationSeconds: 0
+      })
+      setGameState('result')
+    } else {
+      setLevel(prev => prev + 1)
+      setGameState('menu')
+      setTimeout(() => startLevel(), 100)
+    }
   }
 
   const handleDragStart = (e: any, index: number) => {
@@ -204,6 +136,8 @@ export default function LogicPuzzlePage() {
 
   const handleDrop = (e: any, dropIndex: number) => {
     e.preventDefault()
+    if (showAnswer) return
+
     const dragIndex = parseInt(e.dataTransfer.getData('text/plain'))
 
     if (dragIndex === dropIndex) return
@@ -227,22 +161,16 @@ export default function LogicPuzzlePage() {
     setAttempts(attempts + 1)
 
     // Calculate score (100 base - 10 per attempt, minimum 10)
-    const score = Math.max(10, 100 - (attempts * 10))
+    const levelScore = Math.max(10, 100 - (attempts * 10))
 
-    addSession({
-      id: Date.now().toString(),
-      gameId: 'logic-puzzle',
-      difficulty: currentDifficulty,
-      score: isCorrect ? score : 0,
-      completedAt: new Date(),
-      durationSeconds: 60
-    })
+    if (isCorrect) {
+      setTotalScore(prev => prev + levelScore)
+    }
   }
 
   const resetPuzzle = () => {
     if (!puzzle) return
-    const shuffledBoxes = [...puzzle.boxes].sort(() => Math.random() - 0.5)
-    setUserBoxes(shuffledBoxes)
+    setUserBoxes([...puzzle.boxes].sort(() => Math.random() - 0.5))
     setAttempts(0)
     setShowAnswer(false)
     setIsCorrect(false)
@@ -255,18 +183,18 @@ export default function LogicPuzzlePage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-blue-50 p-4 md:p-8">
       <div className="max-w-2xl mx-auto">
-        {/* Back button */}
+        {/* Header */}
         <Link
           href="/logic"
-          className="inline-flex items-center text-gray-600 hover:text-gray-900 mb-6 text-lg"
+          className="inline-flex items-center text-gray-700 hover:text-gray-900 font-medium mb-6 text-lg"
         >
-          <span className="mr-2">←</span> {t('back')}
+          <span className="mr-2">←</span> {t('back', 'Back')}
         </Link>
 
-        <h1 className="text-4xl md:text-5xl font-bold text-gray-800 mb-2">
+        <h1 className="text-3xl md:text-4xl font-bold text-gray-800 mb-2">
           {t('logicPuzzle.title', 'Logic Puzzle')}
         </h1>
-        <p className="text-xl text-gray-600 mb-8">
+        <p className="text-lg text-gray-700 font-medium mb-8">
           {t('logicPuzzle.description', 'Use clues to arrange boxes from smallest to largest!')}
         </p>
 
@@ -277,24 +205,27 @@ export default function LogicPuzzlePage() {
             animate={{ opacity: 1, y: 0 }}
             className="bg-white rounded-2xl shadow-lg p-8 text-center"
           >
-            <h2 className="text-3xl font-bold text-gray-800 mb-4">
-              {t('logicPuzzle.ready', 'Ready for a challenge?')}
+            <h2 className="text-3xl font-bold text-gray-800 mb-2">
+              Level {level}
             </h2>
+            {level > 1 && (
+              <p className="text-lg text-gray-700 mb-4 font-medium">
+                Total Score: <span className="text-green-600 font-bold">{totalScore}</span>
+              </p>
+            )}
             <p className="text-lg text-gray-600 mb-6">
-              {t('logicPuzzle.instructions', 'Read the clues, then drag the boxes to arrange them from smallest to largest.')}
+              {t('logicPuzzle.instructions', 'Read the clues, then drag boxes to arrange them from smallest to largest.')}
             </p>
             <div className="bg-green-50 rounded-xl p-4 mb-6 text-left">
-              <h3 className="font-bold text-gray-800 mb-2">
-                {t('logicPuzzle.example', 'Example Clues:')}
-              </h3>
-              <ul className="space-y-1 text-gray-700">
-                <li>1. {t('logicPuzzle.exampleClue1', 'The red box is the smallest.')}</li>
-                <li>2. {t('logicPuzzle.exampleClue2', 'The blue box is larger than the red box.')}</li>
+              <h3 className="font-bold text-gray-800 mb-2">{t('logicPuzzle.levelInfo', 'Level Settings')}:</h3>
+              <ul className="text-gray-700 space-y-1 font-medium">
+                <li>• {t('logicPuzzle.boxes', 'Boxes')}: {settings.boxCount}</li>
+                <li>• {t('logicPuzzle.clues', 'Clues')}: {settings.clueCount}</li>
               </ul>
             </div>
             <button
-              onClick={startGame}
-              className="bg-gradient-to-r from-green-500 to-blue-500 text-white text-2xl font-bold py-4 px-12 rounded-xl hover:from-green-600 hover:to-blue-600 shadow-lg transition-all"
+              onClick={startLevel}
+              className="bg-gradient-to-r from-green-500 to-blue-500 text-white text-2xl font-bold py-4 px-12 rounded-xl hover:from-green-600 hover:to-blue-600 shadow-lg transition-all w-full"
             >
               {t('start', 'Start')}
             </button>
@@ -304,6 +235,32 @@ export default function LogicPuzzlePage() {
         {/* Playing */}
         {gameState === 'playing' && puzzle && (
           <>
+            {/* Stats */}
+            <div className="bg-white rounded-2xl shadow-lg p-4 mb-6">
+              <div className="flex justify-around text-center">
+                <div>
+                  <p className="text-gray-700 text-sm font-medium">{t('logicPuzzle.level', 'Level')}</p>
+                  <p className="text-3xl font-bold text-green-600">{level}/{MAX_LEVELS}</p>
+                </div>
+                <div>
+                  <p className="text-gray-700 text-sm font-medium">{t('logicPuzzle.score', 'Score')}</p>
+                  <p className="text-3xl font-bold text-blue-600">{totalScore}</p>
+                </div>
+                <div>
+                  <p className="text-gray-700 text-sm font-medium">{t('logicPuzzle.attempts', 'Attempts')}</p>
+                  <p className="text-3xl font-bold text-green-600">{attempts}</p>
+                </div>
+              </div>
+              {/* Progress Bar */}
+              <div className="mt-4 bg-gray-200 rounded-full h-3 overflow-hidden">
+                <motion.div
+                  initial={{ width: 0 }}
+                  animate={{ width: `${((level - 1) / MAX_LEVELS) * 100}%` }}
+                  className="bg-gradient-to-r from-green-500 to-blue-500 h-full"
+                />
+              </div>
+            </div>
+
             {/* Clues */}
             <div className="bg-white rounded-2xl shadow-lg p-6 mb-6">
               <h2 className="text-2xl font-bold text-gray-800 mb-4">
@@ -327,17 +284,13 @@ export default function LogicPuzzlePage() {
                 <h2 className="text-2xl font-bold text-gray-800">
                   {t('logicPuzzle.boxes', 'Boxes')}
                 </h2>
-                <div className="flex items-center gap-4">
-                  <span className="text-lg text-gray-600">
-                    {t('logicPuzzle.attempts', 'Attempts')}: {attempts}
-                  </span>
-                  <button
-                    onClick={resetPuzzle}
-                    className="bg-gray-200 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-300 transition-all"
-                  >
-                    {t('logicPuzzle.reset', 'Reset')}
-                  </button>
-                </div>
+                <button
+                  onClick={resetPuzzle}
+                  disabled={showAnswer}
+                  className="bg-gray-200 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-300 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {t('logicPuzzle.reset', 'Reset')}
+                </button>
               </div>
 
               <div className="space-y-3">
@@ -353,7 +306,7 @@ export default function LogicPuzzlePage() {
                       initial={{ opacity: 0, x: -20 }}
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ delay: index * 0.1 }}
-                      className={`${colorInfo.bg} ${colorInfo.border} border-4 rounded-xl p-6 flex items-center justify-between cursor-move ${showAnswer ? 'cursor-not-allowed opacity-60' : 'hover:scale-102'} transition-all`}
+                      className={`${colorInfo.bg} ${colorInfo.border} border-4 rounded-xl p-6 flex items-center justify-between ${showAnswer ? 'cursor-not-allowed opacity-60' : 'cursor-move hover:scale-102'} transition-all`}
                     >
                       <div className="flex items-center gap-4">
                         <div className={`${colorInfo.bg} rounded-full w-12 h-12 flex items-center justify-center text-2xl font-bold`}>
@@ -402,11 +355,11 @@ export default function LogicPuzzlePage() {
                       ? t('logicPuzzle.correct', 'Correct!')
                       : t('logicPuzzle.incorrect', 'Not quite right!')}
                   </h3>
-                  <p className="text-xl text-gray-700 mt-2">
-                    {isCorrect
-                      ? t('logicPuzzle.correctMessage', `You solved it in ${attempts} attempt${attempts > 1 ? 's' : ''}!`)
-                      : t('logicPuzzle.incorrectMessage', 'Try again or see the correct answer below.')}
-                  </p>
+                  {isCorrect && (
+                    <p className="text-xl text-gray-700 mt-2">
+                      {t('logicPuzzle.levelScore', 'Level Score')}: <span className="font-bold text-green-600">{Math.max(10, 100 - ((attempts - 1) * 10))}</span>
+                    </p>
+                  )}
                 </div>
 
                 {!isCorrect && (
@@ -429,22 +382,51 @@ export default function LogicPuzzlePage() {
                 )}
 
                 <div className="flex gap-3">
-                  <button
-                    onClick={resetPuzzle}
-                    className="flex-1 bg-gray-200 text-gray-700 text-xl font-bold py-3 rounded-lg hover:bg-gray-300 transition-all"
-                  >
-                    {t('logicPuzzle.tryAgain', 'Try Again')}
-                  </button>
-                  <button
-                    onClick={nextPuzzle}
-                    className="flex-1 bg-gradient-to-r from-green-500 to-blue-500 text-white text-xl font-bold py-3 rounded-lg hover:from-green-600 hover:to-blue-600 transition-all"
-                  >
-                    {t('logicPuzzle.nextPuzzle', 'Next Puzzle')}
-                  </button>
+                  {!isCorrect && (
+                    <button
+                      onClick={resetPuzzle}
+                      className="flex-1 bg-gray-200 text-gray-700 text-xl font-bold py-3 rounded-lg hover:bg-gray-300 transition-all"
+                    >
+                      {t('logicPuzzle.tryAgain', 'Try Again')}
+                    </button>
+                  )}
+                  {isCorrect && (
+                    <button
+                      onClick={nextLevel}
+                      className="flex-1 bg-gradient-to-r from-green-500 to-blue-500 text-white text-xl font-bold py-3 rounded-lg hover:from-green-600 hover:to-blue-600 transition-all"
+                    >
+                      {level < MAX_LEVELS ? `Next Level ${level + 1}` : 'View Final Score'}
+                    </button>
+                  )}
                 </div>
               </motion.div>
             )}
           </>
+        )}
+
+        {/* Result (All levels complete) */}
+        {gameState === 'result' && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="bg-white rounded-2xl shadow-lg p-8 text-center"
+          >
+            <div className="text-6xl mb-4">🎉</div>
+            <h2 className="text-4xl font-bold text-green-600 mb-4">{t('logicPuzzle.victory', 'Congratulations!')}</h2>
+            <p className="text-xl text-gray-700 font-medium mb-6">
+              {t('logicPuzzle.victoryMessage', 'You completed all {count} levels!', { count: MAX_LEVELS })}
+            </p>
+            <div className="bg-green-50 rounded-xl p-6 mb-6">
+              <p className="text-gray-700 text-sm font-medium">{t('logicPuzzle.finalScore', 'Final Score')}</p>
+              <p className="text-5xl font-bold text-green-600">{totalScore}</p>
+            </div>
+            <button
+              onClick={startGame}
+              className="bg-gradient-to-r from-green-500 to-blue-500 text-white text-2xl font-bold py-4 px-12 rounded-xl hover:from-green-600 hover:to-blue-600 shadow-lg transition-all w-full"
+            >
+              {t('playAgain', 'Play Again')}
+            </button>
+          </motion.div>
         )}
       </div>
     </div>

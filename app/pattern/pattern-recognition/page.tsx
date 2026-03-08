@@ -39,21 +39,42 @@ const SIZE_MAP: Record<'small' | 'medium' | 'large', string> = {
   large: 'w-20 h-20 md:w-24 md:h-24',
 }
 
+const MAX_LEVELS = 10
+
+const LEVEL_SETTINGS = [
+  { patternLength: 3, questions: 5, timePerQuestion: 30, shapes: 3, colors: 3 },  // Level 1
+  { patternLength: 3, questions: 5, timePerQuestion: 28, shapes: 3, colors: 4 },  // Level 2
+  { patternLength: 3, questions: 5, timePerQuestion: 26, shapes: 4, colors: 4 },  // Level 3
+  { patternLength: 4, questions: 6, timePerQuestion: 24, shapes: 4, colors: 4 },  // Level 4
+  { patternLength: 4, questions: 6, timePerQuestion: 22, shapes: 4, colors: 5 },  // Level 5
+  { patternLength: 4, questions: 7, timePerQuestion: 20, shapes: 4, colors: 5 },  // Level 6
+  { patternLength: 5, questions: 7, timePerQuestion: 18, shapes: 4, colors: 6 },  // Level 7
+  { patternLength: 5, questions: 8, timePerQuestion: 16, shapes: 4, colors: 6 },  // Level 8
+  { patternLength: 5, questions: 9, timePerQuestion: 15, shapes: 4, colors: 6 },  // Level 9
+  { patternLength: 5, questions: 10, timePerQuestion: 14, shapes: 4, colors: 6 }, // Level 10
+]
+
 export default function PatternRecognitionPage() {
   const { t } = useTranslation()
-  const { currentDifficulty, addSession } = useGameStore()
+  const { addSession } = useGameStore()
 
-  const [gameState, setGameState] = useState<'menu' | 'playing' | 'result'>('menu')
+  const [gameState, setGameState] = useState<'menu' | 'playing' | 'result' | 'victory'>('menu')
   const [pattern, setPattern] = useState<PatternItem[]>([])
   const [patternType, setPatternType] = useState<PatternType>('color')
   const [options, setOptions] = useState<PatternItem[]>([])
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null)
   const [correctIndex, setCorrectIndex] = useState<number | null>(null)
   const [score, setScore] = useState(0)
+  const [totalScore, setTotalScore] = useState(0)
   const [questionNumber, setQuestionNumber] = useState(0)
-  const totalQuestions = currentDifficulty === 'easy' ? 5 : currentDifficulty === 'medium' ? 8 : 10
+  const [level, setLevel] = useState(1)
+  const [timeLeft, setTimeLeft] = useState(0)
 
-  const getShapeComponent = (item: PatternItem, index?: number) => {
+  const settings = LEVEL_SETTINGS[Math.min(level - 1, LEVEL_SETTINGS.length - 1)]
+  const levelShapes = SHAPES.slice(0, settings.shapes)
+  const levelColors = COLORS.slice(0, settings.colors)
+
+  const getShapeComponent = (item: PatternItem) => {
     const sizeClass = SIZE_MAP[item.size]
     const colorClass = COLOR_MAP[item.color]
 
@@ -65,7 +86,7 @@ export default function PatternRecognitionPage() {
       case 'triangle':
         return (
           <div
-            className={`${sizeClass}`}
+            className={sizeClass}
             style={{
               width: '0',
               height: '0',
@@ -94,14 +115,14 @@ export default function PatternRecognitionPage() {
     const type = PATTERN_TYPES[Math.floor(Math.random() * PATTERN_TYPES.length)]
     setPatternType(type)
 
-    const length = currentDifficulty === 'easy' ? 3 : currentDifficulty === 'medium' ? 4 : 5
+    const length = settings.patternLength
     const newPattern: PatternItem[] = []
 
     // Start with random items
     for (let i = 0; i < length; i++) {
       newPattern.push({
-        shape: SHAPES[Math.floor(Math.random() * SHAPES.length)],
-        color: COLORS[Math.floor(Math.random() * COLORS.length)],
+        shape: levelShapes[Math.floor(Math.random() * levelShapes.length)],
+        color: levelColors[Math.floor(Math.random() * levelColors.length)],
         size: SIZES[Math.floor(Math.random() * SIZES.length)],
         position: POSITIONS[Math.floor(Math.random() * POSITIONS.length)],
       })
@@ -111,15 +132,14 @@ export default function PatternRecognitionPage() {
     const baseIndex = Math.floor(Math.random() * (newPattern.length - 1))
     const nextIndex = baseIndex + 1
 
-    // Determine the pattern and apply it
     const cycle = (arr: any[], index: number) => arr[(index + 1) % arr.length]
 
     switch (type) {
       case 'color':
-        newPattern[nextIndex].color = cycle(COLORS, COLORS.indexOf(newPattern[baseIndex].color))
+        newPattern[nextIndex].color = cycle(levelColors, levelColors.indexOf(newPattern[baseIndex].color))
         break
       case 'shape':
-        newPattern[nextIndex].shape = cycle(SHAPES, SHAPES.indexOf(newPattern[baseIndex].shape))
+        newPattern[nextIndex].shape = cycle(levelShapes, levelShapes.indexOf(newPattern[baseIndex].shape))
         break
       case 'size':
         newPattern[nextIndex].size = cycle(SIZES, SIZES.indexOf(newPattern[baseIndex].size))
@@ -133,10 +153,10 @@ export default function PatternRecognitionPage() {
     for (let i = nextIndex + 1; i < length; i++) {
       switch (type) {
         case 'color':
-          newPattern[i].color = cycle(COLORS, COLORS.indexOf(newPattern[i - 1].color))
+          newPattern[i].color = cycle(levelColors, levelColors.indexOf(newPattern[i - 1].color))
           break
         case 'shape':
-          newPattern[i].shape = cycle(SHAPES, SHAPES.indexOf(newPattern[i - 1].shape))
+          newPattern[i].shape = cycle(levelShapes, levelShapes.indexOf(newPattern[i - 1].shape))
           break
         case 'size':
           newPattern[i].size = cycle(SIZES, SIZES.indexOf(newPattern[i - 1].size))
@@ -148,7 +168,7 @@ export default function PatternRecognitionPage() {
     }
 
     return { pattern: newPattern, type }
-  }, [currentDifficulty])
+  }, [settings, levelShapes, levelColors])
 
   const generateOptions = useCallback((correctItem: PatternItem, type: PatternType): PatternItem[] => {
     const options: PatternItem[] = [correctItem]
@@ -158,10 +178,10 @@ export default function PatternRecognitionPage() {
 
       switch (type) {
         case 'color':
-          wrongItem.color = COLORS[Math.floor(Math.random() * COLORS.length)]
+          wrongItem.color = levelColors[Math.floor(Math.random() * levelColors.length)]
           break
         case 'shape':
-          wrongItem.shape = SHAPES[Math.floor(Math.random() * SHAPES.length)]
+          wrongItem.shape = levelShapes[Math.floor(Math.random() * levelShapes.length)]
           break
         case 'size':
           wrongItem.size = SIZES[Math.floor(Math.random() * SIZES.length)]
@@ -171,7 +191,6 @@ export default function PatternRecognitionPage() {
           break
       }
 
-      // Check if this option already exists
       const exists = options.some(
         opt =>
           opt.shape === wrongItem.shape &&
@@ -180,15 +199,18 @@ export default function PatternRecognitionPage() {
           opt.position === wrongItem.position
       )
 
-      if (!exists && wrongItem.color !== correctItem.color && wrongItem.shape !== correctItem.shape &&
-          wrongItem.size !== correctItem.size && wrongItem.position !== correctItem.position) {
+      if (!exists && (
+        wrongItem.color !== correctItem.color ||
+        wrongItem.shape !== correctItem.shape ||
+        wrongItem.size !== correctItem.size ||
+        wrongItem.position !== correctItem.position
+      )) {
         options.push(wrongItem)
       }
     }
 
-    // Shuffle options
     return options.sort(() => Math.random() - 0.5)
-  }, [])
+  }, [levelColors, levelShapes])
 
   const getNextItem = (pattern: PatternItem[], type: PatternType): PatternItem => {
     const lastItem = pattern[pattern.length - 1]
@@ -198,10 +220,10 @@ export default function PatternRecognitionPage() {
 
     switch (type) {
       case 'color':
-        nextItem.color = cycle(COLORS, COLORS.indexOf(lastItem.color))
+        nextItem.color = cycle(levelColors, levelColors.indexOf(lastItem.color))
         break
       case 'shape':
-        nextItem.shape = cycle(SHAPES, SHAPES.indexOf(lastItem.shape))
+        nextItem.shape = cycle(levelShapes, levelShapes.indexOf(lastItem.shape))
         break
       case 'size':
         nextItem.size = cycle(SIZES, SIZES.indexOf(lastItem.size))
@@ -215,10 +237,16 @@ export default function PatternRecognitionPage() {
   }
 
   const startGame = () => {
+    setLevel(1)
+    setTotalScore(0)
+    startLevel()
+  }
+
+  const startLevel = () => {
     setScore(0)
     setQuestionNumber(0)
+    setTimeLeft(settings.questions * settings.timePerQuestion)
     startQuestion()
-    setGameState('playing')
   }
 
   const startQuestion = () => {
@@ -246,20 +274,31 @@ export default function PatternRecognitionPage() {
     const isCorrect = index === correctIndex
 
     if (isCorrect) {
-      setScore(prev => prev + 1)
+      setScore(prev => prev + 10)
     }
 
     setTimeout(() => {
-      if (questionNumber + 1 >= totalQuestions) {
-        addSession({
-          id: Date.now().toString(),
-          gameId: 'pattern-recognition',
-          difficulty: currentDifficulty,
-          score: score + (isCorrect ? 1 : 0),
-          completedAt: new Date(),
-          durationSeconds: 60
-        })
-        setGameState('result')
+      if (questionNumber + 1 >= settings.questions) {
+        if (score + (isCorrect ? 10 : 0) >= settings.questions * 5) {
+          setTotalScore(prev => prev + score + (isCorrect ? 10 : 0))
+          if (level >= MAX_LEVELS) {
+            addSession({
+              id: Date.now().toString(),
+              gameId: 'pattern-recognition',
+              difficulty: 'hard',
+              score: totalScore + score + (isCorrect ? 10 : 0),
+              completedAt: new Date(),
+              durationSeconds: 0
+            })
+            setGameState('victory')
+          } else {
+            setLevel(prev => prev + 1)
+            setGameState('menu')
+            setTimeout(() => startLevel(), 100)
+          }
+        } else {
+          setGameState('result')
+        }
       } else {
         setQuestionNumber(prev => prev + 1)
         startQuestion()
@@ -283,48 +322,87 @@ export default function PatternRecognitionPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-cyan-50 via-white to-amber-50 p-4 md:p-8">
       <div className="max-w-4xl mx-auto">
-        {/* Back button */}
+        {/* Header */}
         <Link
           href="/pattern"
-          className="inline-flex items-center text-gray-600 hover:text-gray-900 mb-6 text-lg"
+          className="inline-flex items-center text-gray-700 hover:text-gray-900 font-medium mb-6 text-lg"
         >
-          <span className="mr-2">←</span> {t('back')}
+          <span className="mr-2">←</span> {t('back', 'Back')}
         </Link>
 
-        <h1 className="text-4xl md:text-5xl font-bold text-gray-800 mb-2">
+        <h1 className="text-3xl md:text-4xl font-bold text-gray-800 mb-2">
           {t('patternRecognition.title', 'Pattern Recognition')}
         </h1>
-        <p className="text-xl text-gray-600 mb-8">
+        <p className="text-lg text-gray-700 font-medium mb-8">
           {t('patternRecognition.description', 'Identify the pattern and find what comes next!')}
         </p>
 
-        {/* Score display */}
-        {gameState !== 'menu' && (
-          <div className="bg-white rounded-2xl shadow-lg p-6 mb-8">
-            <div className="flex justify-around text-center">
-              <div>
-                <p className="text-gray-600 text-lg mb-1">{t('patternRecognition.question', 'Question')}</p>
-                <p className="text-4xl font-bold text-cyan-600">
-                  {questionNumber + 1}/{totalQuestions}
-                </p>
-              </div>
-              <div>
-                <p className="text-gray-600 text-lg mb-1">{t('patternRecognition.score', 'Score')}</p>
-                <p className="text-4xl font-bold text-amber-600">
-                  {score}
-                </p>
-              </div>
+        {/* Menu */}
+        {gameState === 'menu' && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="bg-white rounded-2xl shadow-lg p-8 text-center"
+          >
+            <h2 className="text-3xl font-bold text-gray-800 mb-2">
+              Level {level}
+            </h2>
+            {level > 1 && (
+              <p className="text-lg text-gray-700 mb-4 font-medium">
+                Total Score: <span className="text-cyan-600 font-bold">{totalScore}</span>
+              </p>
+            )}
+            <div className="bg-cyan-50 rounded-xl p-4 mb-6 text-left">
+              <h3 className="font-bold text-gray-800 mb-2">Level Settings:</h3>
+              <ul className="text-gray-700 space-y-1 font-medium">
+                <li>• Pattern Length: {settings.patternLength}</li>
+                <li>• Questions: {settings.questions}</li>
+                <li>• Shapes: {settings.shapes}</li>
+                <li>• Colors: {settings.colors}</li>
+              </ul>
             </div>
-          </div>
+            <button
+              onClick={startLevel}
+              className="bg-gradient-to-r from-cyan-500 to-amber-500 text-white text-2xl font-bold py-4 px-12 rounded-xl hover:from-cyan-600 hover:to-amber-600 shadow-lg transition-all w-full"
+            >
+              {t('start', 'Start')}
+            </button>
+          </motion.div>
         )}
 
-        {/* Game Area */}
+        {/* Playing */}
         {gameState === 'playing' && (
           <>
+            {/* Stats */}
+            <div className="bg-white rounded-2xl shadow-lg p-4 mb-6">
+              <div className="flex justify-around text-center">
+                <div>
+                  <p className="text-gray-700 text-sm font-medium">Level</p>
+                  <p className="text-3xl font-bold text-cyan-600">{level}/{MAX_LEVELS}</p>
+                </div>
+                <div>
+                  <p className="text-gray-700 text-sm font-medium">Question</p>
+                  <p className="text-3xl font-bold text-amber-600">{questionNumber + 1}/{settings.questions}</p>
+                </div>
+                <div>
+                  <p className="text-gray-700 text-sm font-medium">Score</p>
+                  <p className="text-3xl font-bold text-cyan-600">{score}</p>
+                </div>
+              </div>
+              {/* Progress Bar */}
+              <div className="mt-4 bg-gray-200 rounded-full h-3 overflow-hidden">
+                <motion.div
+                  initial={{ width: 0 }}
+                  animate={{ width: `${((questionNumber) / settings.questions) * 100}%` }}
+                  className="bg-gradient-to-r from-cyan-500 to-amber-500 h-full"
+                />
+              </div>
+            </div>
+
             {/* Pattern display */}
             <div className="bg-white rounded-2xl shadow-lg p-6 mb-6">
               <h2 className="text-2xl font-bold text-gray-800 mb-6 text-center">
-                {t('patternRecognition.completeThePattern', 'Complete the pattern:')}
+                Complete the pattern:
               </h2>
               <div className="flex justify-center items-center gap-4 md:gap-8 flex-wrap">
                 <AnimatePresence mode="popLayout">
@@ -357,7 +435,7 @@ export default function PatternRecognitionPage() {
             {/* Options */}
             <div className="bg-white rounded-2xl shadow-lg p-6 mb-6">
               <h3 className="text-xl font-bold text-gray-800 mb-4 text-center">
-                {t('patternRecognition.whatsNext', 'What comes next?')}
+                What comes next?
               </h3>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 {options.map((option, index) => (
@@ -395,9 +473,7 @@ export default function PatternRecognitionPage() {
                 }`}
               >
                 <p className="text-xl font-bold mb-2">
-                  {selectedIndex === correctIndex
-                    ? t('patternRecognition.correct', 'Correct!')
-                    : t('patternRecognition.incorrect', 'Incorrect')}
+                  {selectedIndex === correctIndex ? 'Correct!' : 'Incorrect'}
                 </p>
                 <p className="text-lg">
                   {getPatternExplanation(patternType)}
@@ -407,52 +483,48 @@ export default function PatternRecognitionPage() {
           </>
         )}
 
-        {/* Menu */}
-        {gameState === 'menu' && (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="bg-white rounded-2xl shadow-lg p-8 text-center"
-          >
-            <h2 className="text-3xl font-bold text-gray-800 mb-4">
-              {t('patternRecognition.ready', 'Ready to test your pattern recognition?')}
-            </h2>
-            <p className="text-lg text-gray-600 mb-6">
-              {t('patternRecognition.instructions', 'Watch the sequence and identify what comes next!')}
-            </p>
-            <button
-              onClick={startGame}
-              className="bg-gradient-to-r from-cyan-500 to-amber-500 text-white text-2xl font-bold py-4 px-12 rounded-xl hover:from-cyan-600 hover:to-amber-600 shadow-lg transition-all"
-            >
-              {t('start', 'Start')}
-            </button>
-          </motion.div>
-        )}
-
-        {/* Results */}
+        {/* Result (Level Failed) */}
         {gameState === 'result' && (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             className="bg-white rounded-2xl shadow-lg p-8 text-center"
           >
-            <h2 className="text-3xl font-bold text-gray-800 mb-4">
-              {t('patternRecognition.results', 'Results')}
-            </h2>
-            <p className="text-lg text-gray-600 mb-2">
-              {t('patternRecognition.finalScore', 'Your score:')}
-            </p>
-            <p className="text-6xl font-bold text-cyan-600 mb-4">
-              {score}/{totalQuestions}
-            </p>
-            <p className="text-2xl text-gray-700 mb-6">
-              {t('patternRecognition.accuracy', 'Accuracy')}: {Math.round((score / totalQuestions) * 100)}%
+            <div className="text-6xl mb-4">😔</div>
+            <h2 className="text-4xl font-bold text-gray-800 mb-4">Level {level} Failed</h2>
+            <p className="text-xl text-gray-700 font-medium mb-6">
+              You got {score} out of {settings.questions * 10} points needed
             </p>
             <button
-              onClick={startGame}
-              className="bg-gradient-to-r from-cyan-500 to-amber-500 text-white text-2xl font-bold py-4 px-12 rounded-xl hover:from-cyan-600 hover:to-amber-600 shadow-lg transition-all"
+              onClick={startLevel}
+              className="bg-gradient-to-r from-orange-500 to-red-500 text-white text-2xl font-bold py-4 px-12 rounded-xl hover:from-orange-600 hover:to-red-600 shadow-lg transition-all w-full"
             >
-              {t('playAgain', 'Play Again')}
+              Try Again
+            </button>
+          </motion.div>
+        )}
+
+        {/* Victory */}
+        {gameState === 'victory' && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="bg-white rounded-2xl shadow-lg p-8 text-center"
+          >
+            <div className="text-6xl mb-4">🎉</div>
+            <h2 className="text-4xl font-bold text-cyan-600 mb-4">Congratulations!</h2>
+            <p className="text-xl text-gray-700 font-medium mb-6">
+              You completed all {MAX_LEVELS} levels!
+            </p>
+            <div className="bg-cyan-50 rounded-xl p-6 mb-6">
+              <p className="text-gray-700 text-sm font-medium">Final Score</p>
+              <p className="text-5xl font-bold text-cyan-600">{totalScore}</p>
+            </div>
+            <button
+              onClick={startGame}
+              className="bg-gradient-to-r from-cyan-500 to-amber-500 text-white text-2xl font-bold py-4 px-12 rounded-xl hover:from-cyan-600 hover:to-amber-600 shadow-lg transition-all w-full"
+            >
+              Play Again
             </button>
           </motion.div>
         )}
