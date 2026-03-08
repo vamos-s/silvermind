@@ -7,6 +7,7 @@ import Link from 'next/link'
 const games = [
   { id: 'timing-game', icon: '⏱️', title: 'Timing Game', description: 'Click when the color changes' },
   { id: 'target-detection', icon: '🎯', title: 'Target Detection', description: 'Find the targets quickly' },
+  { id: 'color-match', icon: '🌈', title: 'Color Match', description: 'Match the color or word' },
 ]
 
 export default function ReactionPage() {

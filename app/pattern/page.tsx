@@ -6,6 +6,7 @@ import Link from 'next/link'
 
 const games = [
   { id: 'sequence-completion', icon: '📊', title: 'Sequence Completion', description: 'Complete the pattern' },
+  { id: 'pattern-recognition', icon: '🔷', title: 'Pattern Recognition', description: 'Identify what comes next' },
   { id: 'maze-navigation', icon: '🧩', title: 'Maze Navigation', description: 'Find your way through the maze' },
   { id: 'jigsaw-puzzle', icon: '🖼️', title: 'Jigsaw Puzzle', description: 'Arrange the pieces' },
 ]
