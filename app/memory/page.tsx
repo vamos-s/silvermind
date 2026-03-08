@@ -8,6 +8,7 @@ const games = [
   { id: 'pattern-matching', icon: '🎨', title: 'Pattern Matching', description: 'Remember and reproduce patterns' },
   { id: 'number-recall', icon: '🔢', title: 'Number Recall', description: 'Remember number sequences' },
   { id: 'sequence-memory', icon: '🔔', title: 'Sequence Memory', description: 'Watch and repeat the sequence' },
+  { id: 'word-recall', icon: '📝', title: 'Word Recall', description: 'Remember and type the words' },
   { id: 'location-memory', icon: '📍', title: 'Location Memory', description: 'Remember item positions' },
 ]
 
