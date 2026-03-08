@@ -37,20 +37,25 @@ export default function CardFlipPage() {
 
   const [gameState, setGameState] = useState<'menu' | 'preview' | 'playing' | 'victory' | 'gameover'>('menu')
   const [cards, setCards] = useState<Card[]>([])
-  const [flippedCards, setFlippedCards] = useState<number[]>([])
   const [moves, setMoves] = useState(0)
   const [matchedPairs, setMatchedPairs] = useState(0)
   const [timeLeft, setTimeLeft] = useState(0)
   const [totalPairs, setTotalPairs] = useState(0)
-  const [isChecking, setIsChecking] = useState(false)
+  const [previewCards, setPreviewCards] = useState<Card[]>([])
 
   const settings = DIFFICULTY_SETTINGS[currentDifficulty as keyof typeof DIFFICULTY_SETTINGS] || DIFFICULTY_SETTINGS.easy
   const multiplier = DIFFICULTY_MULTIPLIERS[currentDifficulty as keyof typeof DIFFICULTY_MULTIPLIERS] || 1
 
   const createCards = useCallback(() => {
     const emojiList = EMOJIS[currentDifficulty as keyof typeof EMOJIS] || EMOJIS.easy
-    const pairs = emojiList.slice(0, (settings.rows * settings.cols) / 2)
-    const allCards = [...pairs, ...pairs].map((emoji, index) => ({
+    const pairCount = (settings.rows * settings.cols) / 2
+    const emojis = emojiList.slice(0, pairCount)
+
+    // Create pairs (each emoji appears twice)
+    const cardEmojis = [...emojis, ...emojis]
+
+    // Create card objects
+    const allCards = cardEmojis.map((emoji, index) => ({
       id: index,
       emoji,
       isFlipped: false,
@@ -69,81 +74,90 @@ export default function CardFlipPage() {
   const startGame = useCallback(() => {
     const newCards = createCards()
     setCards(newCards)
-    setFlippedCards([])
+    setPreviewCards(newCards.map(card => ({ ...card, isFlipped: true })))
     setMoves(0)
     setMatchedPairs(0)
     setTimeLeft(settings.timeLimit)
     setTotalPairs(newCards.length / 2)
-    setIsChecking(false)
 
-    // Show all cards first
-    setCards(newCards.map(card => ({ ...card, isFlipped: true })))
     setGameState('preview')
 
     // Hide cards after 3 seconds and start the game
     setTimeout(() => {
-      setCards(prev => prev.map(card => ({ ...card, isFlipped: false })))
+      setCards(newCards.map(card => ({ ...card, isFlipped: false })))
+      setPreviewCards([])
       setGameState('playing')
     }, 3000)
   }, [createCards, settings])
 
   const flipCard = useCallback((cardId: number) => {
-    if (isChecking) return // Prevent clicking while checking a match
-    if (flippedCards.length >= 2) return
-    if (flippedCards.includes(cardId)) return // Can't click the same card twice
-    if (cards[cardId].isMatched) return
-    if (cards[cardId].isFlipped) return // Already flipped
+    const card = cards.find(c => c.id === cardId)
+    if (!card) return
+    if (card.isMatched) return
+    if (card.isFlipped) return
 
-    const newFlipped = [...flippedCards, cardId]
-    setFlippedCards(newFlipped)
+    // Flip the card
+    setCards(prev =>
+      prev.map(c =>
+        c.id === cardId ? { ...c, isFlipped: true } : c
+      )
+    )
 
-    if (newFlipped.length === 2) {
-      setIsChecking(true)
+    // Get currently flipped cards
+    const currentlyFlipped = cards.filter(c => c.isFlipped && !c.isMatched)
+    const flippedIds = [...currentlyFlipped.map(c => c.id), cardId]
+
+    if (flippedIds.length === 2) {
       setMoves(prev => prev + 1)
 
-      const [firstId, secondId] = newFlipped
-      const firstCard = cards[firstId]
-      const secondCard = cards[secondId]
+      const [firstId, secondId] = flippedIds
+      const firstCard = cards.find(c => c.id === firstId)!
+      const secondCard = cards.find(c => c.id === secondId)!
 
       if (firstCard.emoji === secondCard.emoji) {
-        // Match found
+        // Match found!
         setTimeout(() => {
           setCards(prev =>
-            prev.map(card =>
-              card.id === firstId || card.id === secondId
-                ? { ...card, isMatched: true, isFlipped: true }
-                : card
+            prev.map(c =>
+              c.id === firstId || c.id === secondId
+                ? { ...c, isMatched: true }
+                : c
             )
           )
-          setFlippedCards([])
-          setMatchedPairs(prev => prev + 1)
-          setIsChecking(false)
-
-          // Check for victory
-          if (matchedPairs + 1 === totalPairs) {
-            const score = Math.round(
-              ((1000 - moves * 10) * multiplier) + (timeLeft * multiplier)
-            )
-            addSession({
-              id: Date.now().toString(),
-              gameId: 'card-flip',
-              difficulty: currentDifficulty,
-              score: Math.max(score, 0),
-              completedAt: new Date(),
-              durationSeconds: settings.timeLimit - timeLeft
-            })
-            setGameState('victory')
-          }
+          setMatchedPairs(prev => {
+            const newCount = prev + 1
+            // Check for victory
+            if (newCount === totalPairs) {
+              const score = Math.round(
+                ((1000 - (moves + 1) * 10) * multiplier) + (timeLeft * multiplier)
+              )
+              addSession({
+                id: Date.now().toString(),
+                gameId: 'card-flip',
+                difficulty: currentDifficulty,
+                score: Math.max(score, 0),
+                completedAt: new Date(),
+                durationSeconds: settings.timeLimit - timeLeft
+              })
+              setGameState('victory')
+            }
+            return newCount
+          })
         }, 500)
       } else {
         // No match - flip back after delay
         setTimeout(() => {
-          setFlippedCards([])
-          setIsChecking(false)
+          setCards(prev =>
+            prev.map(c =>
+              c.id === firstId || c.id === secondId
+                ? { ...c, isFlipped: false }
+                : c
+            )
+          )
         }, 1000)
       }
     }
-  }, [flippedCards, cards, matchedPairs, totalPairs, timeLeft, currentDifficulty, multiplier, settings, addSession, isChecking])
+  }, [cards, moves, matchedPairs, totalPairs, timeLeft, currentDifficulty, multiplier, settings, addSession])
 
   useEffect(() => {
     let timer: NodeJS.Timeout | null = null
@@ -186,84 +200,82 @@ export default function CardFlipPage() {
         <header className="mb-6">
           <Link
             href="/memory"
-            className="inline-flex items-center text-gray-600 hover:text-gray-900 text-lg"
+            className="inline-flex items-center text-gray-700 hover:text-gray-900 text-lg font-medium"
           >
-            <span className="mr-2">←</span> {t('back')}
+            <span className="mr-2">←</span> {t('back', 'Back')}
           </Link>
           <h1 className="text-3xl md:text-4xl font-bold text-gray-800 mt-4">
             {t('cardFlip.title', 'Card Flip')}
           </h1>
-          <p className="text-lg text-gray-600">
+          <p className="text-lg text-gray-700 font-medium">
             {t('cardFlip.description', 'Match the pairs of cards!')}
           </p>
         </header>
 
         {/* Menu */}
-        {(gameState === 'menu' || gameState === 'preview') && (
+        {gameState === 'menu' && (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             className="bg-white rounded-2xl shadow-lg p-8 text-center"
           >
-            {gameState === 'menu' && (
-              <>
-                <h2 className="text-3xl font-bold text-gray-800 mb-4">
-                  {t('cardFlip.ready', 'Ready to test your memory?')}
-                </h2>
-                <p className="text-lg text-gray-600 mb-6">
-                  {t('cardFlip.instructions', 'Find all matching pairs of cards before time runs out!')}
-                </p>
-                <div className="bg-purple-50 rounded-xl p-4 mb-6 text-left">
-                  <h3 className="font-bold text-gray-800 mb-2">{t('cardFlip.difficultyInfo', 'Difficulty Settings')}:</h3>
-                  <ul className="text-gray-700 space-y-1">
-                    <li>• {t('cardFlip.gridSize', 'Grid')}: {settings.rows} × {settings.cols}</li>
-                    <li>• {t('cardFlip.pairs', 'Pairs')}: {(settings.rows * settings.cols) / 2}</li>
-                    <li>• {t('cardFlip.timeLimit', 'Time Limit')}: {Math.floor(settings.timeLimit / 60)}:{(settings.timeLimit % 60).toString().padStart(2, '0')}</li>
-                  </ul>
-                </div>
-                <button
-                  onClick={startGame}
-                  className="bg-gradient-to-r from-purple-500 to-pink-500 text-white text-2xl font-bold py-4 px-12 rounded-xl hover:from-purple-600 hover:to-pink-600 shadow-lg transition-all w-full"
-                >
-                  {t('start', 'Start')}
-                </button>
-              </>
-            )}
+            <h2 className="text-3xl font-bold text-gray-800 mb-4">
+              {t('cardFlip.ready', 'Ready to test your memory?')}
+            </h2>
+            <p className="text-lg text-gray-700 mb-6 font-medium">
+              {t('cardFlip.instructions', 'Find all matching pairs of cards before time runs out!')}
+            </p>
+            <div className="bg-purple-50 rounded-xl p-4 mb-6 text-left">
+              <h3 className="font-bold text-gray-800 mb-2">{t('cardFlip.difficultyInfo', 'Difficulty Settings')}:</h3>
+              <ul className="text-gray-700 space-y-1 font-medium">
+                <li>• {t('cardFlip.gridSize', 'Grid')}: {settings.rows} × {settings.cols}</li>
+                <li>• {t('cardFlip.pairs', 'Pairs')}: {(settings.rows * settings.cols) / 2}</li>
+                <li>• {t('cardFlip.timeLimit', 'Time Limit')}: {Math.floor(settings.timeLimit / 60)}:{(settings.timeLimit % 60).toString().padStart(2, '0')}</li>
+              </ul>
+            </div>
+            <button
+              onClick={startGame}
+              className="bg-gradient-to-r from-purple-500 to-pink-500 text-white text-2xl font-bold py-4 px-12 rounded-xl hover:from-purple-600 hover:to-pink-600 shadow-lg transition-all w-full"
+            >
+              {t('start', 'Start')}
+            </button>
+          </motion.div>
+        )}
 
-            {gameState === 'preview' && (
-              <>
-                <h2 className="text-3xl font-bold text-purple-600 mb-4">
-                  {t('cardFlip.memorize', 'Memorize!')}
-                </h2>
-                <p className="text-lg text-gray-600 mb-6">
-                  {t('cardFlip.memorizeText', 'Remember the card positions!')}
-                </p>
-                {/* Show all cards during preview */}
-                <div
-                  className="grid gap-3 mb-6"
-                  style={{
-                    gridTemplateColumns: `repeat(${settings.cols}, 1fr)`,
-                  }}
+        {/* Preview */}
+        {gameState === 'preview' && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="bg-white rounded-2xl shadow-lg p-8 text-center"
+          >
+            <h2 className="text-3xl font-bold text-purple-600 mb-4">
+              {t('cardFlip.memorize', 'Memorize!')}
+            </h2>
+            <p className="text-lg text-gray-700 mb-6 font-medium">
+              {t('cardFlip.memorizeText', 'Remember the card positions!')}
+            </p>
+            {/* Show all cards during preview */}
+            <div
+              className="grid gap-3 mb-6"
+              style={{
+                gridTemplateColumns: `repeat(${settings.cols}, 1fr)`,
+              }}
+            >
+              {previewCards.map((card) => (
+                <motion.div
+                  key={card.id}
+                  className={getCardSize()}
+                  initial={{ opacity: 0, scale: 0.5 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ delay: card.id * 0.05 }}
                 >
-                  {cards.map((card) => (
-                    <motion.div
-                      key={card.id}
-                      className={getCardSize()}
-                      initial={{ opacity: 0, scale: 0.5 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      transition={{ delay: card.id * 0.05 }}
-                      style={{ perspective: '1000px' }}
-                    >
-                      <div
-                        className="w-full h-full relative bg-white rounded-xl shadow-lg flex items-center justify-center border-4 border-purple-300"
-                      >
-                        <span className="text-4xl md:text-5xl">{card.emoji}</span>
-                      </div>
-                    </motion.div>
-                  ))}
-                </div>
-              </>
-            )}
+                  <div className="w-full h-full bg-white rounded-xl shadow-lg flex items-center justify-center border-4 border-purple-300">
+                    <span className="text-4xl md:text-5xl">{card.emoji}</span>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
           </motion.div>
         )}
 
@@ -274,21 +286,21 @@ export default function CardFlipPage() {
             <div className="bg-white rounded-2xl shadow-lg p-4 mb-6">
               <div className="grid grid-cols-4 gap-4 text-center">
                 <div>
-                  <p className="text-gray-600 text-sm">{t('cardFlip.moves', 'Moves')}</p>
+                  <p className="text-gray-700 text-sm font-medium">{t('cardFlip.moves', 'Moves')}</p>
                   <p className="text-2xl font-bold text-purple-600">{moves}</p>
                 </div>
                 <div>
-                  <p className="text-gray-600 text-sm">{t('cardFlip.time', 'Time')}</p>
+                  <p className="text-gray-700 text-sm font-medium">{t('cardFlip.time', 'Time')}</p>
                   <p className={`text-2xl font-bold ${timeLeft <= 30 ? 'text-red-500' : 'text-purple-600'}`}>
                     {Math.floor(timeLeft / 60)}:{(timeLeft % 60).toString().padStart(2, '0')}
                   </p>
                 </div>
                 <div>
-                  <p className="text-gray-600 text-sm">{t('cardFlip.pairs', 'Pairs')}</p>
+                  <p className="text-gray-700 text-sm font-medium">{t('cardFlip.pairs', 'Pairs')}</p>
                   <p className="text-2xl font-bold text-purple-600">{matchedPairs}/{totalPairs}</p>
                 </div>
                 <div>
-                  <p className="text-gray-600 text-sm">{t('cardFlip.level', 'Level')}</p>
+                  <p className="text-gray-700 text-sm font-medium">{t('cardFlip.level', 'Level')}</p>
                   <p className="text-2xl font-bold capitalize text-purple-600">{currentDifficulty}</p>
                 </div>
               </div>
@@ -321,15 +333,14 @@ export default function CardFlipPage() {
                 >
                   <motion.button
                     onClick={() => flipCard(card.id)}
-                    disabled={card.isFlipped || card.isMatched || flippedCards.length >= 2 || isChecking}
+                    disabled={card.isFlipped || card.isMatched}
                     initial={false}
                     animate={{
-                      rotateY: card.isFlipped || card.isMatched || flippedCards.includes(card.id) ? 180 : 0,
-                      scale: flippedCards.includes(card.id) ? 1.05 : 1,
+                      rotateY: card.isFlipped || card.isMatched ? 180 : 0,
                     }}
                     transition={{ duration: 0.3 }}
-                    className={`w-full h-full relative preserve-3d cursor-pointer ${
-                      card.isMatched ? 'cursor-default' : 'hover:scale-102'
+                    className={`w-full h-full relative cursor-pointer ${
+                      card.isMatched ? 'cursor-default' : 'hover:scale-105'
                     }`}
                     style={{ transformStyle: 'preserve-3d' }}
                   >
@@ -389,23 +400,23 @@ export default function CardFlipPage() {
             <h2 className="text-4xl font-bold text-purple-600 mb-4">
               {t('cardFlip.victory', 'Congratulations!')}
             </h2>
-            <p className="text-xl text-gray-600 mb-6">
+            <p className="text-xl text-gray-700 font-medium mb-6">
               {t('cardFlip.victoryMessage', `You found all ${totalPairs} pairs in ${moves} moves!`)}
             </p>
             <div className="bg-purple-50 rounded-xl p-6 mb-6">
               <div className="grid grid-cols-3 gap-4">
                 <div>
-                  <p className="text-gray-600 text-sm">{t('cardFlip.moves', 'Moves')}</p>
+                  <p className="text-gray-700 text-sm font-medium">{t('cardFlip.moves', 'Moves')}</p>
                   <p className="text-3xl font-bold text-purple-600">{moves}</p>
                 </div>
                 <div>
-                  <p className="text-gray-600 text-sm">{t('cardFlip.time', 'Time')}</p>
+                  <p className="text-gray-700 text-sm font-medium">{t('cardFlip.time', 'Time')}</p>
                   <p className="text-3xl font-bold text-purple-600">
                     {Math.floor((settings.timeLimit - timeLeft) / 60)}:{((settings.timeLimit - timeLeft) % 60).toString().padStart(2, '0')}
                   </p>
                 </div>
                 <div>
-                  <p className="text-gray-600 text-sm">{t('cardFlip.level', 'Level')}</p>
+                  <p className="text-gray-700 text-sm font-medium">{t('cardFlip.level', 'Level')}</p>
                   <p className="text-3xl font-bold capitalize text-purple-600">{currentDifficulty}</p>
                 </div>
               </div>
@@ -430,21 +441,21 @@ export default function CardFlipPage() {
             <h2 className="text-4xl font-bold text-gray-800 mb-4">
               {t('cardFlip.gameOver', 'Time\'s Up!')}
             </h2>
-            <p className="text-xl text-gray-600 mb-6">
+            <p className="text-xl text-gray-700 font-medium mb-6">
               {t('cardFlip.progressMessage', `You found ${matchedPairs} out of ${totalPairs} pairs!`)}
             </p>
             <div className="bg-orange-50 rounded-xl p-6 mb-6">
               <div className="grid grid-cols-3 gap-4">
                 <div>
-                  <p className="text-gray-600 text-sm">{t('cardFlip.moves', 'Moves')}</p>
+                  <p className="text-gray-700 text-sm font-medium">{t('cardFlip.moves', 'Moves')}</p>
                   <p className="text-3xl font-bold text-orange-600">{moves}</p>
                 </div>
                 <div>
-                  <p className="text-gray-600 text-sm">{t('cardFlip.pairsFound', 'Pairs')}</p>
+                  <p className="text-gray-700 text-sm font-medium">{t('cardFlip.pairsFound', 'Pairs')}</p>
                   <p className="text-3xl font-bold text-orange-600">{matchedPairs}/{totalPairs}</p>
                 </div>
                 <div>
-                  <p className="text-gray-600 text-sm">{t('cardFlip.level', 'Level')}</p>
+                  <p className="text-gray-700 text-sm font-medium">{t('cardFlip.level', 'Level')}</p>
                   <p className="text-3xl font-bold capitalize text-orange-600">{currentDifficulty}</p>
                 </div>
               </div>
