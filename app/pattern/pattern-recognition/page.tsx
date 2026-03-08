@@ -51,7 +51,7 @@ export default function PatternRecognitionPage() {
   const [correctIndex, setCorrectIndex] = useState<number | null>(null)
   const [score, setScore] = useState(0)
   const [questionNumber, setQuestionNumber] = useState(0)
-  const [totalQuestions] = useState({ easy: 5, medium: 8, hard: 10 }[currentDifficulty as keyof typeof { easy: 5, medium: 8, hard: 10 }] || 8)
+  const totalQuestions = currentDifficulty === 'easy' ? 5 : currentDifficulty === 'medium' ? 8 : 10
 
   const getShapeComponent = (item: PatternItem, index?: number) => {
     const sizeClass = SIZE_MAP[item.size]
