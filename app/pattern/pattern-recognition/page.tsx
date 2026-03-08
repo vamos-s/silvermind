@@ -251,7 +251,14 @@ export default function PatternRecognitionPage() {
 
     setTimeout(() => {
       if (questionNumber + 1 >= totalQuestions) {
-        addSession('pattern-recognition', currentDifficulty, score + (isCorrect ? 1 : 0), totalQuestions)
+        addSession({
+          id: Date.now().toString(),
+          gameId: 'pattern-recognition',
+          difficulty: currentDifficulty,
+          score: score + (isCorrect ? 1 : 0),
+          completedAt: new Date(),
+          durationSeconds: 60
+        })
         setGameState('result')
       } else {
         setQuestionNumber(prev => prev + 1)

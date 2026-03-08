@@ -111,7 +111,14 @@ export default function ColorMatchPage() {
         setTimeLeft(prev => prev - 1)
       }, 1000)
     } else if (gameState === 'playing' && timeLeft === 0) {
-      addSession('color-match', currentDifficulty, score, score)
+      addSession({
+        id: Date.now().toString(),
+        gameId: 'color-match',
+        difficulty: currentDifficulty,
+        score: score,
+        completedAt: new Date(),
+        durationSeconds: GAME_DURATION
+      })
       setGameState('result')
     }
 

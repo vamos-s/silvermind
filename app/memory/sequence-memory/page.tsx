@@ -72,7 +72,14 @@ export default function SequenceMemoryPage() {
       if (finalScore > bestScore) {
         setBestScore(finalScore)
       }
-      addSession('sequence-memory', currentDifficulty, finalScore, currentSequenceLength)
+      addSession({
+        id: Date.now().toString(),
+        gameId: 'sequence-memory',
+        difficulty: currentDifficulty,
+        score: finalScore,
+        completedAt: new Date(),
+        durationSeconds: 60
+      })
       setGameState('gameover')
       return
     }
