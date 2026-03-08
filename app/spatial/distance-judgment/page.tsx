@@ -267,16 +267,6 @@ export default function DistanceJudgmentPage() {
                   style={{ left: `${opt.x}px`, top: `${opt.y}px` }}
                 />
               ))}
-
-              {/* Target point (only shown after answer) */}
-              {showResult && targetPoint && (
-                <motion.div
-                  initial={{ scale: 0 }}
-                  animate={{ scale: 1 }}
-                  className="absolute w-4 h-4 bg-purple-500 rounded-full -translate-x-1/2 -translate-y-1/2 shadow-lg ring-2 ring-purple-300"
-                  style={{ left: `${targetPoint.x}px`, top: `${targetPoint.y}px` }}
-                />
-              )}
             </div>
 
             <p className="text-sm text-gray-500 mt-2">
@@ -301,9 +291,6 @@ export default function DistanceJudgmentPage() {
             </p>
             <p className="text-lg text-gray-600">
               Actual distance: {actualDistance.toFixed(0)}px
-            </p>
-            <p className="text-sm text-purple-600 mt-4">
-              💡 Purple dot shows the actual target position
             </p>
           </motion.div>
         )}
