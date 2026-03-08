@@ -19,11 +19,13 @@ const EMOJIS = {
   hard: ['🍎', '🍊', '🍋', '🍇', '🍓', '🍑', '🍒', '🥝', '🥭', '🍍', '🥝', '🍉', '🍌', '🥥', '🫐'],
 }
 
-const DIFFICULTY_SETTINGS = {
-  easy: { rows: 4, cols: 4, timeLimit: 120 },
-  medium: { rows: 5, cols: 4, timeLimit: 240 },
-  hard: { rows: 6, cols: 5, timeLimit: 300 },
-}
+const LEVEL_SETTINGS = [
+  { rows: 4, cols: 4, timeLimit: 120, hintCount: 3 }, // Level 1: Easy
+  { rows: 5, cols: 4, timeLimit: 180, hintCount: 2 }, // Level 2: Medium-Easy
+  { rows: 5, cols: 4, timeLimit: 240, hintCount: 2 }, // Level 3: Medium
+  { rows: 6, cols: 5, timeLimit: 240, hintCount: 1 }, // Level 4: Medium-Hard
+  { rows: 6, cols: 5, timeLimit: 300, hintCount: 1 }, // Level 5: Hard
+]
 
 const DIFFICULTY_MULTIPLIERS = {
   easy: 1,
@@ -33,21 +35,33 @@ const DIFFICULTY_MULTIPLIERS = {
 
 export default function CardFlipPage() {
   const { t } = useTranslation()
-  const { currentDifficulty, addSession } = useGameStore()
+  const { addSession } = useGameStore()
 
-  const [gameState, setGameState] = useState<'menu' | 'preview' | 'playing' | 'victory' | 'gameover'>('menu')
+  const [gameState, setGameState] = useState<'menu' | 'preview' | 'playing' | 'victory' | 'gameover' | 'levelComplete'>('menu')
   const [cards, setCards] = useState<Card[]>([])
   const [moves, setMoves] = useState(0)
   const [matchedPairs, setMatchedPairs] = useState(0)
   const [timeLeft, setTimeLeft] = useState(0)
   const [totalPairs, setTotalPairs] = useState(0)
   const [previewCards, setPreviewCards] = useState<Card[]>([])
+  const [currentLevel, setCurrentLevel] = useState(1)
+  const [totalLevels, setTotalLevels] = useState(5)
+  const [hintsRemaining, setHintsRemaining] = useState(3)
+  const [isShowingHint, setIsShowingHint] = useState(false)
+  const [score, setScore] = useState(0)
+  const [totalScore, setTotalScore] = useState(0)
 
-  const settings = DIFFICULTY_SETTINGS[currentDifficulty as keyof typeof DIFFICULTY_SETTINGS] || DIFFICULTY_SETTINGS.easy
-  const multiplier = DIFFICULTY_MULTIPLIERS[currentDifficulty as keyof typeof DIFFICULTY_MULTIPLIERS] || 1
+  const settings = LEVEL_SETTINGS[Math.min(currentLevel - 1, LEVEL_SETTINGS.length - 1)]
+  const multiplier = DIFFICULTY_MULTIPLIERS[getDifficulty() as keyof typeof DIFFICULTY_MULTIPLIERS] || 1
+
+  function getDifficulty() {
+    if (currentLevel <= 2) return 'easy'
+    if (currentLevel <= 4) return 'medium'
+    return 'hard'
+  }
 
   const createCards = useCallback(() => {
-    const emojiList = EMOJIS[currentDifficulty as keyof typeof EMOJIS] || EMOJIS.easy
+    const emojiList = EMOJIS[getDifficulty() as keyof typeof EMOJIS] || EMOJIS.easy
     const pairCount = (settings.rows * settings.cols) / 2
     const emojis = emojiList.slice(0, pairCount)
 
@@ -69,7 +83,7 @@ export default function CardFlipPage() {
     }
 
     return allCards
-  }, [currentDifficulty, settings])
+  }, [settings])
 
   const startGame = useCallback(() => {
     const newCards = createCards()
@@ -79,6 +93,9 @@ export default function CardFlipPage() {
     setMatchedPairs(0)
     setTimeLeft(settings.timeLimit)
     setTotalPairs(newCards.length / 2)
+    setHintsRemaining(settings.hintCount)
+    setIsShowingHint(false)
+    setScore(0)
 
     setGameState('preview')
 
@@ -90,7 +107,71 @@ export default function CardFlipPage() {
     }, 3000)
   }, [createCards, settings])
 
+  const startLevel = useCallback(() => {
+    startGame()
+  }, [startGame])
+
+  const nextLevel = useCallback(() => {
+    if (currentLevel < totalLevels) {
+      setCurrentLevel(prev => prev + 1)
+      setGameState('menu')
+      // Small delay to allow UI to update
+      setTimeout(() => {
+        startGame()
+      }, 100)
+    } else {
+      // All levels complete
+      addSession({
+        id: Date.now().toString(),
+        gameId: 'card-flip',
+        difficulty: 'hard',
+        score: totalScore,
+        completedAt: new Date(),
+        durationSeconds: 0
+      })
+      setGameState('victory')
+    }
+  }, [currentLevel, totalLevels, startGame, totalScore, addSession])
+
+  const useHint = useCallback(() => {
+    if (hintsRemaining <= 0 || isShowingHint) return
+
+    // Find all unmatched pairs
+    const unmatchedCards = cards.filter(c => !c.isMatched)
+    const emojiSet = new Set(unmatchedCards.map(c => c.emoji))
+
+    // Pick a random emoji that hasn't been matched
+    const emojisArray = Array.from(emojiSet)
+    const randomEmoji = emojisArray[Math.floor(Math.random() * emojisArray.length)]
+
+    // Find both cards with this emoji
+    const hintCards = unmatchedCards.filter(c => c.emoji === randomEmoji)
+
+    if (hintCards.length === 2) {
+      setIsShowingHint(true)
+      setHintsRemaining(prev => prev - 1)
+
+      // Temporarily show the cards
+      setCards(prev =>
+        prev.map(c =>
+          hintCards.some(h => h.id === c.id) ? { ...c, isFlipped: true } : c
+        )
+      )
+
+      // Hide after 2 seconds
+      setTimeout(() => {
+        setCards(prev =>
+          prev.map(c =>
+            hintCards.some(h => h.id === c.id) ? { ...c, isFlipped: false } : c
+          )
+        )
+        setIsShowingHint(false)
+      }, 2000)
+    }
+  }, [cards, hintsRemaining, isShowingHint])
+
   const flipCard = useCallback((cardId: number) => {
+    if (isShowingHint) return
     const card = cards.find(c => c.id === cardId)
     if (!card) return
     if (card.isMatched) return
@@ -126,20 +207,29 @@ export default function CardFlipPage() {
           )
           setMatchedPairs(prev => {
             const newCount = prev + 1
-            // Check for victory
+            // Calculate level score
+            const levelScore = Math.round(
+              ((100 - moves * 2) * multiplier) + (timeLeft / 5)
+            )
+            setScore(levelScore)
+
+            // Check for level complete
             if (newCount === totalPairs) {
-              const score = Math.round(
-                ((1000 - (moves + 1) * 10) * multiplier) + (timeLeft * multiplier)
-              )
-              addSession({
-                id: Date.now().toString(),
-                gameId: 'card-flip',
-                difficulty: currentDifficulty,
-                score: Math.max(score, 0),
-                completedAt: new Date(),
-                durationSeconds: settings.timeLimit - timeLeft
-              })
-              setGameState('victory')
+              setTotalScore(prev => prev + levelScore)
+              if (currentLevel < totalLevels) {
+                setGameState('levelComplete')
+              } else {
+                // All levels complete
+                addSession({
+                  id: Date.now().toString(),
+                  gameId: 'card-flip',
+                  difficulty: 'hard',
+                  score: totalScore + levelScore,
+                  completedAt: new Date(),
+                  durationSeconds: 0
+                })
+                setGameState('victory')
+              }
             }
             return newCount
           })
@@ -157,7 +247,7 @@ export default function CardFlipPage() {
         }, 1000)
       }
     }
-  }, [cards, moves, matchedPairs, totalPairs, timeLeft, currentDifficulty, multiplier, settings, addSession])
+  }, [cards, moves, matchedPairs, totalPairs, timeLeft, currentLevel, totalLevels, totalScore, multiplier, addSession, isShowingHint])
 
   useEffect(() => {
     let timer: NodeJS.Timeout | null = null
@@ -167,24 +257,13 @@ export default function CardFlipPage() {
         setTimeLeft(prev => prev - 1)
       }, 1000)
     } else if (gameState === 'playing' && timeLeft === 0) {
-      const score = Math.round(
-        ((matchedPairs / totalPairs) * 500) * multiplier
-      )
-      addSession({
-        id: Date.now().toString(),
-        gameId: 'card-flip',
-        difficulty: currentDifficulty,
-        score,
-        completedAt: new Date(),
-        durationSeconds: settings.timeLimit
-      })
       setGameState('gameover')
     }
 
     return () => {
       if (timer) clearTimeout(timer)
     }
-  }, [gameState, timeLeft, matchedPairs, totalPairs, currentDifficulty, multiplier, settings, addSession])
+  }, [gameState, timeLeft])
 
   const getCardSize = () => {
     const totalCards = settings.rows * settings.cols
@@ -219,18 +298,24 @@ export default function CardFlipPage() {
             animate={{ opacity: 1, y: 0 }}
             className="bg-white rounded-2xl shadow-lg p-8 text-center"
           >
-            <h2 className="text-3xl font-bold text-gray-800 mb-4">
-              {t('cardFlip.ready', 'Ready to test your memory?')}
+            <h2 className="text-3xl font-bold text-gray-800 mb-2">
+              {currentLevel > 1 ? `Level ${currentLevel}` : t('cardFlip.ready', 'Ready to test your memory?')}
             </h2>
+            {currentLevel > 1 && (
+              <p className="text-lg text-gray-700 mb-4 font-medium">
+                Total Score: <span className="text-purple-600 font-bold">{totalScore}</span>
+              </p>
+            )}
             <p className="text-lg text-gray-700 mb-6 font-medium">
               {t('cardFlip.instructions', 'Find all matching pairs of cards before time runs out!')}
             </p>
             <div className="bg-purple-50 rounded-xl p-4 mb-6 text-left">
-              <h3 className="font-bold text-gray-800 mb-2">{t('cardFlip.difficultyInfo', 'Difficulty Settings')}:</h3>
+              <h3 className="font-bold text-gray-800 mb-2">{t('cardFlip.levelInfo', 'Level Settings')}:</h3>
               <ul className="text-gray-700 space-y-1 font-medium">
                 <li>• {t('cardFlip.gridSize', 'Grid')}: {settings.rows} × {settings.cols}</li>
                 <li>• {t('cardFlip.pairs', 'Pairs')}: {(settings.rows * settings.cols) / 2}</li>
                 <li>• {t('cardFlip.timeLimit', 'Time Limit')}: {Math.floor(settings.timeLimit / 60)}:{(settings.timeLimit % 60).toString().padStart(2, '0')}</li>
+                <li>• {t('cardFlip.hints', 'Hints')}: {settings.hintCount}</li>
               </ul>
             </div>
             <button
@@ -284,7 +369,11 @@ export default function CardFlipPage() {
           <>
             {/* Stats Bar */}
             <div className="bg-white rounded-2xl shadow-lg p-4 mb-6">
-              <div className="grid grid-cols-4 gap-4 text-center">
+              <div className="grid grid-cols-5 gap-4 text-center">
+                <div>
+                  <p className="text-gray-700 text-sm font-medium">{t('cardFlip.level', 'Level')}</p>
+                  <p className="text-2xl font-bold text-purple-600">{currentLevel}/{totalLevels}</p>
+                </div>
                 <div>
                   <p className="text-gray-700 text-sm font-medium">{t('cardFlip.moves', 'Moves')}</p>
                   <p className="text-2xl font-bold text-purple-600">{moves}</p>
@@ -300,8 +389,8 @@ export default function CardFlipPage() {
                   <p className="text-2xl font-bold text-purple-600">{matchedPairs}/{totalPairs}</p>
                 </div>
                 <div>
-                  <p className="text-gray-700 text-sm font-medium">{t('cardFlip.level', 'Level')}</p>
-                  <p className="text-2xl font-bold capitalize text-purple-600">{currentDifficulty}</p>
+                  <p className="text-gray-700 text-sm font-medium">{t('cardFlip.hints', 'Hints')}</p>
+                  <p className="text-2xl font-bold text-purple-600">{hintsRemaining}</p>
                 </div>
               </div>
               {/* Progress Bar */}
@@ -313,6 +402,21 @@ export default function CardFlipPage() {
                   className="bg-gradient-to-r from-purple-500 to-pink-500 h-full"
                 />
               </div>
+            </div>
+
+            {/* Hint Button */}
+            <div className="mb-4 text-center">
+              <button
+                onClick={useHint}
+                disabled={hintsRemaining === 0 || isShowingHint}
+                className={`px-6 py-3 rounded-xl font-bold text-lg transition-all ${
+                  hintsRemaining > 0 && !isShowingHint
+                    ? 'bg-gradient-to-r from-amber-400 to-orange-400 text-white hover:from-amber-500 hover:to-orange-500 shadow-lg'
+                    : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                }`}
+              >
+                {isShowingHint ? '👀 Showing...' : `💡 Hint (${hintsRemaining})`}
+              </button>
             </div>
 
             {/* Card Grid */}
@@ -389,6 +493,51 @@ export default function CardFlipPage() {
           </>
         )}
 
+        {/* Level Complete */}
+        {gameState === 'levelComplete' && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="bg-white rounded-2xl shadow-lg p-8 text-center"
+          >
+            <div className="text-6xl mb-4">⭐</div>
+            <h2 className="text-4xl font-bold text-purple-600 mb-4">
+              Level {currentLevel} Complete!
+            </h2>
+            <p className="text-xl text-gray-700 font-medium mb-6">
+              You found all {totalPairs} pairs in {moves} moves!
+            </p>
+            <div className="bg-purple-50 rounded-xl p-6 mb-6">
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <p className="text-gray-700 text-sm font-medium">{t('cardFlip.levelScore', 'Level Score')}</p>
+                  <p className="text-3xl font-bold text-purple-600">{score}</p>
+                </div>
+                <div>
+                  <p className="text-gray-700 text-sm font-medium">{t('cardFlip.totalScore', 'Total Score')}</p>
+                  <p className="text-3xl font-bold text-purple-600">{totalScore + score}</p>
+                </div>
+              </div>
+            </div>
+            <button
+              onClick={nextLevel}
+              className="bg-gradient-to-r from-purple-500 to-pink-500 text-white text-2xl font-bold py-4 px-12 rounded-xl hover:from-purple-600 hover:to-pink-600 shadow-lg transition-all w-full mb-3"
+            >
+              {currentLevel < totalLevels ? `Next Level ${currentLevel + 1}` : 'View Final Score'}
+            </button>
+            <button
+              onClick={() => {
+                setCurrentLevel(1)
+                setTotalScore(0)
+                setGameState('menu')
+              }}
+              className="text-gray-600 hover:text-gray-800 font-medium"
+            >
+              {t('cardFlip.restart', 'Restart from Level 1')}
+            </button>
+          </motion.div>
+        )}
+
         {/* Victory */}
         {gameState === 'victory' && (
           <motion.div
@@ -401,28 +550,18 @@ export default function CardFlipPage() {
               {t('cardFlip.victory', 'Congratulations!')}
             </h2>
             <p className="text-xl text-gray-700 font-medium mb-6">
-              {t('cardFlip.victoryMessage', `You found all ${totalPairs} pairs in ${moves} moves!`)}
+              You completed all {totalLevels} levels!
             </p>
             <div className="bg-purple-50 rounded-xl p-6 mb-6">
-              <div className="grid grid-cols-3 gap-4">
-                <div>
-                  <p className="text-gray-700 text-sm font-medium">{t('cardFlip.moves', 'Moves')}</p>
-                  <p className="text-3xl font-bold text-purple-600">{moves}</p>
-                </div>
-                <div>
-                  <p className="text-gray-700 text-sm font-medium">{t('cardFlip.time', 'Time')}</p>
-                  <p className="text-3xl font-bold text-purple-600">
-                    {Math.floor((settings.timeLimit - timeLeft) / 60)}:{((settings.timeLimit - timeLeft) % 60).toString().padStart(2, '0')}
-                  </p>
-                </div>
-                <div>
-                  <p className="text-gray-700 text-sm font-medium">{t('cardFlip.level', 'Level')}</p>
-                  <p className="text-3xl font-bold capitalize text-purple-600">{currentDifficulty}</p>
-                </div>
-              </div>
+              <p className="text-gray-700 text-sm font-medium">{t('cardFlip.finalScore', 'Final Score')}</p>
+              <p className="text-5xl font-bold text-purple-600">{totalScore}</p>
             </div>
             <button
-              onClick={startGame}
+              onClick={() => {
+                setCurrentLevel(1)
+                setTotalScore(0)
+                setGameState('menu')
+              }}
               className="bg-gradient-to-r from-purple-500 to-pink-500 text-white text-2xl font-bold py-4 px-12 rounded-xl hover:from-purple-600 hover:to-pink-600 shadow-lg transition-all w-full"
             >
               {t('playAgain', 'Play Again')}
@@ -442,29 +581,27 @@ export default function CardFlipPage() {
               {t('cardFlip.gameOver', 'Time\'s Up!')}
             </h2>
             <p className="text-xl text-gray-700 font-medium mb-6">
-              {t('cardFlip.progressMessage', `You found ${matchedPairs} out of ${totalPairs} pairs!`)}
+              You found {matchedPairs} out of {totalPairs} pairs!
             </p>
             <div className="bg-orange-50 rounded-xl p-6 mb-6">
-              <div className="grid grid-cols-3 gap-4">
-                <div>
-                  <p className="text-gray-700 text-sm font-medium">{t('cardFlip.moves', 'Moves')}</p>
-                  <p className="text-3xl font-bold text-orange-600">{moves}</p>
-                </div>
-                <div>
-                  <p className="text-gray-700 text-sm font-medium">{t('cardFlip.pairsFound', 'Pairs')}</p>
-                  <p className="text-3xl font-bold text-orange-600">{matchedPairs}/{totalPairs}</p>
-                </div>
-                <div>
-                  <p className="text-gray-700 text-sm font-medium">{t('cardFlip.level', 'Level')}</p>
-                  <p className="text-3xl font-bold capitalize text-orange-600">{currentDifficulty}</p>
-                </div>
-              </div>
+              <p className="text-gray-700 text-sm font-medium">{t('cardFlip.currentScore', 'Current Score')}</p>
+              <p className="text-3xl font-bold text-orange-600">{totalScore}</p>
             </div>
             <button
               onClick={startGame}
-              className="bg-gradient-to-r from-orange-500 to-red-500 text-white text-2xl font-bold py-4 px-12 rounded-xl hover:from-orange-600 hover:to-red-600 shadow-lg transition-all w-full"
+              className="bg-gradient-to-r from-orange-500 to-red-500 text-white text-2xl font-bold py-4 px-12 rounded-xl hover:from-orange-600 hover:to-red-600 shadow-lg transition-all w-full mb-3"
             >
               {t('tryAgain', 'Try Again')}
+            </button>
+            <button
+              onClick={() => {
+                setCurrentLevel(1)
+                setTotalScore(0)
+                setGameState('menu')
+              }}
+              className="text-gray-600 hover:text-gray-800 font-medium"
+            >
+              {t('cardFlip.restart', 'Restart from Level 1')}
             </button>
           </motion.div>
         )}
