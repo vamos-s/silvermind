@@ -266,33 +266,6 @@ export default function CardFlipPage() {
             )}
           </motion.div>
         )}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="bg-white rounded-2xl shadow-lg p-8 text-center"
-          >
-            <h2 className="text-3xl font-bold text-gray-800 mb-4">
-              {t('cardFlip.ready', 'Ready to test your memory?')}
-            </h2>
-            <p className="text-lg text-gray-600 mb-6">
-              {t('cardFlip.instructions', 'Find all matching pairs of cards before time runs out!')}
-            </p>
-            <div className="bg-purple-50 rounded-xl p-4 mb-6 text-left">
-              <h3 className="font-bold text-gray-800 mb-2">{t('cardFlip.difficultyInfo', 'Difficulty Settings')}:</h3>
-              <ul className="text-gray-700 space-y-1">
-                <li>• {t('cardFlip.gridSize', 'Grid')}: {settings.rows} × {settings.cols}</li>
-                <li>• {t('cardFlip.pairs', 'Pairs')}: {(settings.rows * settings.cols) / 2}</li>
-                <li>• {t('cardFlip.timeLimit', 'Time Limit')}: {Math.floor(settings.timeLimit / 60)}:{(settings.timeLimit % 60).toString().padStart(2, '0')}</li>
-              </ul>
-            </div>
-            <button
-              onClick={startGame}
-              className="bg-gradient-to-r from-purple-500 to-pink-500 text-white text-2xl font-bold py-4 px-12 rounded-xl hover:from-purple-600 hover:to-pink-600 shadow-lg transition-all w-full"
-            >
-              {t('start', 'Start')}
-            </button>
-          </motion.div>
-        )}
 
         {/* Playing */}
         {gameState === 'playing' && (
