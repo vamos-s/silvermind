@@ -53,7 +53,55 @@ All games now feature **30 progressive levels** for extended, engaging gameplay.
 
 ---
 
-### Word Recall (30 Levels)
+### Card Flip (30 Levels)
+**Grid**: 4×4 → 6×6 | **Pairs**: 8 → 18 | **Time**: 120s → 300s
+
+| Level | Grid | Pairs | Time | Hints | Level | Grid | Pairs | Time | Hints |
+|-------|------|-------|------|-------|-------|------|-------|------|-------|
+| 1 | 4×4 | 8 | 120s | 3 | 16 | 6×5 | 15 | 300s | 1 |
+| 2 | 4×4 | 8 | 115s | 3 | 17 | 6×5 | 15 | 295s | 1 |
+| 3 | 4×4 | 8 | 110s | 3 | 18 | 6×5 | 15 | 290s | 1 |
+| 4 | 4×4 | 8 | 105s | 3 | 19 | 6×5 | 15 | 285s | 1 |
+| 5 | 4×4 | 8 | 100s | 3 | 20 | 6×5 | 15 | 280s | 1 |
+| 6 | 4×4 | 8 | 95s | 3 | 21 | 6×5 | 15 | 275s | 1 |
+| 7 | 5×4 | 10 | 180s | 2 | 22 | 6×6 | 18 | 360s | 1 |
+| 8 | 5×4 | 10 | 175s | 2 | 23 | 6×6 | 18 | 350s | 1 |
+| 9 | 5×4 | 10 | 170s | 2 | 24 | 6×6 | 18 | 340s | 1 |
+| 10 | 5×4 | 10 | 165s | 2 | 25 | 6×6 | 18 | 330s | 1 |
+| 11 | 5×4 | 10 | 160s | 2 | 26 | 6×6 | 18 | 320s | 1 |
+| 12 | 5×4 | 10 | 155s | 2 | 27 | 6×6 | 18 | 310s | 1 |
+| 13 | 5×5 | 12 | 240s | 2 | 28 | 6×6 | 18 | 300s | 1 |
+| 14 | 5×5 | 12 | 235s | 2 | 29 | 6×6 | 18 | 300s | 1 |
+| 15 | 5×5 | 12 | 230s | 2 | 30 | 6×6 | 18 | 300s | 1 |
+
+---
+
+### Sudoku (30 Levels)
+**Grid**: 4×4 → 9×9 | **Empty**: 30% → 85% (difficulty-based)
+
+| Level | Grid | Empty Range | Level | Grid | Empty Range |
+|-------|------|-------------|-------|------|-------------|
+| 1 | 4×4 | 30-36% | 16 | 6×6 | 46-52% |
+| 2 | 4×4 | 31-37% | 17 | 6×6 | 47-53% |
+| 3 | 4×4 | 32-38% | 18 | 6×6 | 48-54% |
+| 4 | 4×4 | 33-39% | 19 | 9×9 | 49-55% |
+| 5 | 4×4 | 34-40% | 20 | 9×9 | 50-56% |
+| 6 | 4×4 | 35-41% | 21 | 9×9 | 51-57% |
+| 7 | 6×6 | 36-42% | 22 | 9×9 | 52-58% |
+| 8 | 6×6 | 37-43% | 23 | 9×9 | 53-59% |
+| 9 | 6×6 | 38-44% | 24 | 9×9 | 54-60% |
+| 10 | 6×6 | 39-45% | 25 | 9×9 | 55-61% |
+| 11 | 6×6 | 40-46% | 26 | 9×9 | 56-62% |
+| 12 | 6×6 | 41-47% | 27 | 9×9 | 57-63% |
+| 13 | 6×6 | 42-48% | 28 | 9×9 | 58-64% |
+| 14 | 6×6 | 43-49% | 29 | 9×9 | 59-65% |
+| 15 | 6×6 | 44-50% | 30 | 9×9 | 60-66% |
+
+---
+
+## Logic Games
+
+### Logic Puzzle (30 Levels)
 **Words**: 3 → 17 | **Display**: 2500ms → 320ms | **Input**: 30s → 175s
 
 | Level | Words | Display | Input | Difficulty | Level | Words | Display | Input | Difficulty |
@@ -226,13 +274,13 @@ All games now feature **30 progressive levels** for extended, engaging gameplay.
 | Number Recall | 30 | ✅ Complete |
 | Sequence Memory | 30 | ✅ Complete |
 | Word Recall | 30 | ✅ Complete |
+| Card Flip | 30 | ✅ Complete |
 | Color Match | 30 | ✅ Complete |
 | Quick Reaction | 30 | ✅ Complete |
 | Timing Game | 30 | ✅ Complete |
 | Logic Puzzle | 30 | ✅ Complete |
 | Pattern Recognition | 30 | ✅ Complete |
-| Card Flip | 5 | ⏳ Needs 30 levels |
-| Sudoku | Grid scaling | ⏳ Needs 30 levels |
+| Sudoku | 30 | ✅ Complete |
 
 ---
 

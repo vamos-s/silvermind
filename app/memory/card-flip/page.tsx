@@ -15,16 +15,51 @@ interface Card {
 
 const EMOJIS = {
   easy: ['🍎', '🍊', '🍋', '🍇', '🍓', '🍑', '🍒', '🥝'],
-  medium: ['🍎', '🍊', '🍋', '🍇', '🍓', '🍑', '🍒', '🥝', '🥭', '🍍'],
-  hard: ['🍎', '🍊', '🍋', '🍇', '🍓', '🍑', '🍒', '🥝', '🥭', '🍍', '🥝', '🍉', '🍌', '🥥', '🫐'],
+  medium: ['🍎', '🍊', '🍋', '🍇', '🍓', '🍑', '🍒', '🥝', '🥭', '🍍', '🍉', '🍌'],
+  hard: ['🍎', '🍊', '🍋', '🍇', '🍓', '🍑', '🍒', '🥝', '🥭', '🍍', '🍉', '🍌', '🥥', '🫐', '🍐', '🥑', '🍆', '🥔'],
+  expert: ['🍎', '🍊', '🍋', '🍇', '🍓', '🍑', '🍒', '🥝', '🥭', '🍍', '🍉', '🍌', '🥥', '🫐', '🍐', '🥑', '🍆', '🥔', '🥕', '🌽', '🥦', '🍄'],
 }
 
 const LEVEL_SETTINGS = [
-  { rows: 4, cols: 4, timeLimit: 120, hintCount: 3 }, // Level 1: Easy
-  { rows: 5, cols: 4, timeLimit: 180, hintCount: 2 }, // Level 2: Medium-Easy
-  { rows: 5, cols: 4, timeLimit: 240, hintCount: 2 }, // Level 3: Medium
-  { rows: 6, cols: 5, timeLimit: 240, hintCount: 1 }, // Level 4: Medium-Hard
-  { rows: 6, cols: 5, timeLimit: 300, hintCount: 1 }, // Level 5: Hard
+  // Levels 1-6: Easy (4×4 grid, 8 pairs)
+  { rows: 4, cols: 4, timeLimit: 120, hintCount: 3 }, // Level 1
+  { rows: 4, cols: 4, timeLimit: 115, hintCount: 3 }, // Level 2
+  { rows: 4, cols: 4, timeLimit: 110, hintCount: 3 }, // Level 3
+  { rows: 4, cols: 4, timeLimit: 105, hintCount: 3 }, // Level 4
+  { rows: 4, cols: 4, timeLimit: 100, hintCount: 3 }, // Level 5
+  { rows: 4, cols: 4, timeLimit: 95, hintCount: 3 },  // Level 6
+
+  // Levels 7-12: Medium-Easy (5×4 grid, 10 pairs)
+  { rows: 5, cols: 4, timeLimit: 180, hintCount: 2 }, // Level 7
+  { rows: 5, cols: 4, timeLimit: 175, hintCount: 2 }, // Level 8
+  { rows: 5, cols: 4, timeLimit: 170, hintCount: 2 }, // Level 9
+  { rows: 5, cols: 4, timeLimit: 165, hintCount: 2 }, // Level 10
+  { rows: 5, cols: 4, timeLimit: 160, hintCount: 2 }, // Level 11
+  { rows: 5, cols: 4, timeLimit: 155, hintCount: 2 }, // Level 12
+
+  // Levels 13-18: Medium (5×5 grid, 12 pairs)
+  { rows: 5, cols: 5, timeLimit: 240, hintCount: 2 }, // Level 13
+  { rows: 5, cols: 5, timeLimit: 235, hintCount: 2 }, // Level 14
+  { rows: 5, cols: 5, timeLimit: 230, hintCount: 2 }, // Level 15
+  { rows: 5, cols: 5, timeLimit: 225, hintCount: 2 }, // Level 16
+  { rows: 5, cols: 5, timeLimit: 220, hintCount: 2 }, // Level 17
+  { rows: 5, cols: 5, timeLimit: 215, hintCount: 2 }, // Level 18
+
+  // Levels 19-24: Hard (6×5 grid, 15 pairs)
+  { rows: 6, cols: 5, timeLimit: 300, hintCount: 1 }, // Level 19
+  { rows: 6, cols: 5, timeLimit: 295, hintCount: 1 }, // Level 20
+  { rows: 6, cols: 5, timeLimit: 290, hintCount: 1 }, // Level 21
+  { rows: 6, cols: 5, timeLimit: 285, hintCount: 1 }, // Level 22
+  { rows: 6, cols: 5, timeLimit: 280, hintCount: 1 }, // Level 23
+  { rows: 6, cols: 5, timeLimit: 275, hintCount: 1 }, // Level 24
+
+  // Levels 25-30: Expert (6×6 grid, 18 pairs)
+  { rows: 6, cols: 6, timeLimit: 360, hintCount: 1 }, // Level 25
+  { rows: 6, cols: 6, timeLimit: 350, hintCount: 1 }, // Level 26
+  { rows: 6, cols: 6, timeLimit: 340, hintCount: 1 }, // Level 27
+  { rows: 6, cols: 6, timeLimit: 330, hintCount: 1 }, // Level 28
+  { rows: 6, cols: 6, timeLimit: 320, hintCount: 1 }, // Level 29
+  { rows: 6, cols: 6, timeLimit: 300, hintCount: 1 }, // Level 30
 ]
 
 const DIFFICULTY_MULTIPLIERS = {
@@ -45,7 +80,7 @@ export default function CardFlipPage() {
   const [totalPairs, setTotalPairs] = useState(0)
   const [previewCards, setPreviewCards] = useState<Card[]>([])
   const [currentLevel, setCurrentLevel] = useState(1)
-  const [totalLevels, setTotalLevels] = useState(5)
+  const [totalLevels, setTotalLevels] = useState(30)
   const [hintsRemaining, setHintsRemaining] = useState(3)
   const [isShowingHint, setIsShowingHint] = useState(false)
   const [score, setScore] = useState(0)
@@ -55,9 +90,10 @@ export default function CardFlipPage() {
   const multiplier = DIFFICULTY_MULTIPLIERS[getDifficulty() as keyof typeof DIFFICULTY_MULTIPLIERS] || 1
 
   function getDifficulty() {
-    if (currentLevel <= 2) return 'easy'
-    if (currentLevel <= 4) return 'medium'
-    return 'hard'
+    if (currentLevel <= 6) return 'easy'
+    if (currentLevel <= 12) return 'medium'
+    if (currentLevel <= 18) return 'hard'
+    return 'expert'
   }
 
   const createCards = useCallback(() => {

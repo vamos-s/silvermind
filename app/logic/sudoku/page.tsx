@@ -17,14 +17,15 @@ export default function SudokuPage() {
   const [selectedCell, setSelectedCell] = useState<[number, number] | null>(null)
   const [score, setScore] = useState(0)
   const [level, setLevel] = useState(1)
+  const [maxLevel] = useState(30)
   const [mistakes, setMistakes] = useState(0)
   const [gameOver, setGameOver] = useState(false)
   const [victory, setVictory] = useState(false)
 
   const getGridSize = () => {
     // Scale with level: 4x4 → 6x6 → 9x9
-    if (level <= 3) return 4
-    if (level <= 6) return 6
+    if (level <= 6) return 4
+    if (level <= 12) return 6
     return 9
   }
 
@@ -36,8 +37,8 @@ export default function SudokuPage() {
       hard: 0.6
     }[currentDifficulty]
 
-    // Add level bonus (harder at higher levels)
-    const levelBonus = Math.min(level * 0.02, 0.15)
+    // Add level bonus (harder at higher levels) - scaled for 30 levels
+    const levelBonus = Math.min(level * 0.01, 0.25)
 
     const emptyRatio = baseMultiplier + levelBonus
     return Math.floor(size * size * emptyRatio)
@@ -232,18 +233,22 @@ export default function SudokuPage() {
           animate={{ scale: 1, opacity: 1 }}
           className="bg-white rounded-2xl p-8 shadow-xl text-center max-w-md"
         >
-          <h2 className="text-3xl font-bold text-green-600 mb-4">🎉 Solved!</h2>
+          <h2 className="text-3xl font-bold text-green-600 mb-4">
+            {level === maxLevel ? '🏆 Complete!' : '🎉 Solved!'}
+          </h2>
           <p className="text-xl text-gray-600 mb-2">Score: {score}</p>
           <p className="text-lg text-gray-500 mb-6">Mistakes: {mistakes}</p>
-          <button
-            onClick={() => {
-              setLevel(level + 1)
-              generateSudoku()
-            }}
-            className="bg-green-500 text-white px-8 py-3 rounded-xl text-xl font-bold hover:bg-green-600 transition mb-4"
-          >
-            Next Level
-          </button>
+          {level < maxLevel && (
+            <button
+              onClick={() => {
+                setLevel(level + 1)
+                generateSudoku()
+              }}
+              className="bg-green-500 text-white px-8 py-3 rounded-xl text-xl font-bold hover:bg-green-600 transition mb-4"
+            >
+              Next Level
+            </button>
+          )}
           <br />
           <button
             onClick={() => {
