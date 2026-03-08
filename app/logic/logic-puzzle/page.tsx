@@ -28,19 +28,50 @@ const COLORS = [
 ]
 
 const LEVELS = [
+  // Levels 1-5: Easy introduction (3 boxes)
   { boxCount: 3, clueCount: 2 },
   { boxCount: 3, clueCount: 2 },
   { boxCount: 3, clueCount: 2 },
+  { boxCount: 3, clueCount: 3 },
+  { boxCount: 3, clueCount: 3 },
+
+  // Levels 6-10: Medium challenge (4 boxes)
   { boxCount: 4, clueCount: 3 },
   { boxCount: 4, clueCount: 3 },
-  { boxCount: 4, clueCount: 3 },
+  { boxCount: 4, clueCount: 4 },
+  { boxCount: 4, clueCount: 4 },
+  { boxCount: 4, clueCount: 4 },
+
+  // Levels 11-15: Harder progression (5 boxes)
   { boxCount: 5, clueCount: 4 },
   { boxCount: 5, clueCount: 4 },
-  { boxCount: 5, clueCount: 4 },
-  { boxCount: 5, clueCount: 4 },
+  { boxCount: 5, clueCount: 5 },
+  { boxCount: 5, clueCount: 5 },
+  { boxCount: 5, clueCount: 5 },
+
+  // Levels 16-20: Advanced challenge (6 boxes, max complexity)
+  { boxCount: 6, clueCount: 5 },
+  { boxCount: 6, clueCount: 5 },
+  { boxCount: 6, clueCount: 5 },
+  { boxCount: 6, clueCount: 6 },
+  { boxCount: 6, clueCount: 6 },
+
+  // Levels 21-25: Expert level (6 boxes with tricky clues)
+  { boxCount: 6, clueCount: 6 },
+  { boxCount: 6, clueCount: 6 },
+  { boxCount: 6, clueCount: 6 },
+  { boxCount: 6, clueCount: 6 },
+  { boxCount: 6, clueCount: 6 },
+
+  // Levels 26-30: Master level (max complexity with 6 boxes)
+  { boxCount: 6, clueCount: 6 },
+  { boxCount: 6, clueCount: 6 },
+  { boxCount: 6, clueCount: 6 },
+  { boxCount: 6, clueCount: 6 },
+  { boxCount: 6, clueCount: 6 },
 ]
 
-const MAX_LEVELS = 10
+const MAX_LEVELS = 30
 
 export default function LogicPuzzlePage() {
   const { t } = useTranslation()

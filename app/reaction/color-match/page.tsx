@@ -19,19 +19,50 @@ const COLORS = [
   { name: 'teal', color: 'text-teal-500', hex: '#14b8a6' },
 ]
 
-const MAX_LEVELS = 10
+const MAX_LEVELS = 30
 
 const LEVEL_SETTINGS = [
-  { colorCount: 4, duration: 60, targetScore: 30 },    // Level 1
-  { colorCount: 4, duration: 55, targetScore: 35 },    // Level 2
-  { colorCount: 5, duration: 55, targetScore: 40 },    // Level 3
-  { colorCount: 5, duration: 50, targetScore: 45 },    // Level 4
-  { colorCount: 6, duration: 50, targetScore: 50 },    // Level 5
-  { colorCount: 6, duration: 45, targetScore: 55 },    // Level 6
-  { colorCount: 7, duration: 45, targetScore: 60 },    // Level 7
-  { colorCount: 7, duration: 40, targetScore: 65 },    // Level 8
-  { colorCount: 8, duration: 40, targetScore: 70 },    // Level 9
-  { colorCount: 8, duration: 35, targetScore: 75 },    // Level 10
+  // Levels 1-5: Easy introduction
+  { colorCount: 4, duration: 60, targetScore: 30, modeChangeEvery: 5 },    // Level 1
+  { colorCount: 4, duration: 58, targetScore: 32, modeChangeEvery: 5 },    // Level 2
+  { colorCount: 4, duration: 56, targetScore: 34, modeChangeEvery: 5 },    // Level 3
+  { colorCount: 5, duration: 54, targetScore: 36, modeChangeEvery: 5 },    // Level 4
+  { colorCount: 5, duration: 52, targetScore: 38, modeChangeEvery: 5 },    // Level 5
+
+  // Levels 6-10: Medium challenge
+  { colorCount: 5, duration: 50, targetScore: 40, modeChangeEvery: 4 },    // Level 6
+  { colorCount: 5, duration: 48, targetScore: 42, modeChangeEvery: 4 },    // Level 7
+  { colorCount: 6, duration: 46, targetScore: 45, modeChangeEvery: 4 },    // Level 8
+  { colorCount: 6, duration: 44, targetScore: 48, modeChangeEvery: 4 },    // Level 9
+  { colorCount: 6, duration: 42, targetScore: 50, modeChangeEvery: 4 },    // Level 10
+
+  // Levels 11-15: Harder progression
+  { colorCount: 6, duration: 40, targetScore: 52, modeChangeEvery: 3 },    // Level 11
+  { colorCount: 7, duration: 38, targetScore: 55, modeChangeEvery: 3 },    // Level 12
+  { colorCount: 7, duration: 36, targetScore: 58, modeChangeEvery: 3 },    // Level 13
+  { colorCount: 7, duration: 34, targetScore: 60, modeChangeEvery: 3 },    // Level 14
+  { colorCount: 7, duration: 32, targetScore: 62, modeChangeEvery: 3 },    // Level 15
+
+  // Levels 16-20: Advanced challenge
+  { colorCount: 7, duration: 30, targetScore: 65, modeChangeEvery: 2 },    // Level 16
+  { colorCount: 8, duration: 29, targetScore: 68, modeChangeEvery: 2 },    // Level 17
+  { colorCount: 8, duration: 28, targetScore: 70, modeChangeEvery: 2 },    // Level 18
+  { colorCount: 8, duration: 27, targetScore: 72, modeChangeEvery: 2 },    // Level 19
+  { colorCount: 8, duration: 26, targetScore: 74, modeChangeEvery: 2 },    // Level 20
+
+  // Levels 21-25: Expert level
+  { colorCount: 8, duration: 25, targetScore: 76, modeChangeEvery: 1 },    // Level 21
+  { colorCount: 8, duration: 24, targetScore: 78, modeChangeEvery: 1 },    // Level 22
+  { colorCount: 8, duration: 23, targetScore: 80, modeChangeEvery: 1 },    // Level 23
+  { colorCount: 8, duration: 22, targetScore: 82, modeChangeEvery: 1 },    // Level 24
+  { colorCount: 8, duration: 21, targetScore: 84, modeChangeEvery: 1 },    // Level 25
+
+  // Levels 26-30: Master level
+  { colorCount: 8, duration: 20, targetScore: 86, modeChangeEvery: 1 },    // Level 26
+  { colorCount: 8, duration: 19, targetScore: 88, modeChangeEvery: 1 },    // Level 27
+  { colorCount: 8, duration: 18, targetScore: 90, modeChangeEvery: 1 },    // Level 28
+  { colorCount: 8, duration: 17, targetScore: 92, modeChangeEvery: 1 },    // Level 29
+  { colorCount: 8, duration: 16, targetScore: 94, modeChangeEvery: 1 },    // Level 30
 ]
 
 export default function ColorMatchPage() {
@@ -49,6 +80,7 @@ export default function ColorMatchPage() {
   const [bestStreak, setBestStreak] = useState(0)
   const [timeLeft, setTimeLeft] = useState(0)
   const [level, setLevel] = useState(1)
+  const [questionCount, setQuestionCount] = useState(0)
 
   const settings = LEVEL_SETTINGS[Math.min(level - 1, LEVEL_SETTINGS.length - 1)]
 
@@ -77,6 +109,7 @@ export default function ColorMatchPage() {
     setCurrentColor(colors[0])
     setScore(0)
     setStreak(0)
+    setQuestionCount(0)
     setTimeLeft(settings.duration)
     setGameState('playing')
     generateQuestion()
@@ -107,10 +140,16 @@ export default function ColorMatchPage() {
       setStreak(0)
     }
 
+    setQuestionCount(prev => prev + 1)
+
     // Check if target score reached
     if (score + 1 >= settings.targetScore) {
       setGameState('levelComplete')
     } else {
+      // Change mode based on modeChangeEvery
+      if (questionCount + 1 % settings.modeChangeEvery === 0) {
+        setMode(prev => prev === 'text' ? 'color' : 'text')
+      }
       generateQuestion()
     }
   }

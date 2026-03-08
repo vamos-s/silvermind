@@ -6,19 +6,50 @@ import { motion, AnimatePresence } from 'framer-motion'
 import Link from 'next/link'
 import { useGameStore } from '@/lib/store'
 
-const MAX_LEVELS = 10
+const MAX_LEVELS = 30
 
 const LEVEL_SETTINGS = [
+  // Levels 1-5: Easy introduction
   { minWait: 2000, maxWait: 5000, targetTime: 400, rounds: 5 },  // Level 1
   { minWait: 1900, maxWait: 4800, targetTime: 380, rounds: 5 },  // Level 2
-  { minWait: 1800, maxWait: 4600, targetTime: 360, rounds: 6 },  // Level 3
-  { minWait: 1700, maxWait: 4400, targetTime: 340, rounds: 6 },  // Level 4
-  { minWait: 1600, maxWait: 4200, targetTime: 320, rounds: 7 },  // Level 5
-  { minWait: 1500, maxWait: 4000, targetTime: 300, rounds: 7 },  // Level 6
-  { minWait: 1400, maxWait: 3800, targetTime: 280, rounds: 8 },  // Level 7
-  { minWait: 1300, maxWait: 3600, targetTime: 260, rounds: 8 },  // Level 8
-  { minWait: 1200, maxWait: 3400, targetTime: 240, rounds: 9 },  // Level 9
-  { minWait: 1000, maxWait: 3000, targetTime: 220, rounds: 10 }, // Level 10
+  { minWait: 1800, maxWait: 4600, targetTime: 360, rounds: 5 },  // Level 3
+  { minWait: 1700, maxWait: 4400, targetTime: 340, rounds: 5 },  // Level 4
+  { minWait: 1600, maxWait: 4200, targetTime: 320, rounds: 5 },  // Level 5
+
+  // Levels 6-10: Medium challenge
+  { minWait: 1500, maxWait: 4000, targetTime: 300, rounds: 6 },  // Level 6
+  { minWait: 1400, maxWait: 3800, targetTime: 280, rounds: 6 },  // Level 7
+  { minWait: 1300, maxWait: 3600, targetTime: 260, rounds: 7 },  // Level 8
+  { minWait: 1200, maxWait: 3400, targetTime: 240, rounds: 7 },  // Level 9
+  { minWait: 1100, maxWait: 3200, targetTime: 220, rounds: 8 },  // Level 10
+
+  // Levels 11-15: Harder progression
+  { minWait: 1000, maxWait: 3000, targetTime: 200, rounds: 8 },  // Level 11
+  { minWait: 950, maxWait: 2850, targetTime: 190, rounds: 9 },   // Level 12
+  { minWait: 900, maxWait: 2700, targetTime: 180, rounds: 9 },   // Level 13
+  { minWait: 850, maxWait: 2550, targetTime: 170, rounds: 10 },  // Level 14
+  { minWait: 800, maxWait: 2400, targetTime: 160, rounds: 10 },  // Level 15
+
+  // Levels 16-20: Advanced challenge
+  { minWait: 750, maxWait: 2250, targetTime: 150, rounds: 11 },  // Level 16
+  { minWait: 700, maxWait: 2100, targetTime: 140, rounds: 11 },  // Level 17
+  { minWait: 650, maxWait: 1950, targetTime: 130, rounds: 12 },  // Level 18
+  { minWait: 600, maxWait: 1800, targetTime: 120, rounds: 12 },  // Level 19
+  { minWait: 550, maxWait: 1650, targetTime: 110, rounds: 13 },  // Level 20
+
+  // Levels 21-25: Expert level
+  { minWait: 500, maxWait: 1500, targetTime: 100, rounds: 13 },  // Level 21
+  { minWait: 480, maxWait: 1440, targetTime: 95, rounds: 14 },   // Level 22
+  { minWait: 460, maxWait: 1380, targetTime: 90, rounds: 14 },   // Level 23
+  { minWait: 440, maxWait: 1320, targetTime: 85, rounds: 15 },   // Level 24
+  { minWait: 420, maxWait: 1260, targetTime: 80, rounds: 15 },   // Level 25
+
+  // Levels 26-30: Master level
+  { minWait: 400, maxWait: 1200, targetTime: 75, rounds: 16 },   // Level 26
+  { minWait: 380, maxWait: 1140, targetTime: 70, rounds: 16 },   // Level 27
+  { minWait: 360, maxWait: 1080, targetTime: 65, rounds: 17 },   // Level 28
+  { minWait: 340, maxWait: 1020, targetTime: 60, rounds: 17 },   // Level 29
+  { minWait: 320, maxWait: 960, targetTime: 55, rounds: 18 },    // Level 30
 ]
 
 const WAIT_COLOR = 'bg-red-500'

@@ -6,19 +6,50 @@ import { motion } from 'framer-motion'
 import Link from 'next/link'
 import { useGameStore } from '@/lib/store'
 
-const MAX_LEVELS = 10
+const MAX_LEVELS = 30
 
 const LEVEL_SETTINGS = [
+  // Levels 1-5: Easy introduction
   { rounds: 5, minDelay: 2500, maxDelay: 5000, targetTime: 500 },  // Level 1
   { rounds: 5, minDelay: 2400, maxDelay: 4800, targetTime: 480 },  // Level 2
-  { rounds: 6, minDelay: 2300, maxDelay: 4600, targetTime: 460 },  // Level 3
-  { rounds: 6, minDelay: 2200, maxDelay: 4400, targetTime: 440 },  // Level 4
-  { rounds: 7, minDelay: 2100, maxDelay: 4200, targetTime: 420 },  // Level 5
-  { rounds: 7, minDelay: 2000, maxDelay: 4000, targetTime: 400 },  // Level 6
-  { rounds: 8, minDelay: 1900, maxDelay: 3800, targetTime: 380 },  // Level 7
-  { rounds: 8, minDelay: 1800, maxDelay: 3600, targetTime: 360 },  // Level 8
-  { rounds: 9, minDelay: 1700, maxDelay: 3400, targetTime: 340 },  // Level 9
-  { rounds: 10, minDelay: 1500, maxDelay: 3000, targetTime: 320 }, // Level 10
+  { rounds: 5, minDelay: 2300, maxDelay: 4600, targetTime: 460 },  // Level 3
+  { rounds: 5, minDelay: 2200, maxDelay: 4400, targetTime: 440 },  // Level 4
+  { rounds: 5, minDelay: 2100, maxDelay: 4200, targetTime: 420 },  // Level 5
+
+  // Levels 6-10: Medium challenge
+  { rounds: 6, minDelay: 2000, maxDelay: 4000, targetTime: 400 },  // Level 6
+  { rounds: 6, minDelay: 1900, maxDelay: 3800, targetTime: 380 },  // Level 7
+  { rounds: 6, minDelay: 1800, maxDelay: 3600, targetTime: 360 },  // Level 8
+  { rounds: 7, minDelay: 1700, maxDelay: 3400, targetTime: 340 },  // Level 9
+  { rounds: 7, minDelay: 1600, maxDelay: 3200, targetTime: 320 },  // Level 10
+
+  // Levels 11-15: Harder progression
+  { rounds: 7, minDelay: 1500, maxDelay: 3000, targetTime: 300 },  // Level 11
+  { rounds: 8, minDelay: 1450, maxDelay: 2900, targetTime: 285 },  // Level 12
+  { rounds: 8, minDelay: 1400, maxDelay: 2800, targetTime: 270 },  // Level 13
+  { rounds: 8, minDelay: 1350, maxDelay: 2700, targetTime: 255 },  // Level 14
+  { rounds: 9, minDelay: 1300, maxDelay: 2600, targetTime: 240 },  // Level 15
+
+  // Levels 16-20: Advanced challenge
+  { rounds: 9, minDelay: 1250, maxDelay: 2500, targetTime: 225 },  // Level 16
+  { rounds: 9, minDelay: 1200, maxDelay: 2400, targetTime: 210 },  // Level 17
+  { rounds: 10, minDelay: 1150, maxDelay: 2300, targetTime: 195 },  // Level 18
+  { rounds: 10, minDelay: 1100, maxDelay: 2200, targetTime: 180 },  // Level 19
+  { rounds: 10, minDelay: 1050, maxDelay: 2100, targetTime: 165 },  // Level 20
+
+  // Levels 21-25: Expert level
+  { rounds: 10, minDelay: 1000, maxDelay: 2000, targetTime: 150 },  // Level 21
+  { rounds: 11, minDelay: 950, maxDelay: 1900, targetTime: 140 },   // Level 22
+  { rounds: 11, minDelay: 900, maxDelay: 1800, targetTime: 130 },   // Level 23
+  { rounds: 12, minDelay: 850, maxDelay: 1700, targetTime: 120 },   // Level 24
+  { rounds: 12, minDelay: 800, maxDelay: 1600, targetTime: 110 },   // Level 25
+
+  // Levels 26-30: Master level
+  { rounds: 12, minDelay: 750, maxDelay: 1500, targetTime: 100 },   // Level 26
+  { rounds: 13, minDelay: 700, maxDelay: 1400, targetTime: 90 },    // Level 27
+  { rounds: 13, minDelay: 650, maxDelay: 1300, targetTime: 80 },    // Level 28
+  { rounds: 14, minDelay: 600, maxDelay: 1200, targetTime: 70 },    // Level 29
+  { rounds: 14, minDelay: 550, maxDelay: 1100, targetTime: 60 },    // Level 30
 ]
 
 export default function TimingGamePage() {

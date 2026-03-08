@@ -6,34 +6,69 @@ import { motion, AnimatePresence } from 'framer-motion'
 import Link from 'next/link'
 import { useGameStore } from '@/lib/store'
 
-const MAX_LEVELS = 10
+const MAX_LEVELS = 30
 
 const WORDS = {
   easy: [
-    'apple', 'book', 'chair', 'dog', 'egg', 'fish', 'glass', 'hat',
-    '사과', '책', '의자', '개', '달걀', '물고기', '안경', '모자'
+    'apple', 'book', 'chair', 'dog', 'egg', 'fish', 'glass', 'hat', 'ink', 'jam', 'key', 'lamp', 'moon',
+    '사과', '책', '의자', '개', '달걀', '물고기', '안경', '모자', '잉크', '잼', '열쇠', '램프', '달'
   ],
   medium: [
-    'butterfly', 'mountain', 'rainbow', 'sunset', 'umbrella', 'window', 'zebra', 'garden',
-    '나비', '산', '무지개', '일몰', '우산', '창문', '斑马', '정원'
+    'butterfly', 'mountain', 'rainbow', 'sunset', 'umbrella', 'window', 'zebra', 'garden', 'pyramid', 'dolphin', 'galaxy', 'symphony',
+    '나비', '산', '무지개', '일몰', '우산', '창문', '斑马', '정원', '피라미드', '돌고래', '은하', '교향곡'
   ],
   hard: [
-    'adventure', 'chocolate', 'encyclopedia', 'philosophy', 'serendipity', 'extraordinary', 'magnificent', 'breathtaking',
-    '모험', '초콜릿', '백과사전', '철학', '뜻밖의 발견', '비범한', '장엄한', '숨이 막히는'
+    'adventure', 'chocolate', 'encyclopedia', 'philosophy', 'serendipity', 'extraordinary', 'magnificent', 'breathtaking', 'consciousness', 'electromagnetic', 'phenomenological', 'understanding',
+    '모험', '초콜릿', '백과사전', '철학', '뜻밖의 발견', '비범한', '장엄한', '숨이 막히는', '의식', '전자기', '현상학적', '이해'
+  ],
+  expert: [
+    'epistemological', 'psycholinguistics', 'neuroplasticity', 'phenomenologically', 'characteristically', 'unquestionably', 'simultaneously', 'comprehensive', 'straightforward', 'interchangeable',
+    '인식론적', '심리언어학', '신경가소성', '현상학적으로', '특성적으로', '의심할 여지 없이', '동시에', '포괄적인', '간단명료한', '상호 교환 가능한'
   ]
 }
 
 const LEVEL_SETTINGS = [
+  // Levels 1-5: Easy introduction
   { wordCount: 3, duration: 2500, inputTime: 30, difficulty: 'easy' },    // Level 1
   { wordCount: 4, duration: 2300, inputTime: 35, difficulty: 'easy' },    // Level 2
   { wordCount: 5, duration: 2000, inputTime: 40, difficulty: 'easy' },    // Level 3
-  { wordCount: 5, duration: 1800, inputTime: 45, difficulty: 'medium' },  // Level 4
-  { wordCount: 6, duration: 1600, inputTime: 45, difficulty: 'medium' },  // Level 5
-  { wordCount: 7, duration: 1500, inputTime: 50, difficulty: 'medium' },  // Level 6
-  { wordCount: 7, duration: 1300, inputTime: 55, difficulty: 'hard' },     // Level 7
-  { wordCount: 8, duration: 1200, inputTime: 60, difficulty: 'hard' },     // Level 8
-  { wordCount: 9, duration: 1100, inputTime: 65, difficulty: 'hard' },     // Level 9
-  { wordCount: 10, duration: 1000, inputTime: 70, difficulty: 'hard' },    // Level 10
+  { wordCount: 5, duration: 1800, inputTime: 45, difficulty: 'easy' },    // Level 4
+  { wordCount: 6, duration: 1600, inputTime: 50, difficulty: 'easy' },    // Level 5
+
+  // Levels 6-10: Medium challenge
+  { wordCount: 6, duration: 1500, inputTime: 55, difficulty: 'medium' },  // Level 6
+  { wordCount: 7, duration: 1400, inputTime: 60, difficulty: 'medium' },  // Level 7
+  { wordCount: 7, duration: 1300, inputTime: 65, difficulty: 'medium' },  // Level 8
+  { wordCount: 8, duration: 1200, inputTime: 70, difficulty: 'medium' },  // Level 9
+  { wordCount: 8, duration: 1100, inputTime: 75, difficulty: 'medium' },  // Level 10
+
+  // Levels 11-15: Harder progression
+  { wordCount: 8, duration: 1000, inputTime: 80, difficulty: 'hard' },   // Level 11
+  { wordCount: 9, duration: 950, inputTime: 85, difficulty: 'hard' },     // Level 12
+  { wordCount: 9, duration: 900, inputTime: 90, difficulty: 'hard' },     // Level 13
+  { wordCount: 10, duration: 850, inputTime: 95, difficulty: 'hard' },    // Level 14
+  { wordCount: 10, duration: 800, inputTime: 100, difficulty: 'hard' },   // Level 15
+
+  // Levels 16-20: Advanced challenge
+  { wordCount: 10, duration: 750, inputTime: 105, difficulty: 'hard' },   // Level 16
+  { wordCount: 11, duration: 700, inputTime: 110, difficulty: 'hard' },   // Level 17
+  { wordCount: 11, duration: 650, inputTime: 115, difficulty: 'hard' },   // Level 18
+  { wordCount: 12, duration: 600, inputTime: 120, difficulty: 'hard' },   // Level 19
+  { wordCount: 12, duration: 550, inputTime: 125, difficulty: 'hard' },   // Level 20
+
+  // Levels 21-25: Expert level
+  { wordCount: 12, duration: 500, inputTime: 130, difficulty: 'expert' }, // Level 21
+  { wordCount: 13, duration: 480, inputTime: 135, difficulty: 'expert' }, // Level 22
+  { wordCount: 13, duration: 460, inputTime: 140, difficulty: 'expert' }, // Level 23
+  { wordCount: 14, duration: 440, inputTime: 145, difficulty: 'expert' }, // Level 24
+  { wordCount: 14, duration: 420, inputTime: 150, difficulty: 'expert' }, // Level 25
+
+  // Levels 26-30: Master level
+  { wordCount: 15, duration: 400, inputTime: 155, difficulty: 'expert' }, // Level 26
+  { wordCount: 15, duration: 380, inputTime: 160, difficulty: 'expert' }, // Level 27
+  { wordCount: 16, duration: 360, inputTime: 165, difficulty: 'expert' }, // Level 28
+  { wordCount: 16, duration: 340, inputTime: 170, difficulty: 'expert' }, // Level 29
+  { wordCount: 17, duration: 320, inputTime: 175, difficulty: 'expert' }, // Level 30
 ]
 
 export default function WordRecallPage() {
