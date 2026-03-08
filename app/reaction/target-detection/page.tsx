@@ -85,8 +85,9 @@ export default function TargetDetectionPage() {
       setRound(round + 1)
       setTimeout(generateRound, 500)
     } else {
-      // Remove clicked target
-      setTargets(targets.filter(t => t.id !== target.id))
+      // Remove clicked target and shuffle the remaining ones
+      const remaining = targets.filter(t => t.id !== target.id)
+      setTargets(remaining.sort(() => Math.random() - 0.5))
     }
   }
 
