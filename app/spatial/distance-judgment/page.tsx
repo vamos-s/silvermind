@@ -31,6 +31,8 @@ export default function DistanceJudgmentPage() {
     }
   }
 
+  const getPointSize = () => 16 // 16px = 1rem (w-4 h-4)
+
   const getOptionCount = () => {
     switch (currentDifficulty) {
       case 'easy': return 3
@@ -45,20 +47,28 @@ export default function DistanceJudgmentPage() {
 
   const generateQuestion = () => {
     const gridSize = getGridSize()
+    const pointSize = getPointSize()
     const optionCount = getOptionCount()
-    const margin = 50
+    const margin = 50 + pointSize / 2 // Add half point size to margin
 
-    // Reference point (red dot)
+    // Reference point (red dot) - keep well within bounds
     const refX = margin + Math.random() * (gridSize - margin * 2)
     const refY = margin + Math.random() * (gridSize - margin * 2)
     const refPoint: Point = { id: 0, x: refX, y: refY }
     setReferencePoint(refPoint)
 
     // Target point (not shown - user must estimate)
+    // Ensure target stays within grid bounds
     const minDist = currentDifficulty === 'easy' ? 100 : currentDifficulty === 'medium' ? 150 : 200
     const maxDist = currentDifficulty === 'easy' ? 200 : currentDifficulty === 'medium' ? 300 : 400
     const targetDist = minDist + Math.random() * (maxDist - minDist)
-    const angle = Math.random() * Math.PI * 2
+
+    // Calculate valid angle range to keep target within grid
+    const maxAngle = Math.asin(Math.min(1, Math.min(
+      (gridSize - margin - refY) / targetDist,
+      (refY - margin) / targetDist
+    )))
+    const angle = (Math.random() * 2 - 1) * maxAngle
 
     const targetX = refX + targetDist * Math.cos(angle)
     const targetY = refY + targetDist * Math.sin(angle)
@@ -66,28 +76,44 @@ export default function DistanceJudgmentPage() {
     setTargetPoint(target)
     setActualDistance(targetDist)
 
-    // Generate options
+    // Generate options - ensure they stay within grid bounds
     const newOptions: Point[] = []
     const usedDistances = new Set<number>()
 
     for (let i = 0; i < optionCount; i++) {
       let optDist: number
+      let optX: number, optY: number
       let attempts = 0
 
       do {
         const variance = currentDifficulty === 'easy' ? 30 : currentDifficulty === 'medium' ? 20 : 15
         optDist = targetDist + (Math.random() - 0.5) * variance * 2
         attempts++
+
+        // Generate random angle
+        const optAngle = Math.random() * Math.PI * 2
+
+        // Calculate position
+        optX = refX + optDist * Math.cos(optAngle)
+        optY = refY + optDist * Math.sin(optAngle)
+
+        // Check if within bounds
+        const withinBounds = optX >= margin && optX <= gridSize - margin &&
+                            optY >= margin && optY <= gridSize - margin
+
+        // Continue if distance is used, too close to target, or out of bounds
       } while (
-        (usedDistances.has(Math.round(optDist)) || Math.abs(optDist - targetDist) < 10) &&
-        attempts < 50
+        (usedDistances.has(Math.round(optDist)) || Math.abs(optDist - targetDist) < 10 ||
+         optX < margin || optX > gridSize - margin ||
+         optY < margin || optY > gridSize - margin) &&
+        attempts < 100
       )
 
       usedDistances.add(Math.round(optDist))
 
-      const optAngle = Math.random() * Math.PI * 2
-      const optX = refX + optDist * Math.cos(optAngle)
-      const optY = refY + optDist * Math.sin(optAngle)
+      // Clamp to bounds as fallback
+      optX = Math.max(margin, Math.min(gridSize - margin, optX))
+      optY = Math.max(margin, Math.min(gridSize - margin, optY))
 
       newOptions.push({ id: i + 1, x: optX, y: optY })
     }
