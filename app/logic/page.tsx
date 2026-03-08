@@ -8,6 +8,7 @@ const games = [
   { id: 'math-operations', icon: '➕', title: 'Math Operations', description: 'Solve math problems' },
   { id: 'sudoku', icon: '🔢', title: 'Sudoku', description: 'Fill in the numbers' },
   { id: 'logic-grid', icon: '🧩', title: 'Logic Grid', description: 'Solve logical puzzles' },
+  { id: 'logic-puzzle', icon: '📦', title: 'Logic Puzzle', description: 'Arrange boxes using clues' },
 ]
 
 export default function LogicPage() {
