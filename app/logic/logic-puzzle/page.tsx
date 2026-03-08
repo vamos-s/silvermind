@@ -194,15 +194,15 @@ export default function LogicPuzzlePage() {
     startGame()
   }
 
-  const handleDragStart = (e: React.DragEvent<HTMLDivElement>, index: number) => {
+  const handleDragStart = (e: any, index: number) => {
     e.dataTransfer.setData('text/plain', index.toString())
   }
 
-  const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
+  const handleDragOver = (e: any) => {
     e.preventDefault()
   }
 
-  const handleDrop = (e: React.DragEvent<HTMLDivElement>, dropIndex: number) => {
+  const handleDrop = (e: any, dropIndex: number) => {
     e.preventDefault()
     const dragIndex = parseInt(e.dataTransfer.getData('text/plain'))
 
