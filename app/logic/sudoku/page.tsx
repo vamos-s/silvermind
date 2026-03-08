@@ -58,10 +58,10 @@ export default function SudokuPage() {
     // Initialize empty grid
     const newGrid: CellValue[][] = Array(size).fill(null).map(() => Array(size).fill(null))
 
-    // Fill diagonal boxes (independent)
+    // Fill diagonal boxes with random numbers (these are independent and don't conflict)
     for (let boxRow = 0; boxRow < size; boxRow += subRows) {
       for (let boxCol = 0; boxCol < size; boxCol += subCols) {
-        // Only fill diagonal boxes (boxRow === boxCol)
+        // Only fill diagonal boxes (boxRow === boxCol) - they're independent
         if (boxRow !== boxCol) continue
 
         const numbers = Array.from({ length: size }, (_, i) => i + 1).sort(() => Math.random() - 0.5)
@@ -74,7 +74,7 @@ export default function SudokuPage() {
       }
     }
 
-    // Solve the rest
+    // Solve the rest using backtracking - this creates a complete valid Sudoku
     solveSudoku(newGrid, size)
 
     // Create copy for solution
