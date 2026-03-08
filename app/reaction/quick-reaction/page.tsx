@@ -6,11 +6,20 @@ import { motion, AnimatePresence } from 'framer-motion'
 import Link from 'next/link'
 import { useGameStore } from '@/lib/store'
 
-const DIFFICULTY_SETTINGS = {
-  easy: { minWait: 2000, maxWait: 5000, rounds: 5 },
-  medium: { minWait: 1500, maxWait: 4000, rounds: 7 },
-  hard: { minWait: 1000, maxWait: 3000, rounds: 10 },
-}
+const MAX_LEVELS = 10
+
+const LEVEL_SETTINGS = [
+  { minWait: 2000, maxWait: 5000, targetTime: 400, rounds: 5 },  // Level 1
+  { minWait: 1900, maxWait: 4800, targetTime: 380, rounds: 5 },  // Level 2
+  { minWait: 1800, maxWait: 4600, targetTime: 360, rounds: 6 },  // Level 3
+  { minWait: 1700, maxWait: 4400, targetTime: 340, rounds: 6 },  // Level 4
+  { minWait: 1600, maxWait: 4200, targetTime: 320, rounds: 7 },  // Level 5
+  { minWait: 1500, maxWait: 4000, targetTime: 300, rounds: 7 },  // Level 6
+  { minWait: 1400, maxWait: 3800, targetTime: 280, rounds: 8 },  // Level 7
+  { minWait: 1300, maxWait: 3600, targetTime: 260, rounds: 8 },  // Level 8
+  { minWait: 1200, maxWait: 3400, targetTime: 240, rounds: 9 },  // Level 9
+  { minWait: 1000, maxWait: 3000, targetTime: 220, rounds: 10 }, // Level 10
+]
 
 const WAIT_COLOR = 'bg-red-500'
 const ACTIVE_COLOR = 'bg-green-500'
@@ -18,21 +27,36 @@ const TOO_EARLY_COLOR = 'bg-orange-500'
 
 export default function QuickReactionPage() {
   const { t } = useTranslation()
-  const { currentDifficulty, addSession } = useGameStore()
+  const { addSession } = useGameStore()
 
-  const [gameState, setGameState] = useState<'menu' | 'waiting' | 'active' | 'early' | 'result'>('menu')
+  const [gameState, setGameState] = useState<'menu' | 'waiting' | 'active' | 'early' | 'levelComplete' | 'gameOver' | 'victory'>('menu')
   const [currentRound, setCurrentRound] = useState(0)
   const [reactionTimes, setReactionTimes] = useState<number[]>([])
   const [startTime, setStartTime] = useState(0)
   const [averageTime, setAverageTime] = useState(0)
   const [waitingTimeout, setWaitingTimeout] = useState<NodeJS.Timeout | null>(null)
+  const [level, setLevel] = useState(1)
+  const [totalScore, setTotalScore] = useState(0)
+  const [levelScore, setLevelScore] = useState(0)
 
-  const settings = DIFFICULTY_SETTINGS[currentDifficulty as keyof typeof DIFFICULTY_SETTINGS] || DIFFICULTY_SETTINGS.easy
+  const settings = LEVEL_SETTINGS[Math.min(level - 1, LEVEL_SETTINGS.length - 1)]
+
+  const calculateScore = (avgTime: number) => {
+    const ratio = settings.targetTime / avgTime
+    return Math.round(ratio * 100 * level)
+  }
 
   const startGame = useCallback(() => {
+    setLevel(1)
+    setTotalScore(0)
+    startLevel()
+  }, [])
+
+  const startLevel = useCallback(() => {
     setCurrentRound(0)
     setReactionTimes([])
     setAverageTime(0)
+    setLevelScore(0)
     startRound()
   }, [])
 
@@ -52,7 +76,7 @@ export default function QuickReactionPage() {
 
   const handleClick = useCallback(() => {
     if (gameState === 'waiting') {
-      // Clicked too early
+      // Clicked too early - penalize
       if (waitingTimeout) clearTimeout(waitingTimeout)
       setGameState('early')
       return
@@ -64,33 +88,11 @@ export default function QuickReactionPage() {
       setReactionTimes(newTimes)
 
       if (newTimes.length >= settings.rounds) {
-        // Game over
+        // Level complete
         const avg = Math.round(newTimes.reduce((a, b) => a + b, 0) / newTimes.length)
         setAverageTime(avg)
-
-        // Calculate score based on average reaction time
-        // Better (lower) reaction time = higher score
-        let score = 0
-        if (avg < 200) score = 100
-        else if (avg < 250) score = 90
-        else if (avg < 300) score = 80
-        else if (avg < 350) score = 70
-        else if (avg < 400) score = 60
-        else if (avg < 500) score = 50
-        else if (avg < 600) score = 40
-        else if (avg < 700) score = 30
-        else score = 20
-
-        addSession({
-          id: Date.now().toString(),
-          gameId: 'quick-reaction',
-          difficulty: currentDifficulty,
-          score: score,
-          completedAt: new Date(),
-          durationSeconds: Math.round((settings.rounds * 3) / 1000) // Rough estimate
-        })
-
-        setGameState('result')
+        setLevelScore(calculateScore(avg))
+        setGameState('levelComplete')
       } else {
         // Next round
         setGameState('waiting')
@@ -99,10 +101,40 @@ export default function QuickReactionPage() {
     }
 
     if (gameState === 'early') {
-      // Try again for this round
-      startRound()
+      // Try again for this round - add penalty
+      const newTimes = [...reactionTimes, 2000] // 2 second penalty
+      setReactionTimes(newTimes)
+
+      if (newTimes.length >= settings.rounds) {
+        const avg = Math.round(newTimes.reduce((a, b) => a + b, 0) / newTimes.length)
+        setAverageTime(avg)
+        setLevelScore(calculateScore(avg))
+        setGameState('levelComplete')
+      } else {
+        startRound()
+      }
     }
-  }, [gameState, startTime, reactionTimes, settings, waitingTimeout, addSession, currentDifficulty])
+  }, [gameState, startTime, reactionTimes, settings, waitingTimeout, calculateScore])
+
+  const nextLevel = () => {
+    setTotalScore(prev => prev + levelScore)
+
+    if (level >= MAX_LEVELS) {
+      addSession({
+        id: Date.now().toString(),
+        gameId: 'quick-reaction',
+        difficulty: 'hard',
+        score: totalScore + levelScore,
+        completedAt: new Date(),
+        durationSeconds: 0
+      })
+      setGameState('victory')
+    } else {
+      setLevel(prev => prev + 1)
+      setGameState('menu')
+      setTimeout(() => startLevel(), 100)
+    }
+  }
 
   const resetGame = useCallback(() => {
     if (waitingTimeout) clearTimeout(waitingTimeout)
@@ -119,14 +151,15 @@ export default function QuickReactionPage() {
   }, [waitingTimeout])
 
   const getRating = (avgTime: number) => {
-    if (avgTime < 200) return { text: 'Amazing!', color: 'text-green-600', emoji: '🚀' }
-    if (avgTime < 250) return { text: 'Excellent!', color: 'text-green-500', emoji: '⭐' }
-    if (avgTime < 300) return { text: 'Great!', color: 'text-blue-600', emoji: '👍' }
-    if (avgTime < 350) return { text: 'Good!', color: 'text-blue-500', emoji: '👌' }
-    if (avgTime < 400) return { text: 'Not bad!', color: 'text-yellow-600', emoji: '😊' }
-    if (avgTime < 500) return { text: 'Keep practicing!', color: 'text-yellow-500', emoji: '💪' }
-    if (avgTime < 600) return { text: 'Average!', color: 'text-orange-600', emoji: '🎯' }
-    return { text: 'Keep trying!', color: 'text-orange-500', emoji: '🏋️' }
+    const target = settings.targetTime
+    const ratio = target / avgTime
+
+    if (ratio >= 1.5) return { text: 'Amazing!', color: 'text-green-600', emoji: '🚀' }
+    if (ratio >= 1.3) return { text: 'Excellent!', color: 'text-green-500', emoji: '⭐' }
+    if (ratio >= 1.1) return { text: 'Great!', color: 'text-blue-600', emoji: '👍' }
+    if (ratio >= 0.9) return { text: 'Good!', color: 'text-blue-500', emoji: '👌' }
+    if (ratio >= 0.8) return { text: 'Almost there!', color: 'text-yellow-600', emoji: '😊' }
+    return { text: 'Keep trying!', color: 'text-orange-500', emoji: '💪' }
   }
 
   const rating = getRating(averageTime)
@@ -137,9 +170,9 @@ export default function QuickReactionPage() {
       <header className="bg-white shadow-sm p-6">
         <Link
           href="/reaction"
-          className="inline-flex items-center text-gray-600 hover:text-gray-900 mb-4 text-lg"
+          className="inline-flex items-center text-gray-700 hover:text-gray-900 font-medium mb-4 text-lg"
         >
-          <span className="mr-2">←</span> {t('back')}
+          <span className="mr-2">←</span> {t('back', 'Back')}
         </Link>
         <h1 className="text-3xl font-bold text-gray-800">
           {t('quickReaction.title', 'Quick Reaction')}
@@ -156,37 +189,27 @@ export default function QuickReactionPage() {
               animate={{ opacity: 1, y: 0 }}
               className="bg-white rounded-2xl shadow-lg p-8 text-center"
             >
-              <h2 className="text-3xl font-bold text-gray-800 mb-4">
-                {t('quickReaction.ready', 'Test your reaction speed!')}
+              <h2 className="text-3xl font-bold text-gray-800 mb-2">
+                Level {level}
               </h2>
+              {level > 1 && (
+                <p className="text-lg text-gray-700 mb-4 font-medium">
+                  Total Score: <span className="text-green-600 font-bold">{totalScore}</span>
+                </p>
+              )}
               <p className="text-lg text-gray-600 mb-6">
-                {t('quickReaction.instructions', 'Wait for the screen to turn GREEN, then click as fast as you can!')}
+                {t('quickReaction.instructions', 'Wait for screen to turn GREEN, then click as fast as you can!')}
               </p>
-              <div className="bg-gray-50 rounded-xl p-6 mb-6">
-                <div className="flex justify-around">
-                  <div className="text-center">
-                    <div className="w-16 h-16 bg-red-500 rounded-xl mx-auto mb-2"></div>
-                    <p className="text-sm text-gray-600">{t('quickReaction.wait', 'Wait')}</p>
-                  </div>
-                  <div className="text-center">
-                    <div className="w-16 h-16 bg-green-500 rounded-xl mx-auto mb-2"></div>
-                    <p className="text-sm text-gray-600">{t('quickReaction.click', 'Click!')}</p>
-                  </div>
-                  <div className="text-center">
-                    <div className="w-16 h-16 bg-orange-500 rounded-xl mx-auto mb-2"></div>
-                    <p className="text-sm text-gray-600">{t('quickReaction.tooEarly', 'Too Early')}</p>
-                  </div>
-                </div>
-              </div>
-              <div className="bg-blue-50 rounded-xl p-4 mb-6 text-left">
-                <h3 className="font-bold text-gray-800 mb-2">{t('quickReaction.difficultyInfo', 'Difficulty Settings')}:</h3>
-                <ul className="text-gray-700 space-y-1">
+              <div className="bg-green-50 rounded-xl p-4 mb-6 text-left">
+                <h3 className="font-bold text-gray-800 mb-2">{t('quickReaction.levelInfo', 'Level Settings')}:</h3>
+                <ul className="text-gray-700 space-y-1 font-medium">
                   <li>• {t('quickReaction.rounds', 'Rounds')}: {settings.rounds}</li>
                   <li>• {t('quickReaction.waitTime', 'Wait time')}: {settings.minWait / 1000}-{settings.maxWait / 1000}s</li>
+                  <li>• {t('quickReaction.targetTime', 'Target Time')}: {settings.targetTime}ms</li>
                 </ul>
               </div>
               <button
-                onClick={startGame}
+                onClick={startLevel}
                 className="bg-gradient-to-r from-green-500 to-blue-500 text-white text-2xl font-bold py-4 px-12 rounded-xl hover:from-green-600 hover:to-blue-600 shadow-lg transition-all w-full"
               >
                 {t('start', 'Start')}
@@ -200,14 +223,18 @@ export default function QuickReactionPage() {
               {/* Progress */}
               <div className="bg-white rounded-2xl shadow-lg p-4 mb-6">
                 <div className="flex justify-between items-center">
-                  <p className="text-gray-600">
-                    {t('quickReaction.round', 'Round')} {currentRound}/{settings.rounds}
-                  </p>
-                  {reactionTimes.length > 0 && (
-                    <p className="text-gray-600">
-                      {t('quickReaction.lastTime', 'Last')}: {reactionTimes[reactionTimes.length - 1]}ms
-                    </p>
-                  )}
+                  <p className="text-gray-700 text-sm font-medium">{t('quickReaction.level', 'Level')}</p>
+                  <p className="text-3xl font-bold text-green-600">{level}/{MAX_LEVELS}</p>
+                  <p className="text-gray-700 text-sm font-medium">{t('quickReaction.round', 'Round')}</p>
+                  <p className="text-3xl font-bold text-blue-600">{currentRound}/{settings.rounds}</p>
+                </div>
+                {/* Progress Bar */}
+                <div className="mt-4 bg-gray-200 rounded-full h-3 overflow-hidden">
+                  <motion.div
+                    initial={{ width: 0 }}
+                    animate={{ width: `${((currentRound) / settings.rounds) * 100}%` }}
+                    className="bg-gradient-to-r from-green-500 to-blue-500 h-full"
+                  />
                 </div>
               </div>
 
@@ -279,60 +306,110 @@ export default function QuickReactionPage() {
             </>
           )}
 
-          {/* Results */}
-          {gameState === 'result' && (
+          {/* Level Complete */}
+          {gameState === 'levelComplete' && (
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               className="bg-white rounded-2xl shadow-lg p-8 text-center"
             >
-              <h2 className="text-3xl font-bold text-gray-800 mb-4">
-                {t('quickReaction.results', 'Results')}
-              </h2>
+              <div className="text-6xl mb-4">✅</div>
+              <h2 className="text-4xl font-bold text-green-600 mb-4">Level {level} Complete!</h2>
 
               {/* Rating */}
-              <div className={`text-5xl mb-4 ${rating.color}`}>
+              <div className={`text-5xl mb-2 ${rating.color}`}>
                 {rating.emoji}
               </div>
-              <p className={`text-3xl font-bold mb-6 ${rating.color}`}>
+              <p className={`text-2xl font-bold mb-6 ${rating.color}`}>
                 {rating.text}
               </p>
 
               {/* Average Time */}
-              <div className="bg-gradient-to-r from-green-50 to-blue-50 rounded-xl p-6 mb-6">
-                <p className="text-gray-600 text-lg mb-2">
+              <div className="bg-green-50 rounded-xl p-6 mb-6">
+                <p className="text-gray-700 text-lg mb-2">
                   {t('quickReaction.averageTime', 'Average Reaction Time')}
                 </p>
                 <p className="text-6xl font-bold text-gray-800">
                   {averageTime}ms
                 </p>
-              </div>
-
-              {/* Individual Times */}
-              <div className="mb-6">
-                <h3 className="text-xl font-bold text-gray-800 mb-4">
-                  {t('quickReaction.individualTimes', 'Individual Times')}
-                </h3>
-                <div className="flex flex-wrap gap-3 justify-center">
-                  {reactionTimes.map((time, index) => (
-                    <div
-                      key={index}
-                      className="bg-gray-100 rounded-lg px-4 py-2 text-center"
-                    >
-                      <p className="text-sm text-gray-500">#{index + 1}</p>
-                      <p className="text-xl font-bold text-gray-800">{time}ms</p>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Best Time */}
-              <div className="bg-green-50 rounded-xl p-4 mb-6">
-                <p className="text-gray-600">
-                  {t('quickReaction.bestTime', 'Best Time')}: <span className="text-2xl font-bold text-green-600">{Math.min(...reactionTimes)}ms</span>
+                <p className="text-gray-600 mt-2">
+                  Target: {settings.targetTime}ms
                 </p>
               </div>
 
+              {/* Score */}
+              <div className="bg-blue-50 rounded-xl p-6 mb-6">
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <p className="text-gray-700 text-sm font-medium">{t('quickReaction.levelScore', 'Level Score')}</p>
+                    <p className="text-3xl font-bold text-green-600">{levelScore}</p>
+                  </div>
+                  <div>
+                    <p className="text-gray-700 text-sm font-medium">{t('quickReaction.totalScore', 'Total Score')}</p>
+                    <p className="text-3xl font-bold text-blue-600">{totalScore + levelScore}</p>
+                  </div>
+                </div>
+              </div>
+
+              <button
+                onClick={nextLevel}
+                className="bg-gradient-to-r from-green-500 to-blue-500 text-white text-2xl font-bold py-4 px-12 rounded-xl hover:from-green-600 hover:to-blue-600 shadow-lg transition-all w-full mb-3"
+              >
+                {level < MAX_LEVELS ? `Next Level ${level + 1}` : 'View Final Score'}
+              </button>
+              <button
+                onClick={startGame}
+                className="text-gray-600 hover:text-gray-800 font-medium"
+              >
+                {t('quickReaction.restart', 'Restart from Level 1')}
+              </button>
+            </motion.div>
+          )}
+
+          {/* Game Over */}
+          {gameState === 'gameOver' && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="bg-white rounded-2xl shadow-lg p-8 text-center"
+            >
+              <div className="text-6xl mb-4">❌</div>
+              <h2 className="text-4xl font-bold text-gray-800 mb-4">{t('quickReaction.gameOver', 'Game Over!')}</h2>
+              <div className="bg-orange-50 rounded-xl p-6 mb-6">
+                <p className="text-gray-700 text-sm font-medium">{t('quickReaction.finalScore', 'Final Score')}</p>
+                <p className="text-3xl font-bold text-orange-600">{totalScore}</p>
+              </div>
+              <button
+                onClick={startGame}
+                className="bg-gradient-to-r from-orange-500 to-red-500 text-white text-2xl font-bold py-4 px-12 rounded-xl hover:from-orange-600 hover:to-red-600 shadow-lg transition-all w-full mb-3"
+              >
+                {t('tryAgain', 'Try Again')}
+              </button>
+              <button
+                onClick={startGame}
+                className="text-gray-600 hover:text-gray-800 font-medium"
+              >
+                {t('quickReaction.restart', 'Restart from Level 1')}
+              </button>
+            </motion.div>
+          )}
+
+          {/* Victory */}
+          {gameState === 'victory' && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="bg-white rounded-2xl shadow-lg p-8 text-center"
+            >
+              <div className="text-6xl mb-4">🎉</div>
+              <h2 className="text-4xl font-bold text-green-600 mb-4">{t('quickReaction.victory', 'Congratulations!')}</h2>
+              <p className="text-xl text-gray-700 font-medium mb-6">
+                {t('quickReaction.victoryMessage', 'You completed all {count} levels!', { count: MAX_LEVELS })}
+              </p>
+              <div className="bg-green-50 rounded-xl p-6 mb-6">
+                <p className="text-gray-700 text-sm font-medium">{t('quickReaction.finalScore', 'Final Score')}</p>
+                <p className="text-5xl font-bold text-green-600">{totalScore + levelScore}</p>
+              </div>
               <button
                 onClick={startGame}
                 className="bg-gradient-to-r from-green-500 to-blue-500 text-white text-2xl font-bold py-4 px-12 rounded-xl hover:from-green-600 hover:to-blue-600 shadow-lg transition-all w-full"
