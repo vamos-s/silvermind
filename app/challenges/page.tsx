@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import Link from 'next/link'
 import { useGameStore } from '@/lib/store'
 import { DailyChallenge } from '@/lib/types'
+import { ThemeToggle } from '@/components/ThemeToggle'
 
 export default function ChallengesPage() {
   const { t } = useTranslation()
@@ -104,24 +105,27 @@ export default function ChallengesPage() {
 
   return (
     <div className={`min-h-screen ${darkMode ? 'bg-gradient-to-br from-slate-900 to-slate-800' : 'bg-gradient-to-br from-blue-50 to-purple-50'}`}>
-      <header className="p-6 bg-white dark:bg-gray-800 shadow-sm">
+      <header className={`p-6 shadow-sm ${darkMode ? 'bg-slate-900' : 'bg-white'}`}>
         <div className="flex justify-between items-center max-w-4xl mx-auto">
           <Link href="/">
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              className="flex items-center gap-2 text-gray-600 dark:text-gray-300 hover:text-gray-800 dark:hover:text-white"
+              className={`flex items-center gap-2 ${darkMode ? 'text-gray-300 hover:text-white' : 'text-gray-600 hover:text-gray-800'}`}
             >
               <span>←</span>
               <span>{t('back')}</span>
             </motion.button>
           </Link>
-          <h1 className="text-2xl font-bold text-gray-800 dark:text-white">
+          <h1 className={`text-2xl font-bold ${darkMode ? 'text-white' : 'text-gray-800'}`}>
             {t('challengesTitle')}
           </h1>
           <div className="w-20" />
         </div>
       </header>
+
+      {/* Theme Toggle - Fixed Position */}
+      <ThemeToggle />
 
       <main className="container mx-auto px-4 py-8 max-w-4xl">
         {/* Today's Challenges */}
@@ -130,10 +134,10 @@ export default function ChallengesPage() {
           animate={{ opacity: 1, y: 0 }}
           className="mb-8"
         >
-          <h2 className="text-xl font-bold text-gray-800 dark:text-white mb-4">
+          <h2 className={`text-xl font-bold mb-4 ${darkMode ? 'text-white' : 'text-gray-800'}`}>
             {t('todayChallenges')}
           </h2>
-          
+
           {allCompleted && (
             <motion.div
               initial={{ opacity: 0, scale: 0.9 }}
@@ -159,31 +163,31 @@ export default function ChallengesPage() {
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: 0.1 * (index + 1) }}
-                  className={`bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg border-2 ${
-                    isCompleted 
-                      ? 'border-green-300 dark:border-green-600' 
-                      : progress > 0 
-                        ? 'border-purple-300 dark:border-purple-600' 
-                        : 'border-gray-200 dark:border-gray-600'
-                  }`}
+                  className={`rounded-2xl p-6 shadow-lg border-2 ${
+                    isCompleted
+                      ? 'border-green-400 dark:border-green-600'
+                      : progress > 0
+                        ? 'border-purple-400 dark:border-purple-600'
+                        : 'border-gray-200 dark:border-gray-700'
+                  } ${darkMode ? 'bg-gray-800' : 'bg-white'}`}
                 >
                   <div className="flex items-start justify-between mb-4">
                     <div className="flex-1">
                       <div className="flex items-center gap-2 mb-2">
                         <span className={`px-2 py-1 text-xs font-semibold rounded ${
-                          challenge.type === 'score' ? 'bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300' :
-                          challenge.type === 'complete' ? 'bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300' :
-                          'bg-purple-100 text-purple-700 dark:bg-purple-900 dark:text-purple-300'
+                          challenge.type === 'score' ? 'bg-blue-600 text-white' :
+                          challenge.type === 'complete' ? 'bg-green-600 text-white' :
+                          'bg-purple-600 text-white'
                         }`}>
                           {challenge.type.toUpperCase()}
                         </span>
                         {isCompleted && (
-                          <span className="px-2 py-1 text-xs font-semibold rounded bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300">
+                          <span className="px-2 py-1 text-xs font-semibold rounded bg-green-600 text-white">
                             {t('completed')}
                           </span>
                         )}
                       </div>
-                      <h3 className="text-lg font-bold text-gray-800 dark:text-white">
+                      <h3 className={`text-lg font-bold ${darkMode ? 'text-white' : 'text-gray-800'}`}>
                         {challenge.description.en}
                       </h3>
                     </div>
@@ -199,24 +203,24 @@ export default function ChallengesPage() {
                   </div>
 
                   {/* Progress Bar */}
-                  <div className="relative h-4 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden mb-2">
+                  <div className={`relative h-4 rounded-full overflow-hidden mb-2 ${darkMode ? 'bg-gray-700' : 'bg-gray-200'}`}>
                     <motion.div
                       initial={{ width: 0 }}
                       animate={{ width: `${progress}%` }}
                       transition={{ duration: 0.8, delay: 0.2 * index }}
                       className={`absolute h-full rounded-full ${
-                        isCompleted 
-                          ? 'bg-gradient-to-r from-green-400 to-emerald-500' 
+                        isCompleted
+                          ? 'bg-gradient-to-r from-green-400 to-emerald-500'
                           : 'bg-gradient-to-r from-purple-500 to-pink-500'
                       }`}
                     />
                   </div>
 
                   <div className="flex items-center justify-between">
-                    <p className="text-sm text-gray-600 dark:text-gray-400">
+                    <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                       {progressText}
                     </p>
-                    
+
                     {canComplete && (
                       <motion.button
                         whileHover={{ scale: 1.05 }}
@@ -241,21 +245,21 @@ export default function ChallengesPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4 }}
           >
-            <h2 className="text-lg font-semibold text-gray-600 dark:text-gray-400 mb-4">
+            <h2 className={`text-lg font-semibold mb-4 ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
               Yesterday
             </h2>
             <div className="space-y-3 opacity-60">
               {yesterdayChallenges.map((challenge, index) => (
                 <div
                   key={challenge.id}
-                  className="bg-white dark:bg-gray-800 rounded-xl p-4 border-2 border-gray-200 dark:border-gray-700"
+                  className={`rounded-xl p-4 border-2 ${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'}`}
                 >
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="font-medium text-gray-800 dark:text-white">
+                      <p className={`font-medium ${darkMode ? 'text-white' : 'text-gray-800'}`}>
                         {challenge.description.en}
                       </p>
-                      <p className="text-sm text-gray-600 dark:text-gray-400">
+                      <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                         {challenge.completed ? '✓ Completed' : '✗ Not completed'}
                       </p>
                     </div>

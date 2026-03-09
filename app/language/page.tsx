@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { useTranslation } from 'react-i18next'
 import { useGameStore } from '@/lib/store'
 import { CATEGORY_COLORS } from '@/lib/game-data/colors'
+import { ThemeToggle } from '@/components/ThemeToggle'
 
 const games = [
   {
@@ -64,21 +65,24 @@ export default function LanguagePage() {
   const { darkMode } = useGameStore()
 
   return (
-    <div className={`min-h-screen ${darkMode ? 'bg-slate-900 text-white' : 'bg-gray-50 text-gray-900'}`}>
-      <header className="p-6 bg-white dark:bg-gray-800 shadow-sm">
+    <div className={`min-h-screen ${darkMode ? 'bg-gradient-to-br from-slate-900 to-slate-800' : 'bg-gradient-to-br from-blue-50 to-purple-50'}`}>
+      <header className={`p-6 shadow-sm ${darkMode ? 'bg-slate-900' : 'bg-white'}`}>
         <div className="max-w-6xl mx-auto">
           <Link href="/">
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              className={`px-4 py-2 rounded-lg ${darkMode ? 'text-indigo-400' : 'text-indigo-600'}`}
+              className={`px-4 py-2 rounded-lg ${darkMode ? 'text-indigo-400 hover:text-indigo-300' : 'text-indigo-600 hover:text-indigo-700'}`}
             >
               ← {t('back')}
             </motion.button>
           </Link>
-          <h1 className="text-4xl font-bold mt-4">📝 Language & Verbal</h1>
+          <h1 className={`text-4xl font-bold mt-4 ${darkMode ? 'text-white' : 'text-gray-800'}`}>📝 Language & Verbal</h1>
         </div>
       </header>
+
+      {/* Theme Toggle - Fixed Position */}
+      <ThemeToggle />
 
       <main className="p-6 max-w-6xl mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -92,10 +96,12 @@ export default function LanguagePage() {
               whileTap={{ scale: 0.95 }}
             >
               <Link href={`/language/${game.id}`}>
-                <div className={`${darkMode ? 'bg-gray-800' : 'bg-white'} rounded-xl p-6 shadow-lg hover:shadow-xl transition-shadow h-full`}>
+                <div className={`rounded-xl p-6 shadow-lg hover:shadow-xl transition-shadow h-full ${
+                  darkMode ? 'bg-gray-800 hover:bg-gray-750' : 'bg-white hover:bg-gray-50'
+                }`}>
                   <div className="text-5xl mb-4">{game.icon}</div>
-                  <h2 className="text-xl font-bold mb-2">{game.title.ko || game.title.en}</h2>
-                  <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                  <h2 className={`text-xl font-bold mb-2 ${darkMode ? 'text-white' : 'text-gray-800'}`}>{game.title.ko || game.title.en}</h2>
+                  <p className={`text-sm ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
                     {game.description.ko || game.description.en}
                   </p>
                   <div className="mt-4 flex gap-2">

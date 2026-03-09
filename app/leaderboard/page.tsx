@@ -6,6 +6,7 @@ import { motion } from 'framer-motion'
 import Link from 'next/link'
 import { useGameStore } from '@/lib/store'
 import { Difficulty } from '@/lib/types'
+import { ThemeToggle } from '@/components/ThemeToggle'
 
 export default function LeaderboardPage() {
   const { t } = useTranslation()
@@ -49,24 +50,27 @@ export default function LeaderboardPage() {
 
   return (
     <div className={`min-h-screen ${darkMode ? 'bg-gradient-to-br from-slate-900 to-slate-800' : 'bg-gradient-to-br from-blue-50 to-purple-50'}`}>
-      <header className="p-6 bg-white dark:bg-gray-800 shadow-sm">
+      <header className={`p-6 shadow-sm ${darkMode ? 'bg-slate-900' : 'bg-white'}`}>
         <div className="flex justify-between items-center max-w-4xl mx-auto">
           <Link href="/">
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              className="flex items-center gap-2 text-gray-600 dark:text-gray-300 hover:text-gray-800 dark:hover:text-white"
+              className={`flex items-center gap-2 ${darkMode ? 'text-gray-300 hover:text-white' : 'text-gray-600 hover:text-gray-800'}`}
             >
               <span>←</span>
               <span>{t('back')}</span>
             </motion.button>
           </Link>
-          <h1 className="text-2xl font-bold text-gray-800 dark:text-white">
+          <h1 className={`text-2xl font-bold ${darkMode ? 'text-white' : 'text-gray-800'}`}>
             {t('leaderboardTitle')}
           </h1>
           <div className="w-20" />
         </div>
       </header>
+
+      {/* Theme Toggle - Fixed Position */}
+      <ThemeToggle />
 
       <main className="container mx-auto px-4 py-8 max-w-4xl">
         {/* Filters */}
@@ -77,13 +81,13 @@ export default function LeaderboardPage() {
         >
           <div className="flex flex-col sm:flex-row gap-4">
             <div className="flex-1">
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              <label className={`block text-sm font-medium mb-2 ${darkMode ? 'text-gray-400' : 'text-gray-700'}`}>
                 {t('filterByGame')}
               </label>
               <select
                 value={selectedGame}
                 onChange={(e) => setSelectedGame(e.target.value)}
-                className="w-full p-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-800 dark:text-white"
+                className={`w-full p-3 rounded-lg border ${darkMode ? 'bg-gray-800 border-gray-700 text-white' : 'bg-white border-gray-300 text-gray-800'}`}
               >
                 <option value="all">{t('allGames')}</option>
                 {gameIds.map(gameId => (
@@ -93,15 +97,15 @@ export default function LeaderboardPage() {
                 ))}
               </select>
             </div>
-            
+
             <div className="w-full sm:w-48">
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              <label className={`block text-sm font-medium mb-2 ${darkMode ? 'text-gray-400' : 'text-gray-700'}`}>
                 {t('difficulty')}
               </label>
               <select
                 value={selectedDifficulty}
                 onChange={(e) => setSelectedDifficulty(e.target.value as Difficulty | 'all')}
-                className="w-full p-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-800 dark:text-white"
+                className={`w-full p-3 rounded-lg border ${darkMode ? 'bg-gray-800 border-gray-700 text-white' : 'bg-white border-gray-300 text-gray-800'}`}
               >
                 <option value="all">{t('allGames')}</option>
                 <option value="easy">{t('easy')}</option>
@@ -118,9 +122,9 @@ export default function LeaderboardPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
-            className="mb-8 bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6"
+            className={`mb-8 rounded-2xl shadow-lg p-6 ${darkMode ? 'bg-gray-800' : 'bg-white'}`}
           >
-            <h2 className="text-xl font-bold text-gray-800 dark:text-white mb-4">
+            <h2 className={`text-xl font-bold mb-4 ${darkMode ? 'text-white' : 'text-gray-800'}`}>
               {t('bestScores')}
             </h2>
             <div className="space-y-3">
@@ -131,9 +135,9 @@ export default function LeaderboardPage() {
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: 0.1 * (index + 1) }}
                   className={`flex items-center justify-between p-4 rounded-lg ${
-                    index === 0 ? 'bg-yellow-50 dark:bg-yellow-900/20' : 
+                    index === 0 ? 'bg-yellow-50 dark:bg-yellow-900/30' :
                     index === 1 ? 'bg-gray-50 dark:bg-gray-700/50' :
-                    index === 2 ? 'bg-orange-50 dark:bg-orange-900/20' :
+                    index === 2 ? 'bg-orange-50 dark:bg-orange-900/30' :
                     'bg-gray-50 dark:bg-gray-700/30'
                   }`}
                 >
@@ -147,10 +151,10 @@ export default function LeaderboardPage() {
                       {index + 1}
                     </div>
                     <div>
-                      <p className="font-semibold text-gray-800 dark:text-white">
+                      <p className={`font-semibold ${darkMode ? 'text-white' : 'text-gray-800'}`}>
                         {formatGameId(item.gameId)}
                       </p>
-                      <p className="text-sm text-gray-600 dark:text-gray-400">
+                      <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                         {t(item.difficulty)}
                       </p>
                     </div>
@@ -169,14 +173,14 @@ export default function LeaderboardPage() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
-          className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6"
+          className={`rounded-2xl shadow-lg p-6 ${darkMode ? 'bg-gray-800' : 'bg-white'}`}
         >
-          <h2 className="text-xl font-bold text-gray-800 dark:text-white mb-4">
+          <h2 className={`text-xl font-bold mb-4 ${darkMode ? 'text-white' : 'text-gray-800'}`}>
             {t('topScores')}
           </h2>
-          
+
           {filteredSessions.length === 0 ? (
-            <div className="text-center py-12 text-gray-500 dark:text-gray-400">
+            <div className={`text-center py-12 ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>
               <p className="text-6xl mb-4">🎮</p>
               <p>{t('noScores')}</p>
             </div>
@@ -189,9 +193,9 @@ export default function LeaderboardPage() {
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: 0.05 * (index + 1) }}
                   className={`flex items-center justify-between p-4 rounded-lg ${
-                    index === 0 ? 'bg-yellow-50 dark:bg-yellow-900/20' : 
+                    index === 0 ? 'bg-yellow-50 dark:bg-yellow-900/30' :
                     index === 1 ? 'bg-gray-50 dark:bg-gray-700/50' :
-                    index === 2 ? 'bg-orange-50 dark:bg-orange-900/20' :
+                    index === 2 ? 'bg-orange-50 dark:bg-orange-900/30' :
                     'bg-gray-50 dark:bg-gray-700/30'
                   }`}
                 >
@@ -205,10 +209,10 @@ export default function LeaderboardPage() {
                       {index + 1}
                     </div>
                     <div>
-                      <p className="font-semibold text-gray-800 dark:text-white">
+                      <p className={`font-semibold ${darkMode ? 'text-white' : 'text-gray-800'}`}>
                         {formatGameId(session.gameId)}
                       </p>
-                      <p className="text-sm text-gray-600 dark:text-gray-400">
+                      <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                         {t(session.difficulty)} • {new Date(session.completedAt).toLocaleDateString()}
                       </p>
                     </div>
