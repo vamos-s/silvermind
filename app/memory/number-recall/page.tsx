@@ -113,7 +113,7 @@ export default function NumberRecallPage() {
   }, [playerInput])
 
   return (
-    <div className={`min-h-screen p-3 md:p-4 lg:p-8 transition-colors duration-300 ${darkMode ? "bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white" : "bg-gradient-to-br from-blue-50 to-purple-50 p-4 md:p-8"}`}
+    <div className={`min-h-screen p-3 md:p-4 lg:p-8 transition-colors duration-300 ${darkMode ? "bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white" : "bg-gradient-to-br from-blue-50 to-purple-50 p-4 md:p-8"}`}>
       <SettingsPanel />
       <div className="max-w-lg mx-auto">
         <header className="mb-6">

@@ -197,7 +197,7 @@ export default function QuickReactionPage() {
   const rating = getRating(averageTime)
 
   return (
-    <div className={`min-h-screen p-3 md:p-4 lg:p-8 transition-colors duration-300 ${darkMode ? "bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white" : "flex flex-col"}`}
+    <div className={`min-h-screen p-3 md:p-4 lg:p-8 transition-colors duration-300 ${darkMode ? "bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white" : "flex flex-col"}`}>
       <SettingsPanel />
       {/* Header */}
       <header className="bg-white dark:bg-slate-800 shadow-sm p-6">
