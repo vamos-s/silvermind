@@ -7,25 +7,32 @@ export function LayoutClient({ children }: { children: React.ReactNode }) {
   const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
+    // Immediately set mounted to allow rendering
     setMounted(true)
 
-    // Import and initialize i18n on client side
+    // Import and initialize i18n synchronously if possible
     const initI18n = async () => {
       try {
         const i18n = (await import('@/lib/i18n')).default
 
-        // Detect browser language and set html lang attribute
+        // Check localStorage for saved language first, then browser detection
+        const savedLang = localStorage.getItem('language')
         const browserLang = navigator.language.split('-')[0]
         const supportedLanguages = ['en', 'ko', 'ja', 'zh', 'es', 'fr', 'de', 'pt', 'ru', 'ar']
 
-        const detectedLang = supportedLanguages.includes(browserLang) ? browserLang : 'en'
+        let targetLang = 'en'
+        if (savedLang && supportedLanguages.includes(savedLang)) {
+          targetLang = savedLang
+        } else if (supportedLanguages.includes(browserLang)) {
+          targetLang = browserLang
+        }
 
         // Set html lang attribute
-        document.documentElement.lang = detectedLang
+        document.documentElement.lang = targetLang
 
-        // Sync i18n language with detected language
-        if (i18n.language !== detectedLang) {
-          await i18n.changeLanguage(detectedLang)
+        // Sync i18n language with target language
+        if (i18n.language !== targetLang) {
+          await i18n.changeLanguage(targetLang)
         }
       } catch (error) {
         console.error('Failed to initialize i18n:', error)
@@ -35,11 +42,6 @@ export function LayoutClient({ children }: { children: React.ReactNode }) {
     initI18n()
   }, [])
 
-  // Don't render until mounted to prevent hydration mismatch
-  // This ensures server-rendered HTML matches client-rendered HTML
-  if (!mounted) {
-    return <ThemeProvider>{children}</ThemeProvider>
-  }
-
+  // Render immediately after mount - children will re-render when language changes
   return <ThemeProvider>{children}</ThemeProvider>
 }

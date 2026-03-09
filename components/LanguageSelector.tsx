@@ -42,6 +42,7 @@ export function LanguageSelector() {
 
   const handleLanguageChange = (langCode: string) => {
     i18n.changeLanguage(langCode)
+    localStorage.setItem('language', langCode)
     document.documentElement.lang = langCode
     setIsOpen(false)
   }
