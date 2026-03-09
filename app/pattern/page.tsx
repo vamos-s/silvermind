@@ -4,39 +4,18 @@ import { useTranslation } from 'react-i18next'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
 import { useGameStore } from '@/lib/store'
-import { ThemeToggle } from '@/components/SettingsPanel'
+import { SettingsPanel } from '@/components/SettingsPanel'
 
 const games = [
-  {
-    id: 'sequence-completion',
-    title: { ko: '시퀀스 완성', en: 'Sequence Completion' },
-    description: { ko: '패턴을 완성하세요', en: 'Complete the pattern' },
-    icon: '📊',
-  },
-  {
-    id: 'pattern-recognition',
-    title: { ko: '패턴 인식', en: 'Pattern Recognition' },
-    description: { ko: '다음을 식별하세요', en: 'Identify what comes next' },
-    icon: '🔷',
-  },
-  {
-    id: 'maze-navigation',
-    title: { ko: '미로 내비게이션', en: 'Maze Navigation' },
-    description: { ko: '미로를 통해 길을 찾으세요', en: 'Find your way through the maze' },
-    icon: '🧩',
-  },
-  {
-    id: 'jigsaw-puzzle',
-    title: { ko: '지그소 퍼즐', en: 'Jigsaw Puzzle' },
-    description: { ko: '조각을 배열하세요', en: 'Arrange the pieces' },
-    icon: '🖼️',
-  },
+  { id: 'sequence-completion', icon: '📊' },
+  { id: 'pattern-recognition', icon: '🔷' },
+  { id: 'maze-navigation', icon: '🧩' },
+  { id: 'jigsaw-puzzle', icon: '🖼️' },
 ]
 
 export default function PatternPage() {
-  const { t, i18n } = useTranslation()
+  const { t } = useTranslation()
   const { darkMode } = useGameStore()
-  const lang = i18n.language
 
   return (
     <div className={`min-h-screen ${darkMode ? 'bg-gradient-to-br from-slate-900 to-slate-800' : 'bg-gradient-to-br from-blue-50 to-purple-50'}`}>
@@ -51,11 +30,10 @@ export default function PatternPage() {
               ← {t('back')}
             </motion.button>
           </Link>
-          <h1 className={`text-4xl font-bold mt-4 ${darkMode ? 'text-white' : 'text-gray-800'}`}>🔮 Pattern Recognition</h1>
+          <h1 className={`text-4xl font-bold mt-4 ${darkMode ? 'text-white' : 'text-gray-800'}`}>🔮 {t('pattern')}</h1>
         </div>
       </header>
 
-      {/* Theme Toggle - Fixed Position */}
       <SettingsPanel />
 
       <main className="p-6 max-w-6xl mx-auto">
@@ -75,10 +53,10 @@ export default function PatternPage() {
               >
                 <span className="text-5xl block mb-4">{game.icon}</span>
                 <h2 className={`text-2xl font-bold mb-2 ${darkMode ? 'text-white' : 'text-gray-800'}`}>
-                  {game.title[lang as keyof typeof game.title] || game.title.en}
+                  {t(`games.${game.id}.title`)}
                 </h2>
                 <p className={darkMode ? 'text-gray-300' : 'text-gray-600'}>
-                  {game.description[lang as keyof typeof game.description] || game.description.en}
+                  {t(`games.${game.id}.description`)}
                 </p>
               </motion.div>
             </Link>

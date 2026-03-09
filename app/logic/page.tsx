@@ -4,45 +4,19 @@ import { useTranslation } from 'react-i18next'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
 import { useGameStore } from '@/lib/store'
-import { ThemeToggle } from '@/components/SettingsPanel'
+import { SettingsPanel } from '@/components/SettingsPanel'
 
 const games = [
-  {
-    id: 'math-operations',
-    title: { ko: '수학 연산', en: 'Math Operations' },
-    description: { ko: '수학 문제를 풀으세요', en: 'Solve math problems' },
-    icon: '➕',
-  },
-  {
-    id: 'sudoku',
-    title: { ko: '스도쿠', en: 'Sudoku' },
-    description: { ko: '숫자를 채우세요', en: 'Fill in the numbers' },
-    icon: '🔢',
-  },
-  {
-    id: 'number-sequence',
-    title: { ko: '숫자 시퀀스', en: 'Number Sequence' },
-    description: { ko: '다음 숫자를 찾으세요', en: 'Find the next number' },
-    icon: '📊',
-  },
-  {
-    id: 'logic-grid',
-    title: { ko: '논리 그리드', en: 'Logic Grid' },
-    description: { ko: '논리 퍼즐을 풀으세요', en: 'Solve logical puzzles' },
-    icon: '🧩',
-  },
-  {
-    id: 'logic-puzzle',
-    title: { ko: '논리 퍼즐', en: 'Logic Puzzle' },
-    description: { ko: '단서를 사용하여 상자를 정렬하세요', en: 'Arrange boxes using clues' },
-    icon: '📦',
-  },
+  { id: 'math-operations', icon: '➕' },
+  { id: 'sudoku', icon: '🔢' },
+  { id: 'number-sequence', icon: '📊' },
+  { id: 'logic-grid', icon: '🧩' },
+  { id: 'logic-puzzle', icon: '📦' },
 ]
 
 export default function LogicPage() {
-  const { t, i18n } = useTranslation()
+  const { t } = useTranslation()
   const { darkMode } = useGameStore()
-  const lang = i18n.language
 
   return (
     <div className={`min-h-screen ${darkMode ? 'bg-gradient-to-br from-slate-900 to-slate-800' : 'bg-gradient-to-br from-blue-50 to-purple-50'}`}>
@@ -57,11 +31,10 @@ export default function LogicPage() {
               ← {t('back')}
             </motion.button>
           </Link>
-          <h1 className={`text-4xl font-bold mt-4 ${darkMode ? 'text-white' : 'text-gray-800'}`}>🧩 Logic & Reasoning</h1>
+          <h1 className={`text-4xl font-bold mt-4 ${darkMode ? 'text-white' : 'text-gray-800'}`}>🧩 {t('logic')}</h1>
         </div>
       </header>
 
-      {/* Theme Toggle - Fixed Position */}
       <SettingsPanel />
 
       <main className="p-6 max-w-6xl mx-auto">
@@ -81,10 +54,10 @@ export default function LogicPage() {
               >
                 <span className="text-5xl block mb-4">{game.icon}</span>
                 <h2 className={`text-2xl font-bold mb-2 ${darkMode ? 'text-white' : 'text-gray-800'}`}>
-                  {game.title[lang as keyof typeof game.title] || game.title.en}
+                  {t(`games.${game.id}.title`)}
                 </h2>
                 <p className={darkMode ? 'text-gray-300' : 'text-gray-600'}>
-                  {game.description[lang as keyof typeof game.description] || game.description.en}
+                  {t(`games.${game.id}.description`)}
                 </p>
               </motion.div>
             </Link>

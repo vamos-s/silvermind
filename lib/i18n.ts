@@ -96,6 +96,224 @@ const resources = {
       spatial: 'Spatial',
       attention: 'Attention & Focus',
       language: 'Language & Verbal',
+
+      // Games - Memory
+      games: {
+        'pattern-matching': {
+          title: 'Pattern Matching',
+          description: 'Remember and reproduce patterns'
+        },
+        'word-association': {
+          title: 'Word Association',
+          description: 'Find words in the same category'
+        },
+        'number-recall': {
+          title: 'Number Recall',
+          description: 'Remember number sequences'
+        },
+        'sequence-memory': {
+          title: 'Sequence Memory',
+          description: 'Watch and repeat the sequence'
+        },
+        'word-recall': {
+          title: 'Word Recall',
+          description: 'Remember and type the words'
+        },
+        'card-flip': {
+          title: 'Card Flip',
+          description: 'Match the pairs of cards'
+        },
+        'location-memory': {
+          title: 'Location Memory',
+          description: 'Remember item positions'
+        },
+        // Pattern
+        'sequence-completion': {
+          title: 'Sequence Completion',
+          description: 'Complete the pattern sequence'
+        },
+        'pattern-recognition': {
+          title: 'Pattern Recognition',
+          description: 'Identify the correct pattern'
+        },
+        'symbol-matching': {
+          title: 'Symbol Matching',
+          description: 'Match identical symbols'
+        },
+        'pattern-memory': {
+          title: 'Pattern Memory',
+          description: 'Remember and recreate patterns'
+        },
+        'maze-navigation': {
+          title: 'Maze Navigation',
+          description: 'Find your way through the maze'
+        },
+        'jigsaw-puzzle': {
+          title: 'Jigsaw Puzzle',
+          description: 'Arrange the pieces'
+        },
+        // Logic
+        'number-sequence': {
+          title: 'Number Sequence',
+          description: 'Find the next number in the sequence'
+        },
+        'word-puzzle': {
+          title: 'Word Puzzle',
+          description: 'Solve the word puzzle'
+        },
+        'logic-grid': {
+          title: 'Logic Grid',
+          description: 'Solve the logic puzzle'
+        },
+        'math-quiz': {
+          title: 'Math Quiz',
+          description: 'Solve math problems'
+        },
+        'sudoku': {
+          title: 'Sudoku',
+          description: 'Fill in the grid correctly'
+        },
+        'logic-problem': {
+          title: 'Logic Problem',
+          description: 'Solve logical reasoning problems'
+        },
+        // Reaction
+        'quick-tap': {
+          title: 'Quick Tap',
+          description: 'Tap as fast as you can'
+        },
+        'reaction-time': {
+          title: 'Reaction Time',
+          description: 'Test your reaction speed'
+        },
+        'color-match': {
+          title: 'Color Match',
+          description: 'Match the color or word'
+        },
+        'symbol-reaction': {
+          title: 'Symbol Reaction',
+          description: 'React to symbols quickly'
+        },
+        'timing-game': {
+          title: 'Timing Game',
+          description: 'Click when color changes'
+        },
+        'target-detection': {
+          title: 'Target Detection',
+          description: 'Find targets quickly'
+        },
+        'quick-reaction': {
+          title: 'Quick Reaction',
+          description: 'Test your reaction speed'
+        },
+        // Spatial
+        'rotation-puzzle': {
+          title: 'Rotation Puzzle',
+          description: 'Match the rotated shape'
+        },
+        'spatial-memory': {
+          title: 'Spatial Memory',
+          description: 'Remember the spatial arrangement'
+        },
+        'mental-rotation': {
+          title: 'Mental Rotation',
+          description: 'Rotate the shape mentally'
+        },
+        'block-puzzle': {
+          title: 'Block Puzzle',
+          description: 'Arrange the blocks correctly'
+        },
+        'rotated-shapes': {
+          title: 'Rotated Shapes',
+          description: 'Match rotated shapes'
+        },
+        'distance-judgment': {
+          title: 'Distance Judgment',
+          description: 'Estimate distances'
+        },
+        'pattern-in-3d': {
+          title: 'Pattern in 3D',
+          description: 'Match 3D patterns'
+        },
+        'mental-rotation-advanced': {
+          title: 'Mental Rotation Advanced',
+          description: 'Advanced complex shapes rotation'
+        },
+        'shape-reconstruction': {
+          title: 'Shape Reconstruction',
+          description: 'Reconstruct shapes from parts'
+        },
+        'perspective-matching': {
+          title: 'Perspective Matching',
+          description: 'Match object perspectives'
+        },
+        'cube-navigation': {
+          title: 'Cube Navigation',
+          description: 'Navigate through 3D cube'
+        },
+        // Attention
+        'find-difference': {
+          title: 'Find Difference',
+          description: 'Find the differences'
+        },
+        'attention-test': {
+          title: 'Attention Test',
+          description: 'Test your attention span'
+        },
+        'focused-search': {
+          title: 'Focused Search',
+          description: 'Find the target item'
+        },
+        'spotlight': {
+          title: 'Spotlight',
+          description: 'Find hidden objects with limited visibility'
+        },
+        'selective-search': {
+          title: 'Selective Search',
+          description: 'Find targets among distractors'
+        },
+        'concentration-grid': {
+          title: 'Concentration Grid',
+          description: 'Find numbers in sequence quickly'
+        },
+        'focus-tracker': {
+          title: 'Focus Tracker',
+          description: 'Track one object among many moving objects'
+        },
+        // Language
+        'word-chain': {
+          title: 'Word Chain',
+          description: 'Connect words with associations'
+        },
+        'spelling': {
+          title: 'Spelling',
+          description: 'Spell the words correctly'
+        },
+        'antonyms': {
+          title: 'Antonyms',
+          description: 'Find the opposite word'
+        },
+        'synonyms': {
+          title: 'Synonyms',
+          description: 'Find the similar word'
+        },
+        'word-scramble': {
+          title: 'Word Scramble',
+          description: 'Create correct words from scrambled letters'
+        },
+        'anagrams': {
+          title: 'Anagrams',
+          description: 'Create different words from same letters'
+        },
+        'synonym-matcher': {
+          title: 'Synonym Matcher',
+          description: 'Match words with same meaning'
+        },
+        'idiom-riddle': {
+          title: 'Idiom Riddle',
+          description: 'Guess meanings of idioms and proverbs'
+        },
+      },
     }
   },
   ko: {

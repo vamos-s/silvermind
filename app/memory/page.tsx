@@ -4,57 +4,21 @@ import { useTranslation } from 'react-i18next'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
 import { useGameStore } from '@/lib/store'
-import { ThemeToggle } from '@/components/SettingsPanel'
+import { SettingsPanel } from '@/components/SettingsPanel'
 
 const games = [
-  {
-    id: 'pattern-matching',
-    title: { ko: '패턴 매칭', en: 'Pattern Matching' },
-    description: { ko: '패턴을 기억하고 재현하세요', en: 'Remember and reproduce patterns' },
-    icon: '🎨',
-  },
-  {
-    id: 'word-association',
-    title: { ko: '단어 연상', en: 'Word Association' },
-    description: { ko: '같은 카테고리의 단어를 찾으세요', en: 'Find words in the same category' },
-    icon: '🔗',
-  },
-  {
-    id: 'number-recall',
-    title: { ko: '숫자 기억', en: 'Number Recall' },
-    description: { ko: '숫자 순서를 기억하세요', en: 'Remember number sequences' },
-    icon: '🔢',
-  },
-  {
-    id: 'sequence-memory',
-    title: { ko: '시퀀스 기억', en: 'Sequence Memory' },
-    description: { ko: '순서를 보고 반복하세요', en: 'Watch and repeat the sequence' },
-    icon: '🔔',
-  },
-  {
-    id: 'word-recall',
-    title: { ko: '단어 기억', en: 'Word Recall' },
-    description: { ko: '단어를 기억하고 입력하세요', en: 'Remember and type the words' },
-    icon: '📝',
-  },
-  {
-    id: 'card-flip',
-    title: { ko: '카드 뒤집기', en: 'Card Flip' },
-    description: { ko: '카드 쌍을 맞추세요', en: 'Match the pairs of cards' },
-    icon: '🃏',
-  },
-  {
-    id: 'location-memory',
-    title: { ko: '위치 기억', en: 'Location Memory' },
-    description: { ko: '아이템 위치를 기억하세요', en: 'Remember item positions' },
-    icon: '📍',
-  },
+  { id: 'pattern-matching', icon: '🎨' },
+  { id: 'word-association', icon: '🔗' },
+  { id: 'number-recall', icon: '🔢' },
+  { id: 'sequence-memory', icon: '🔔' },
+  { id: 'word-recall', icon: '📝' },
+  { id: 'card-flip', icon: '🃏' },
+  { id: 'location-memory', icon: '📍' },
 ]
 
 export default function MemoryPage() {
-  const { t, i18n } = useTranslation()
+  const { t } = useTranslation()
   const { darkMode } = useGameStore()
-  const lang = i18n.language
 
   return (
     <div className={`min-h-screen ${darkMode ? 'bg-gradient-to-br from-slate-900 to-slate-800' : 'bg-gradient-to-br from-blue-50 to-purple-50'}`}>
@@ -73,7 +37,6 @@ export default function MemoryPage() {
         </div>
       </header>
 
-      {/* Theme Toggle - Fixed Position */}
       <SettingsPanel />
 
       <main className="p-6 max-w-6xl mx-auto">
@@ -93,10 +56,10 @@ export default function MemoryPage() {
               >
                 <span className="text-5xl block mb-4">{game.icon}</span>
                 <h2 className={`text-2xl font-bold mb-2 ${darkMode ? 'text-white' : 'text-gray-800'}`}>
-                  {game.title[lang as keyof typeof game.title] || game.title.en}
+                  {t(`games.${game.id}.title`)}
                 </h2>
                 <p className={darkMode ? 'text-gray-300' : 'text-gray-600'}>
-                  {game.description[lang as keyof typeof game.description] || game.description.en}
+                  {t(`games.${game.id}.description`)}
                 </p>
               </motion.div>
             </Link>

@@ -5,59 +5,14 @@ import Link from 'next/link'
 import { useTranslation } from 'react-i18next'
 import { useGameStore } from '@/lib/store'
 import { CATEGORY_COLORS } from '@/lib/game-data/colors'
-import { ThemeToggle } from '@/components/SettingsPanel'
+import { SettingsPanel } from '@/components/SettingsPanel'
 
 const games = [
-  {
-    id: 'word-scramble',
-    title: { ko: '워드 스크램블', en: 'Word Scramble' },
-    description: {
-      ko: '섞인 글자로 올바른 단어를 만드세요',
-      en: 'Create correct words from scrambled letters'
-    },
-    icon: '🔤',
-    color: CATEGORY_COLORS.language.primary,
-  },
-  {
-    id: 'anagrams',
-    title: { ko: '아나그램', en: 'Anagrams' },
-    description: {
-      ko: '같은 글자로 다른 단어 만들기',
-      en: 'Create different words from same letters'
-    },
-    icon: '🔄',
-    color: CATEGORY_COLORS.language.primary,
-  },
-  {
-    id: 'synonym-matcher',
-    title: { ko: '유의어 매칭', en: 'Synonym Matcher' },
-    description: {
-      ko: '같은 의미의 단어를 매칭하세요',
-      en: 'Match words with same meaning'
-    },
-    icon: '🔗',
-    color: CATEGORY_COLORS.language.primary,
-  },
-  {
-    id: 'idiom-riddle',
-    title: { ko: '속담 수수께끼', en: 'Idiom Riddle' },
-    description: {
-      ko: '속담과 관용사의 뜻을 맞추세요',
-      en: 'Guess meanings of idioms and proverbs'
-    },
-    icon: '📚',
-    color: CATEGORY_COLORS.language.primary,
-  },
-  {
-    id: 'word-chain',
-    title: { ko: '워드 체인', en: 'Word Chain' },
-    description: {
-      ko: '끝말잇기로 단어 체인을 만드세요',
-      en: 'Chain words where each starts with last letter'
-    },
-    icon: '⛓️',
-    color: CATEGORY_COLORS.language.primary,
-  },
+  { id: 'word-scramble', icon: '🔤', color: CATEGORY_COLORS.language.primary },
+  { id: 'anagrams', icon: '🔄', color: CATEGORY_COLORS.language.primary },
+  { id: 'synonym-matcher', icon: '🔗', color: CATEGORY_COLORS.language.primary },
+  { id: 'idiom-riddle', icon: '📚', color: CATEGORY_COLORS.language.primary },
+  { id: 'word-chain', icon: '⛓️', color: CATEGORY_COLORS.language.primary },
 ]
 
 export default function LanguagePage() {
@@ -77,11 +32,10 @@ export default function LanguagePage() {
               ← {t('back')}
             </motion.button>
           </Link>
-          <h1 className={`text-4xl font-bold mt-4 ${darkMode ? 'text-white' : 'text-gray-800'}`}>📝 Language & Verbal</h1>
+          <h1 className={`text-4xl font-bold mt-4 ${darkMode ? 'text-white' : 'text-gray-800'}`}>📝 {t('language')}</h1>
         </div>
       </header>
 
-      {/* Theme Toggle - Fixed Position */}
       <SettingsPanel />
 
       <main className="p-6 max-w-6xl mx-auto">
@@ -100,9 +54,9 @@ export default function LanguagePage() {
                   darkMode ? 'bg-gray-800 hover:bg-gray-750' : 'bg-white hover:bg-gray-50'
                 }`}>
                   <div className="text-5xl mb-4">{game.icon}</div>
-                  <h2 className={`text-xl font-bold mb-2 ${darkMode ? 'text-white' : 'text-gray-800'}`}>{game.title.ko || game.title.en}</h2>
+                  <h2 className={`text-xl font-bold mb-2 ${darkMode ? 'text-white' : 'text-gray-800'}`}>{t(`games.${game.id}.title`)}</h2>
                   <p className={`text-sm ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
-                    {game.description.ko || game.description.en}
+                    {t(`games.${game.id}.description`)}
                   </p>
                 </div>
               </Link>

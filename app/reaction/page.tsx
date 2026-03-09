@@ -4,39 +4,18 @@ import { useTranslation } from 'react-i18next'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
 import { useGameStore } from '@/lib/store'
-import { ThemeToggle } from '@/components/SettingsPanel'
+import { SettingsPanel } from '@/components/SettingsPanel'
 
 const games = [
-  {
-    id: 'timing-game',
-    title: { ko: '타이밍 게임', en: 'Timing Game' },
-    description: { ko: '색이 변할 때 클릭하세요', en: 'Click when the color changes' },
-    icon: '⏱️',
-  },
-  {
-    id: 'target-detection',
-    title: { ko: '타겟 탐지', en: 'Target Detection' },
-    description: { ko: '타겟을 빠르게 찾으세요', en: 'Find the targets quickly' },
-    icon: '🎯',
-  },
-  {
-    id: 'color-match',
-    title: { ko: '컬러 매치', en: 'Color Match' },
-    description: { ko: '색이나 단어를 일치시키세요', en: 'Match the color or word' },
-    icon: '🌈',
-  },
-  {
-    id: 'quick-reaction',
-    title: { ko: '퀵 리액션', en: 'Quick Reaction' },
-    description: { ko: '반응 속도를 테스트하세요', en: 'Test your reaction speed' },
-    icon: '⚡',
-  },
+  { id: 'timing-game', icon: '⏱️' },
+  { id: 'target-detection', icon: '🎯' },
+  { id: 'color-match', icon: '🌈' },
+  { id: 'quick-reaction', icon: '⚡' },
 ]
 
 export default function ReactionPage() {
-  const { t, i18n } = useTranslation()
+  const { t } = useTranslation()
   const { darkMode } = useGameStore()
-  const lang = i18n.language
 
   return (
     <div className={`min-h-screen ${darkMode ? 'bg-gradient-to-br from-slate-900 to-slate-800' : 'bg-gradient-to-br from-blue-50 to-purple-50'}`}>
@@ -55,7 +34,6 @@ export default function ReactionPage() {
         </div>
       </header>
 
-      {/* Theme Toggle - Fixed Position */}
       <SettingsPanel />
 
       <main className="container mx-auto px-4 py-8">
@@ -75,10 +53,10 @@ export default function ReactionPage() {
               >
                 <span className="text-5xl block mb-4">{game.icon}</span>
                 <h2 className={`text-2xl font-bold mb-2 ${darkMode ? 'text-white' : 'text-gray-800'}`}>
-                  {game.title[lang as keyof typeof game.title] || game.title.en}
+                  {t(`games.${game.id}.title`)}
                 </h2>
                 <p className={darkMode ? 'text-gray-300' : 'text-gray-600'}>
-                  {game.description[lang as keyof typeof game.description] || game.description.en}
+                  {t(`games.${game.id}.description`)}
                 </p>
               </motion.div>
             </Link>
