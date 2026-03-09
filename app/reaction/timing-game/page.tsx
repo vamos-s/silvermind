@@ -55,7 +55,7 @@ const LEVEL_SETTINGS = [
 
 export default function TimingGamePage() {
   const { t } = useTranslation()
-  const { addSession } = useGameStore()
+  const { addSession, darkMode } = useGameStore()
 
   const [gameState, setGameState] = useState<'menu' | 'waiting' | 'ready' | 'finished' | 'levelComplete' | 'gameOver' | 'victory'>('menu')
   const [startTime, setStartTime] = useState(0)
@@ -176,33 +176,33 @@ export default function TimingGamePage() {
 
   if (gameState === 'menu') {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-yellow-50 to-orange-50 p-4 md:p-8">
+      <div className="min-h-screen p-4 md:p-8 transition-colors duration-300 {darkMode ? "bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white" : "bg-gradient-to-br from-yellow-50 to-orange-50 p-4 md:p-8"}">
       <SettingsPanel />
         <div className="max-w-lg mx-auto">
-          <Link href="/reaction" className="text-gray-700 hover:text-gray-900 font-medium mb-6 block">
+          <Link href="/reaction" className="text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white font-medium mb-6 block">
             ← {t('back', 'Back')}
           </Link>
 
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="bg-white rounded-2xl shadow-lg p-8 text-center"
+            className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-8 text-center"
           >
-            <h1 className="text-4xl font-bold text-gray-800 mb-2">⏱️ Timing Game</h1>
-            <h2 className="text-3xl font-bold text-gray-800 mb-2">
+            <h1 className="text-4xl font-bold text-gray-800 dark:text-white mb-2">⏱️ Timing Game</h1>
+            <h2 className="text-3xl font-bold text-gray-800 dark:text-white mb-2">
               Level {level}
             </h2>
             {level > 1 && (
-              <p className="text-lg text-gray-700 mb-4 font-medium">
+              <p className="text-lg text-gray-700 dark:text-gray-300 mb-4 font-medium">
                 Total Score: <span className="text-yellow-600 font-bold">{totalScore}</span>
               </p>
             )}
-            <p className="text-lg text-gray-600 mb-6">
+            <p className="text-lg text-gray-600 dark:text-gray-400 mb-6">
               Wait for the screen to turn GREEN, then click as fast as you can!
             </p>
             <div className="bg-yellow-50 rounded-xl p-4 mb-6 text-left">
-              <h3 className="font-bold text-gray-800 mb-2">Level Settings:</h3>
-              <ul className="text-gray-700 space-y-1 font-medium">
+              <h3 className="font-bold text-gray-800 dark:text-white mb-2">Level Settings:</h3>
+              <ul className="text-gray-700 dark:text-gray-300 space-y-1 font-medium">
                 <li>• Rounds: {settings.rounds}</li>
                 <li>• Delay: {settings.minDelay / 1000}-{settings.maxDelay / 1000}s</li>
                 <li>• Target Time: {settings.targetTime}ms</li>
@@ -222,31 +222,31 @@ export default function TimingGamePage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-yellow-50 to-orange-50">
-      <header className="p-6 bg-white shadow-sm">
+      <header className="p-6 bg-white dark:bg-slate-800 shadow-sm">
         <Link href="/reaction" className="text-yellow-500 hover:underline mb-4 block">
           ← Back
         </Link>
-        <h1 className="text-3xl font-bold text-gray-800">⏱️ Timing Game</h1>
+        <h1 className="text-3xl font-bold text-gray-800 dark:text-white">⏱️ Timing Game</h1>
       </header>
 
       <main className="container mx-auto px-4 py-8">
         <div className="max-w-lg mx-auto text-center mb-8">
-          <div className="bg-white rounded-2xl shadow-lg p-4 mb-6">
+          <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-4 mb-6">
             <div className="flex justify-around text-center">
               <div>
-                <p className="text-gray-700 text-sm font-medium">Level</p>
+                <p className="text-gray-700 dark:text-gray-300 text-sm font-medium">Level</p>
                 <p className="text-3xl font-bold text-yellow-600">{level}/{MAX_LEVELS}</p>
               </div>
               <div>
-                <p className="text-gray-700 text-sm font-medium">Round</p>
+                <p className="text-gray-700 dark:text-gray-300 text-sm font-medium">Round</p>
                 <p className="text-3xl font-bold text-orange-600">{round}/{settings.rounds}</p>
               </div>
               <div>
-                <p className="text-gray-700 text-sm font-medium">Score</p>
+                <p className="text-gray-700 dark:text-gray-300 text-sm font-medium">Score</p>
                 <p className="text-3xl font-bold text-yellow-600">{score}</p>
               </div>
             </div>
-            <div className="mt-4 bg-gray-200 rounded-full h-3 overflow-hidden">
+            <div className="mt-4 bg-gray-200 dark:bg-slate-700 rounded-full h-3 overflow-hidden">
               <motion.div
                 initial={{ width: 0 }}
                 animate={{ width: `${(round / settings.rounds) * 100}%` }}
@@ -285,12 +285,12 @@ export default function TimingGamePage() {
           )}
         </motion.button>
 
-        <div className="mt-8 bg-white rounded-xl p-6 shadow-lg max-w-lg mx-auto">
-          <h2 className="text-xl font-bold mb-4 text-gray-800">Previous Times</h2>
+        <div className="mt-8 bg-white dark:bg-slate-800 rounded-xl p-6 shadow-lg max-w-lg mx-auto">
+          <h2 className="text-xl font-bold mb-4 text-gray-800 dark:text-white">Previous Times</h2>
           <div className="space-y-2">
             {reactionTimes.map((time, i) => (
               <div key={i} className="flex justify-between text-lg">
-                <span className="text-gray-600">Round {i + 1}:</span>
+                <span className="text-gray-600 dark:text-gray-400">Round {i + 1}:</span>
                 <span className={time === -1 ? 'text-red-500' : 'text-green-500'}>
                   {time === -1 ? 'Too early' : `${time}ms`}
                 </span>
@@ -306,23 +306,23 @@ export default function TimingGamePage() {
             animate={{ opacity: 1, y: 0 }}
             className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50"
           >
-            <div className="bg-white rounded-2xl shadow-2xl p-8 max-w-md w-full">
+            <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl p-8 max-w-md w-full">
               <div className="text-6xl mb-4 text-center">✅</div>
               <h2 className="text-4xl font-bold text-yellow-600 mb-4 text-center">Level {level} Complete!</h2>
               <div className="bg-yellow-50 rounded-xl p-6 mb-6">
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <p className="text-gray-700 text-sm font-medium">Level Score</p>
+                    <p className="text-gray-700 dark:text-gray-300 text-sm font-medium">Level Score</p>
                     <p className="text-3xl font-bold text-yellow-600">{score}</p>
                   </div>
                   <div>
-                    <p className="text-gray-700 text-sm font-medium">Total Score</p>
+                    <p className="text-gray-700 dark:text-gray-300 text-sm font-medium">Total Score</p>
                     <p className="text-3xl font-bold text-orange-600">{totalScore + score}</p>
                   </div>
                 </div>
                 <div className="mt-4 text-center">
-                  <p className="text-gray-600">Avg Time: {avgTime > 0 ? `${Math.round(avgTime)}ms` : 'N/A'}</p>
-                  <p className="text-gray-600">Target: {settings.targetTime}ms</p>
+                  <p className="text-gray-600 dark:text-gray-400">Avg Time: {avgTime > 0 ? `${Math.round(avgTime)}ms` : 'N/A'}</p>
+                  <p className="text-gray-600 dark:text-gray-400">Target: {settings.targetTime}ms</p>
                 </div>
               </div>
               <button
@@ -333,7 +333,7 @@ export default function TimingGamePage() {
               </button>
               <button
                 onClick={startGame}
-                className="text-gray-600 hover:text-gray-800 font-medium w-full text-center"
+                className="text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:text-white font-medium w-full text-center"
               >
                 Restart from Level 1
               </button>
@@ -348,14 +348,14 @@ export default function TimingGamePage() {
             animate={{ opacity: 1, y: 0 }}
             className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50"
           >
-            <div className="bg-white rounded-2xl shadow-2xl p-8 max-w-md w-full">
+            <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl p-8 max-w-md w-full">
               <div className="text-6xl mb-4 text-center">🎉</div>
               <h2 className="text-4xl font-bold text-yellow-600 mb-4 text-center">Congratulations!</h2>
-              <p className="text-xl text-gray-700 text-center mb-6">
+              <p className="text-xl text-gray-700 dark:text-gray-300 text-center mb-6">
                 You completed all {MAX_LEVELS} levels!
               </p>
               <div className="bg-yellow-50 rounded-xl p-6 mb-6">
-                <p className="text-gray-700 text-sm font-medium text-center">Final Score</p>
+                <p className="text-gray-700 dark:text-gray-300 text-sm font-medium text-center">Final Score</p>
                 <p className="text-5xl font-bold text-yellow-600 text-center">{totalScore + score}</p>
               </div>
               <button

@@ -108,7 +108,7 @@ const generateSequence = (type: SequenceType, length: number): { sequence: numbe
 
 export default function NumberSequencePage() {
   const { t } = useTranslation()
-  const { addSession } = useGameStore()
+  const { addSession, darkMode } = useGameStore()
 
   const [gameState, setGameState] = useState<'menu' | 'showing' | 'input' | 'levelComplete' | 'gameOver' | 'victory'>('menu')
   const [sequence, setSequence] = useState<number[]>([])
@@ -196,21 +196,21 @@ export default function NumberSequencePage() {
   }, [gameState, timeLeft])
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-teal-50 via-white to-cyan-50 p-4 md:p-8">
+    <div className="min-h-screen p-4 md:p-8 transition-colors duration-300 {darkMode ? "bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white" : "bg-gradient-to-br from-teal-50 via-white to-cyan-50 p-4 md:p-8"}">
       <SettingsPanel />
       <div className="max-w-2xl mx-auto">
         {/* Header */}
         <Link
           href="/logic"
-          className="inline-flex items-center text-gray-700 hover:text-gray-900 font-medium mb-6 text-lg"
+          className="inline-flex items-center text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white font-medium mb-6 text-lg"
         >
           <span className="mr-2">←</span> {t('back', 'Back')}
         </Link>
 
-        <h1 className="text-3xl md:text-4xl font-bold text-gray-800 mb-2">
+        <h1 className="text-3xl md:text-4xl font-bold text-gray-800 dark:text-white mb-2">
           {t('numberSequence.title', 'Number Sequence')}
         </h1>
-        <p className="text-lg text-gray-700 font-medium mb-8">
+        <p className="text-lg text-gray-700 dark:text-gray-300 font-medium mb-8">
           {t('numberSequence.description', 'Find the next number in the sequence!')}
         </p>
 
@@ -219,19 +219,19 @@ export default function NumberSequencePage() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="bg-white rounded-2xl shadow-lg p-8 text-center"
+            className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-8 text-center"
           >
-            <h2 className="text-3xl font-bold text-gray-800 mb-2">
+            <h2 className="text-3xl font-bold text-gray-800 dark:text-white mb-2">
               Level {level}
             </h2>
             {level > 1 && (
-              <p className="text-lg text-gray-700 mb-4 font-medium">
+              <p className="text-lg text-gray-700 dark:text-gray-300 mb-4 font-medium">
                 Total Score: <span className="text-teal-600 font-bold">{totalScore}</span>
               </p>
             )}
             <div className="bg-teal-50 rounded-xl p-4 mb-6 text-left">
-              <h3 className="font-bold text-gray-800 mb-2">{t('numberSequence.levelInfo', 'Level Settings')}:</h3>
-              <ul className="text-gray-700 space-y-1 font-medium">
+              <h3 className="font-bold text-gray-800 dark:text-white mb-2">{t('numberSequence.levelInfo', 'Level Settings')}:</h3>
+              <ul className="text-gray-700 dark:text-gray-300 space-y-1 font-medium">
                 <li>• {t('numberSequence.type', 'Type')}: {settings.type}</li>
                 <li>• {t('numberSequence.sequenceLength', 'Sequence Length')}: {settings.sequenceLength}</li>
                 <li>• {t('numberSequence.inputTime', 'Time Limit')}: {settings.inputTime}s</li>
@@ -248,8 +248,8 @@ export default function NumberSequencePage() {
 
         {/* Showing sequence */}
         {gameState === 'showing' && (
-          <div className="bg-white rounded-2xl shadow-lg p-8 text-center">
-            <p className="text-xl text-gray-600 mb-4 font-medium">
+          <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-8 text-center">
+            <p className="text-xl text-gray-600 dark:text-gray-400 mb-4 font-medium">
               {t('numberSequence.memorize', 'Memorize the pattern!')}
             </p>
             <div className="flex flex-wrap justify-center gap-3 mb-4">
@@ -274,25 +274,25 @@ export default function NumberSequencePage() {
         {gameState === 'input' && (
           <>
             {/* Stats */}
-            <div className="bg-white rounded-2xl shadow-lg p-6 mb-6">
+            <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-6 mb-6">
               <div className="flex justify-between items-center">
                 <div>
-                  <p className="text-gray-700 text-sm font-medium">{t('numberSequence.level', 'Level')}</p>
+                  <p className="text-gray-700 dark:text-gray-300 text-sm font-medium">{t('numberSequence.level', 'Level')}</p>
                   <p className="text-3xl font-bold text-teal-600">{level}/{MAX_LEVELS}</p>
                 </div>
                 <div>
-                  <p className="text-gray-700 text-sm font-medium">{t('numberSequence.score', 'Score')}</p>
+                  <p className="text-gray-700 dark:text-gray-300 text-sm font-medium">{t('numberSequence.score', 'Score')}</p>
                   <p className="text-3xl font-bold text-cyan-600">{totalScore}</p>
                 </div>
                 <div>
-                  <p className="text-gray-700 text-sm font-medium">{t('numberSequence.timeLeft', 'Time Left')}</p>
+                  <p className="text-gray-700 dark:text-gray-300 text-sm font-medium">{t('numberSequence.timeLeft', 'Time Left')}</p>
                   <p className={`text-4xl font-bold ${timeLeft <= 10 ? 'text-red-500' : 'text-teal-600'}`}>
                     {timeLeft}s
                   </p>
                 </div>
               </div>
               {/* Progress Bar */}
-              <div className="mt-4 bg-gray-200 rounded-full h-3 overflow-hidden">
+              <div className="mt-4 bg-gray-200 dark:bg-slate-700 rounded-full h-3 overflow-hidden">
                 <motion.div
                   initial={{ width: 0 }}
                   animate={{ width: `${((level - 1) / MAX_LEVELS) * 100}%` }}
@@ -302,15 +302,15 @@ export default function NumberSequencePage() {
             </div>
 
             {/* Input area */}
-            <div className="bg-white rounded-2xl shadow-lg p-8 mb-6 text-center">
-              <p className="text-2xl font-bold text-gray-800 mb-4">
+            <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-8 mb-6 text-center">
+              <p className="text-2xl font-bold text-gray-800 dark:text-white mb-4">
                 {t('numberSequence.nextNumber', 'What comes next?')}
               </p>
               <div className="flex flex-wrap justify-center gap-2 mb-6">
                 {sequence.map((num, index) => (
                   <span
                     key={index}
-                    className="px-3 py-2 bg-gray-100 text-gray-700 rounded-lg font-medium"
+                    className="px-3 py-2 bg-gray-100 dark:bg-slate-700 text-gray-700 dark:text-gray-300 rounded-lg font-medium"
                   >
                     {num}
                   </span>
@@ -324,7 +324,7 @@ export default function NumberSequencePage() {
                 value={userInput}
                 onChange={(e) => setUserInput(e.target.value)}
                 placeholder={t('numberSequence.placeholder', 'Enter the next number')}
-                className="w-full p-6 text-2xl border-4 border-gray-300 rounded-xl focus:border-teal-300 focus:outline-none mb-6 text-center text-gray-800 placeholder-gray-500"
+                className="w-full p-6 text-2xl border-4 border-gray-300 rounded-xl focus:border-teal-300 focus:outline-none mb-6 text-center text-gray-800 dark:text-white placeholder-gray-500"
                 autoFocus
                 onKeyPress={(e) => {
                   if (e.key === 'Enter') {
@@ -349,7 +349,7 @@ export default function NumberSequencePage() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="bg-white rounded-2xl shadow-lg p-8 text-center"
+            className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-8 text-center"
           >
             <div className="text-6xl mb-4">
               {score > 0 ? '✅' : '❌'}
@@ -359,24 +359,24 @@ export default function NumberSequencePage() {
             </h2>
             {score > 0 ? (
               <div className="bg-teal-50 rounded-xl p-6 mb-6">
-                <p className="text-gray-700 mb-2">{t('numberSequence.correctAnswer', 'Correct Answer')}:</p>
+                <p className="text-gray-700 dark:text-gray-300 mb-2">{t('numberSequence.correctAnswer', 'Correct Answer')}:</p>
                 <p className="text-3xl font-bold text-teal-600">{correctAnswer}</p>
                 <div className="grid grid-cols-2 gap-4 mt-4">
                   <div>
-                    <p className="text-gray-700 text-sm font-medium">{t('numberSequence.levelScore', 'Level Score')}</p>
+                    <p className="text-gray-700 dark:text-gray-300 text-sm font-medium">{t('numberSequence.levelScore', 'Level Score')}</p>
                     <p className="text-3xl font-bold text-teal-600">{score}</p>
                   </div>
                   <div>
-                    <p className="text-gray-700 text-sm font-medium">{t('numberSequence.totalScore', 'Total Score')}</p>
+                    <p className="text-gray-700 dark:text-gray-300 text-sm font-medium">{t('numberSequence.totalScore', 'Total Score')}</p>
                     <p className="text-3xl font-bold text-cyan-600">{totalScore + score}</p>
                   </div>
                 </div>
               </div>
             ) : (
               <div className="bg-red-50 rounded-xl p-6 mb-6">
-                <p className="text-gray-700 mb-2">{t('numberSequence.yourAnswer', 'Your Answer')}:</p>
+                <p className="text-gray-700 dark:text-gray-300 mb-2">{t('numberSequence.yourAnswer', 'Your Answer')}:</p>
                 <p className="text-2xl font-bold text-red-600">{userInput || '---'}</p>
-                <p className="text-gray-700 mt-4">{t('numberSequence.correctAnswer', 'Correct Answer')}:</p>
+                <p className="text-gray-700 dark:text-gray-300 mt-4">{t('numberSequence.correctAnswer', 'Correct Answer')}:</p>
                 <p className="text-2xl font-bold text-green-600">{correctAnswer}</p>
               </div>
             )}
@@ -388,7 +388,7 @@ export default function NumberSequencePage() {
             </button>
             <button
               onClick={startGame}
-              className="text-gray-600 hover:text-gray-800 font-medium"
+              className="text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:text-white font-medium"
             >
               {t('numberSequence.restart', 'Restart from Level 1')}
             </button>
@@ -400,15 +400,15 @@ export default function NumberSequencePage() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="bg-white rounded-2xl shadow-lg p-8 text-center"
+            className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-8 text-center"
           >
             <div className="text-6xl mb-4">🎉</div>
             <h2 className="text-4xl font-bold text-teal-600 mb-4">{t('numberSequence.victory', 'Congratulations!')}</h2>
-            <p className="text-xl text-gray-700 font-medium mb-6">
+            <p className="text-xl text-gray-700 dark:text-gray-300 font-medium mb-6">
               {t('numberSequence.victoryMessage', 'You completed all {count} levels!', { count: MAX_LEVELS })}
             </p>
             <div className="bg-teal-50 rounded-xl p-6 mb-6">
-              <p className="text-gray-700 text-sm font-medium">{t('numberSequence.finalScore', 'Final Score')}</p>
+              <p className="text-gray-700 dark:text-gray-300 text-sm font-medium">{t('numberSequence.finalScore', 'Final Score')}</p>
               <p className="text-5xl font-bold text-teal-600">{totalScore + score}</p>
             </div>
             <button

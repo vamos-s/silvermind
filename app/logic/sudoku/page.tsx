@@ -11,7 +11,7 @@ type CellValue = number | null
 
 export default function SudokuPage() {
   const { t } = useTranslation()
-  const { currentDifficulty, addSession } = useGameStore()
+  const { currentDifficulty, addSession, darkMode } = useGameStore()
 
   const [grid, setGrid] = useState<CellValue[][]>([])
   const [solution, setSolution] = useState<CellValue[][]>([])
@@ -225,17 +225,17 @@ export default function SudokuPage() {
 
   if (gameOver && victory) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50 flex items-center justify-center">
+      <div className="min-h-screen p-4 md:p-8 transition-colors duration-300 {darkMode ? "bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white" : "bg-gradient-to-br from-green-50 to-blue-50 flex items-center justify-center"}">
       <SettingsPanel />
         <motion.div
           initial={{ scale: 0.8, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
-          className="bg-white rounded-2xl p-8 shadow-xl text-center max-w-md"
+          className="bg-white dark:bg-slate-800 rounded-2xl p-8 shadow-xl text-center max-w-md"
         >
           <h2 className="text-3xl font-bold text-green-600 mb-4">
             {level === maxLevel ? '🏆 Complete!' : '🎉 Solved!'}
           </h2>
-          <p className="text-xl text-gray-600 mb-2">Score: {score}</p>
+          <p className="text-xl text-gray-600 dark:text-gray-400 mb-2">Score: {score}</p>
           <p className="text-lg text-gray-500 mb-6">Mistakes: {mistakes}</p>
           {level < maxLevel && (
             <button
@@ -269,14 +269,14 @@ export default function SudokuPage() {
 
   if (gameOver) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50 flex items-center justify-center">
+      <div className="min-h-screen p-4 md:p-8 transition-colors duration-300 {darkMode ? "bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white" : "bg-gradient-to-br from-green-50 to-blue-50 flex items-center justify-center"}">
         <motion.div
           initial={{ scale: 0.8, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
-          className="bg-white rounded-2xl p-8 shadow-xl text-center max-w-md"
+          className="bg-white dark:bg-slate-800 rounded-2xl p-8 shadow-xl text-center max-w-md"
         >
           <h2 className="text-3xl font-bold text-red-600 mb-4">Game Over!</h2>
-          <p className="text-xl text-gray-600 mb-2">Score: {score}</p>
+          <p className="text-xl text-gray-600 dark:text-gray-400 mb-2">Score: {score}</p>
           <p className="text-lg text-gray-500 mb-6">Too many mistakes</p>
           <button
             onClick={() => {
@@ -298,11 +298,11 @@ export default function SudokuPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50">
-      <header className="p-6 bg-white shadow-sm">
+      <header className="p-6 bg-white dark:bg-slate-800 shadow-sm">
         <Link href="/logic" className="text-green-500 hover:underline mb-4 block">
           ← Back
         </Link>
-        <h1 className="text-3xl font-bold text-gray-800">🔢 Sudoku</h1>
+        <h1 className="text-3xl font-bold text-gray-800 dark:text-white">🔢 Sudoku</h1>
       </header>
 
       <main className="container mx-auto px-4 py-8">
@@ -314,7 +314,7 @@ export default function SudokuPage() {
           <p className="text-xl text-red-500">Mistakes: {mistakes}/3</p>
         </div>
 
-        <div className="bg-white p-4 rounded-2xl shadow-xl max-w-md mx-auto mb-8">
+        <div className="bg-white dark:bg-slate-800 p-4 rounded-2xl shadow-xl max-w-md mx-auto mb-8">
           <div
             className="grid gap-1"
             style={{
@@ -339,7 +339,7 @@ export default function SudokuPage() {
                     disabled={cell !== null || gameOver}
                     className={`aspect-square rounded-lg text-2xl font-bold transition-all border-2 ${
                       cell !== null
-                        ? 'bg-gray-100 border-gray-300 text-gray-800'
+                        ? 'bg-gray-100 dark:bg-slate-700 border-gray-300 text-gray-800 dark:text-white'
                         : selectedCell && selectedCell[0] === r && selectedCell[1] === c
                         ? 'bg-green-200 border-green-500'
                         : 'bg-white border-gray-200 hover:border-green-400'
@@ -358,8 +358,8 @@ export default function SudokuPage() {
           </p>
         </div>
 
-        <div className="bg-white rounded-xl p-6 shadow-lg max-w-md mx-auto">
-          <p className="text-center text-gray-600 mb-4">Select a number:</p>
+        <div className="bg-white dark:bg-slate-800 rounded-xl p-6 shadow-lg max-w-md mx-auto">
+          <p className="text-center text-gray-600 dark:text-gray-400 mb-4">Select a number:</p>
           <div className="grid grid-cols-4 gap-2">
             {Array.from({ length: size }, (_, i) => i + 1).map((num) => (
               <motion.button

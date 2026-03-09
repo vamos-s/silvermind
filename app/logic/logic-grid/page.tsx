@@ -11,7 +11,7 @@ type Item = { name: string, value: number }
 
 export default function LogicGridPage() {
   const { t } = useTranslation()
-  const { currentDifficulty, addSession } = useGameStore()
+  const { currentDifficulty, addSession, darkMode } = useGameStore()
 
   const [items, setItems] = useState<Item[]>([])
   const [userOrder, setUserOrder] = useState<string[]>([])
@@ -144,15 +144,15 @@ export default function LogicGridPage() {
 
   if (gameOver && victory) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50 flex items-center justify-center">
+      <div className="min-h-screen p-4 md:p-8 transition-colors duration-300 {darkMode ? "bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white" : "bg-gradient-to-br from-green-50 to-blue-50 flex items-center justify-center"}">
       <SettingsPanel />
         <motion.div
           initial={{ scale: 0.8, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
-          className="bg-white rounded-2xl p-8 shadow-xl text-center max-w-md"
+          className="bg-white dark:bg-slate-800 rounded-2xl p-8 shadow-xl text-center max-w-md"
         >
           <h2 className="text-3xl font-bold text-green-600 mb-4">🎉 Solved!</h2>
-          <p className="text-xl text-gray-600 mb-2">Score: {score}</p>
+          <p className="text-xl text-gray-600 dark:text-gray-400 mb-2">Score: {score}</p>
           <p className="text-lg text-gray-500 mb-6">Level: {level}</p>
           <button
             onClick={() => {
@@ -184,11 +184,11 @@ export default function LogicGridPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50">
-      <header className="p-6 bg-white shadow-sm">
+      <header className="p-6 bg-white dark:bg-slate-800 shadow-sm">
         <Link href="/logic" className="text-green-500 hover:underline mb-4 block">
           ← Back
         </Link>
-        <h1 className="text-3xl font-bold text-gray-800">🧩 Logic Grid</h1>
+        <h1 className="text-3xl font-bold text-gray-800 dark:text-white">🧩 Logic Grid</h1>
       </header>
 
       <main className="container mx-auto px-4 py-8">
@@ -197,23 +197,23 @@ export default function LogicGridPage() {
             <p className="font-bold text-green-600">Score: {score}</p>
             <p className="font-bold text-blue-600">Level: {level}</p>
           </div>
-          <p className="text-lg text-gray-600">Arrange items in order from smallest to largest value</p>
+          <p className="text-lg text-gray-600 dark:text-gray-400">Arrange items in order from smallest to largest value</p>
         </div>
 
         <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto mb-8">
-          <div className="bg-white rounded-xl p-6 shadow-lg">
-            <h2 className="text-xl font-bold mb-4 text-gray-800">📝 Hints</h2>
+          <div className="bg-white dark:bg-slate-800 rounded-xl p-6 shadow-lg">
+            <h2 className="text-xl font-bold mb-4 text-gray-800 dark:text-white">📝 Hints</h2>
             <ul className="space-y-3">
               {hints.map((hint, i) => (
-                <li key={i} className="bg-gray-100 rounded-lg p-3 text-gray-700">
+                <li key={i} className="bg-gray-100 dark:bg-slate-700 rounded-lg p-3 text-gray-700 dark:text-gray-300">
                   {hint}
                 </li>
               ))}
             </ul>
           </div>
 
-          <div className="bg-white rounded-xl p-6 shadow-lg">
-            <h2 className="text-xl font-bold mb-4 text-gray-800">📦 Items</h2>
+          <div className="bg-white dark:bg-slate-800 rounded-xl p-6 shadow-lg">
+            <h2 className="text-xl font-bold mb-4 text-gray-800 dark:text-white">📦 Items</h2>
             <div className="grid grid-cols-2 gap-3">
               {items.map((item, i) => (
                 <motion.button
@@ -228,7 +228,7 @@ export default function LogicGridPage() {
                     selectedItem === item.name
                       ? 'bg-yellow-400 text-white border-4 border-yellow-500'
                       : userOrder.includes(item.name)
-                      ? 'bg-gray-200 text-gray-500 cursor-not-allowed opacity-50'
+                      ? 'bg-gray-200 dark:bg-slate-700 text-gray-500 cursor-not-allowed opacity-50'
                       : 'bg-blue-500 text-white hover:bg-blue-600'
                   }`}
                   disabled={userOrder.includes(item.name)}
@@ -240,9 +240,9 @@ export default function LogicGridPage() {
           </div>
         </div>
 
-        <div className="bg-white rounded-xl p-6 shadow-lg max-w-2xl mx-auto mb-8">
-          <h2 className="text-xl font-bold mb-4 text-gray-800">📋 Your Order (Smallest → Largest)</h2>
-          <div className="flex flex-wrap gap-3 min-h-[60px] bg-gray-100 rounded-lg p-4">
+        <div className="bg-white dark:bg-slate-800 rounded-xl p-6 shadow-lg max-w-2xl mx-auto mb-8">
+          <h2 className="text-xl font-bold mb-4 text-gray-800 dark:text-white">📋 Your Order (Smallest → Largest)</h2>
+          <div className="flex flex-wrap gap-3 min-h-[60px] bg-gray-100 dark:bg-slate-700 rounded-lg p-4">
             {userOrder.length === 0 ? (
               <p className="text-gray-500">Click items to add them to your order</p>
             ) : (

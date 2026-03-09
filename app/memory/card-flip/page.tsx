@@ -71,7 +71,7 @@ const DIFFICULTY_MULTIPLIERS = {
 
 export default function CardFlipPage() {
   const { t } = useTranslation()
-  const { addSession } = useGameStore()
+  const { addSession, darkMode } = useGameStore()
 
   const [gameState, setGameState] = useState<'menu' | 'preview' | 'playing' | 'victory' | 'gameover' | 'levelComplete'>('menu')
   const [cards, setCards] = useState<Card[]>([])
@@ -313,21 +313,21 @@ export default function CardFlipPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-pink-50 p-4 md:p-8">
+    <div className="min-h-screen p-4 md:p-8 transition-colors duration-300 {darkMode ? "bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white" : "bg-gradient-to-br from-purple-50 via-white to-pink-50 p-4 md:p-8"}">
       <SettingsPanel />
       <div className="max-w-4xl mx-auto">
         {/* Header */}
         <header className="mb-6">
           <Link
             href="/memory"
-            className="inline-flex items-center text-gray-700 hover:text-gray-900 text-lg font-medium"
+            className="inline-flex items-center text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white text-lg font-medium"
           >
             <span className="mr-2">←</span> {t('back', 'Back')}
           </Link>
-          <h1 className="text-3xl md:text-4xl font-bold text-gray-800 mt-4">
+          <h1 className="text-3xl md:text-4xl font-bold text-gray-800 dark:text-white mt-4">
             {t('cardFlip.title', 'Card Flip')}
           </h1>
-          <p className="text-lg text-gray-700 font-medium">
+          <p className="text-lg text-gray-700 dark:text-gray-300 font-medium">
             {t('cardFlip.description', 'Match the pairs of cards!')}
           </p>
         </header>
@@ -337,22 +337,22 @@ export default function CardFlipPage() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="bg-white rounded-2xl shadow-lg p-8 text-center"
+            className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-8 text-center"
           >
-            <h2 className="text-3xl font-bold text-gray-800 mb-2">
+            <h2 className="text-3xl font-bold text-gray-800 dark:text-white mb-2">
               {currentLevel > 1 ? `Level ${currentLevel}` : t('cardFlip.ready', 'Ready to test your memory?')}
             </h2>
             {currentLevel > 1 && (
-              <p className="text-lg text-gray-700 mb-4 font-medium">
+              <p className="text-lg text-gray-700 dark:text-gray-300 mb-4 font-medium">
                 Total Score: <span className="text-purple-600 font-bold">{totalScore}</span>
               </p>
             )}
-            <p className="text-lg text-gray-700 mb-6 font-medium">
+            <p className="text-lg text-gray-700 dark:text-gray-300 mb-6 font-medium">
               {t('cardFlip.instructions', 'Find all matching pairs of cards before time runs out!')}
             </p>
-            <div className="bg-purple-50 rounded-xl p-4 mb-6 text-left">
-              <h3 className="font-bold text-gray-800 mb-2">{t('cardFlip.levelInfo', 'Level Settings')}:</h3>
-              <ul className="text-gray-700 space-y-1 font-medium">
+            <div className="bg-purple-50 dark:bg-slate-800 rounded-xl p-4 mb-6 text-left">
+              <h3 className="font-bold text-gray-800 dark:text-white mb-2">{t('cardFlip.levelInfo', 'Level Settings')}:</h3>
+              <ul className="text-gray-700 dark:text-gray-300 space-y-1 font-medium">
                 <li>• {t('cardFlip.gridSize', 'Grid')}: {settings.rows} × {settings.cols}</li>
                 <li>• {t('cardFlip.pairs', 'Pairs')}: {(settings.rows * settings.cols) / 2}</li>
                 <li>• {t('cardFlip.timeLimit', 'Time Limit')}: {Math.floor(settings.timeLimit / 60)}:{(settings.timeLimit % 60).toString().padStart(2, '0')}</li>
@@ -373,12 +373,12 @@ export default function CardFlipPage() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="bg-white rounded-2xl shadow-lg p-8 text-center"
+            className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-8 text-center"
           >
             <h2 className="text-3xl font-bold text-purple-600 mb-4">
               {t('cardFlip.memorize', 'Memorize!')}
             </h2>
-            <p className="text-lg text-gray-700 mb-6 font-medium">
+            <p className="text-lg text-gray-700 dark:text-gray-300 mb-6 font-medium">
               {t('cardFlip.memorizeText', 'Remember the card positions!')}
             </p>
             {/* Show all cards during preview */}
@@ -396,7 +396,7 @@ export default function CardFlipPage() {
                   animate={{ opacity: 1, scale: 1 }}
                   transition={{ delay: card.id * 0.05 }}
                 >
-                  <div className="w-full h-full bg-white rounded-xl shadow-lg flex items-center justify-center border-4 border-purple-300">
+                  <div className="w-full h-full bg-white dark:bg-slate-800 rounded-xl shadow-lg flex items-center justify-center border-4 border-purple-300">
                     <span className="text-4xl md:text-5xl">{card.emoji}</span>
                   </div>
                 </motion.div>
@@ -409,33 +409,33 @@ export default function CardFlipPage() {
         {gameState === 'playing' && (
           <>
             {/* Stats Bar */}
-            <div className="bg-white rounded-2xl shadow-lg p-4 mb-6">
+            <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-4 mb-6">
               <div className="grid grid-cols-5 gap-4 text-center">
                 <div>
-                  <p className="text-gray-700 text-sm font-medium">{t('cardFlip.level', 'Level')}</p>
+                  <p className="text-gray-700 dark:text-gray-300 text-sm font-medium">{t('cardFlip.level', 'Level')}</p>
                   <p className="text-2xl font-bold text-purple-600">{currentLevel}/{totalLevels}</p>
                 </div>
                 <div>
-                  <p className="text-gray-700 text-sm font-medium">{t('cardFlip.moves', 'Moves')}</p>
+                  <p className="text-gray-700 dark:text-gray-300 text-sm font-medium">{t('cardFlip.moves', 'Moves')}</p>
                   <p className="text-2xl font-bold text-purple-600">{moves}</p>
                 </div>
                 <div>
-                  <p className="text-gray-700 text-sm font-medium">{t('cardFlip.time', 'Time')}</p>
+                  <p className="text-gray-700 dark:text-gray-300 text-sm font-medium">{t('cardFlip.time', 'Time')}</p>
                   <p className={`text-2xl font-bold ${timeLeft <= 30 ? 'text-red-500' : 'text-purple-600'}`}>
                     {Math.floor(timeLeft / 60)}:{(timeLeft % 60).toString().padStart(2, '0')}
                   </p>
                 </div>
                 <div>
-                  <p className="text-gray-700 text-sm font-medium">{t('cardFlip.pairs', 'Pairs')}</p>
+                  <p className="text-gray-700 dark:text-gray-300 text-sm font-medium">{t('cardFlip.pairs', 'Pairs')}</p>
                   <p className="text-2xl font-bold text-purple-600">{matchedPairs}/{totalPairs}</p>
                 </div>
                 <div>
-                  <p className="text-gray-700 text-sm font-medium">{t('cardFlip.hints', 'Hints')}</p>
+                  <p className="text-gray-700 dark:text-gray-300 text-sm font-medium">{t('cardFlip.hints', 'Hints')}</p>
                   <p className="text-2xl font-bold text-purple-600">{hintsRemaining}</p>
                 </div>
               </div>
               {/* Progress Bar */}
-              <div className="mt-4 bg-gray-200 rounded-full h-3 overflow-hidden">
+              <div className="mt-4 bg-gray-200 dark:bg-slate-700 rounded-full h-3 overflow-hidden">
                 <motion.div
                   initial={{ width: 0 }}
                   animate={{ width: `${(matchedPairs / totalPairs) * 100}%` }}
@@ -499,7 +499,7 @@ export default function CardFlipPage() {
 
                     {/* Back of card (shown when flipped) */}
                     <div
-                      className="absolute inset-0 backface-hidden bg-white rounded-xl shadow-lg flex items-center justify-center border-4 border-purple-200"
+                      className="absolute inset-0 backface-hidden bg-white dark:bg-slate-800 rounded-xl shadow-lg flex items-center justify-center border-4 border-purple-200"
                       style={{
                         backfaceVisibility: 'hidden',
                         transform: 'rotateY(180deg)',
@@ -539,23 +539,23 @@ export default function CardFlipPage() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="bg-white rounded-2xl shadow-lg p-8 text-center"
+            className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-8 text-center"
           >
             <div className="text-6xl mb-4">⭐</div>
             <h2 className="text-4xl font-bold text-purple-600 mb-4">
               Level {currentLevel} Complete!
             </h2>
-            <p className="text-xl text-gray-700 font-medium mb-6">
+            <p className="text-xl text-gray-700 dark:text-gray-300 font-medium mb-6">
               You found all {totalPairs} pairs in {moves} moves!
             </p>
-            <div className="bg-purple-50 rounded-xl p-6 mb-6">
+            <div className="bg-purple-50 dark:bg-slate-800 rounded-xl p-6 mb-6">
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <p className="text-gray-700 text-sm font-medium">{t('cardFlip.levelScore', 'Level Score')}</p>
+                  <p className="text-gray-700 dark:text-gray-300 text-sm font-medium">{t('cardFlip.levelScore', 'Level Score')}</p>
                   <p className="text-3xl font-bold text-purple-600">{score}</p>
                 </div>
                 <div>
-                  <p className="text-gray-700 text-sm font-medium">{t('cardFlip.totalScore', 'Total Score')}</p>
+                  <p className="text-gray-700 dark:text-gray-300 text-sm font-medium">{t('cardFlip.totalScore', 'Total Score')}</p>
                   <p className="text-3xl font-bold text-purple-600">{totalScore + score}</p>
                 </div>
               </div>
@@ -572,7 +572,7 @@ export default function CardFlipPage() {
                 setTotalScore(0)
                 setGameState('menu')
               }}
-              className="text-gray-600 hover:text-gray-800 font-medium"
+              className="text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:text-white font-medium"
             >
               {t('cardFlip.restart', 'Restart from Level 1')}
             </button>
@@ -584,17 +584,17 @@ export default function CardFlipPage() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="bg-white rounded-2xl shadow-lg p-8 text-center"
+            className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-8 text-center"
           >
             <div className="text-6xl mb-4">🎉</div>
             <h2 className="text-4xl font-bold text-purple-600 mb-4">
               {t('cardFlip.victory', 'Congratulations!')}
             </h2>
-            <p className="text-xl text-gray-700 font-medium mb-6">
+            <p className="text-xl text-gray-700 dark:text-gray-300 font-medium mb-6">
               You completed all {totalLevels} levels!
             </p>
-            <div className="bg-purple-50 rounded-xl p-6 mb-6">
-              <p className="text-gray-700 text-sm font-medium">{t('cardFlip.finalScore', 'Final Score')}</p>
+            <div className="bg-purple-50 dark:bg-slate-800 rounded-xl p-6 mb-6">
+              <p className="text-gray-700 dark:text-gray-300 text-sm font-medium">{t('cardFlip.finalScore', 'Final Score')}</p>
               <p className="text-5xl font-bold text-purple-600">{totalScore}</p>
             </div>
             <button
@@ -615,17 +615,17 @@ export default function CardFlipPage() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="bg-white rounded-2xl shadow-lg p-8 text-center"
+            className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-8 text-center"
           >
             <div className="text-6xl mb-4">⏰</div>
-            <h2 className="text-4xl font-bold text-gray-800 mb-4">
+            <h2 className="text-4xl font-bold text-gray-800 dark:text-white mb-4">
               {t('cardFlip.gameOver', 'Time\'s Up!')}
             </h2>
-            <p className="text-xl text-gray-700 font-medium mb-6">
+            <p className="text-xl text-gray-700 dark:text-gray-300 font-medium mb-6">
               You found {matchedPairs} out of {totalPairs} pairs!
             </p>
-            <div className="bg-orange-50 rounded-xl p-6 mb-6">
-              <p className="text-gray-700 text-sm font-medium">{t('cardFlip.currentScore', 'Current Score')}</p>
+            <div className="bg-orange-50 dark:bg-slate-800 rounded-xl p-6 mb-6">
+              <p className="text-gray-700 dark:text-gray-300 text-sm font-medium">{t('cardFlip.currentScore', 'Current Score')}</p>
               <p className="text-3xl font-bold text-orange-600">{totalScore}</p>
             </div>
             <button
@@ -640,7 +640,7 @@ export default function CardFlipPage() {
                 setTotalScore(0)
                 setGameState('menu')
               }}
-              className="text-gray-600 hover:text-gray-800 font-medium"
+              className="text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:text-white font-medium"
             >
               {t('cardFlip.restart', 'Restart from Level 1')}
             </button>

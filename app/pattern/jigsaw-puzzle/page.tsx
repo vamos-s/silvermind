@@ -77,7 +77,7 @@ const COLORS = [
 
 export default function JigsawPuzzlePage() {
   const { t } = useTranslation()
-  const { addSession } = useGameStore()
+  const { addSession, darkMode } = useGameStore()
 
   const [gameState, setGameState] = useState<'menu' | 'playing' | 'levelComplete' | 'gameOver' | 'victory'>('menu')
   const [pieces, setPieces] = useState<Piece[]>([])
@@ -207,21 +207,21 @@ export default function JigsawPuzzlePage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-rose-50 via-white to-pink-50 p-4 md:p-8">
+    <div className="min-h-screen p-4 md:p-8 transition-colors duration-300 {darkMode ? "bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white" : "bg-gradient-to-br from-rose-50 via-white to-pink-50 p-4 md:p-8"}">
       <SettingsPanel />
       <div className="max-w-2xl mx-auto">
         {/* Header */}
         <Link
           href="/pattern"
-          className="inline-flex items-center text-gray-700 hover:text-gray-900 font-medium mb-6 text-lg"
+          className="inline-flex items-center text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white font-medium mb-6 text-lg"
         >
           <span className="mr-2">←</span> {t('back', 'Back')}
         </Link>
 
-        <h1 className="text-3xl md:text-4xl font-bold text-gray-800 mb-2">
+        <h1 className="text-3xl md:text-4xl font-bold text-gray-800 dark:text-white mb-2">
           {t('jigsawPuzzle.title', 'Jigsaw Puzzle')}
         </h1>
-        <p className="text-lg text-gray-700 font-medium mb-8">
+        <p className="text-lg text-gray-700 dark:text-gray-300 font-medium mb-8">
           {t('jigsawPuzzle.description', 'Arrange the pieces to complete the pattern!')}
         </p>
 
@@ -230,19 +230,19 @@ export default function JigsawPuzzlePage() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="bg-white rounded-2xl shadow-lg p-8 text-center"
+            className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-8 text-center"
           >
-            <h2 className="text-3xl font-bold text-gray-800 mb-2">
+            <h2 className="text-3xl font-bold text-gray-800 dark:text-white mb-2">
               Level {level}
             </h2>
             {level > 1 && (
-              <p className="text-lg text-gray-700 mb-4 font-medium">
+              <p className="text-lg text-gray-700 dark:text-gray-300 mb-4 font-medium">
                 Total Score: <span className="text-rose-600 font-bold">{totalScore}</span>
               </p>
             )}
             <div className="bg-rose-50 rounded-xl p-4 mb-6 text-left">
-              <h3 className="font-bold text-gray-800 mb-2">{t('jigsawPuzzle.levelInfo', 'Level Settings')}:</h3>
-              <ul className="text-gray-700 space-y-1 font-medium">
+              <h3 className="font-bold text-gray-800 dark:text-white mb-2">{t('jigsawPuzzle.levelInfo', 'Level Settings')}:</h3>
+              <ul className="text-gray-700 dark:text-gray-300 space-y-1 font-medium">
                 <li>• {t('jigsawPuzzle.gridSize', 'Grid Size')}: {rows}x{cols}</li>
                 <li>• {t('jigsawPuzzle.pieces', 'Pieces')}: {totalPieces}</li>
                 <li>• {t('jigsawPuzzle.inputTime', 'Time Limit')}: {settings.inputTime}s</li>
@@ -261,25 +261,25 @@ export default function JigsawPuzzlePage() {
         {gameState === 'playing' && (
           <>
             {/* Stats */}
-            <div className="bg-white rounded-2xl shadow-lg p-6 mb-6">
+            <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-6 mb-6">
               <div className="flex justify-between items-center">
                 <div>
-                  <p className="text-gray-700 text-sm font-medium">{t('jigsawPuzzle.level', 'Level')}</p>
+                  <p className="text-gray-700 dark:text-gray-300 text-sm font-medium">{t('jigsawPuzzle.level', 'Level')}</p>
                   <p className="text-3xl font-bold text-rose-600">{level}/{MAX_LEVELS}</p>
                 </div>
                 <div>
-                  <p className="text-gray-700 text-sm font-medium">{t('jigsawPuzzle.moves', 'Moves')}</p>
-                  <p className="text-3xl font-bold text-gray-600">{moves}</p>
+                  <p className="text-gray-700 dark:text-gray-300 text-sm font-medium">{t('jigsawPuzzle.moves', 'Moves')}</p>
+                  <p className="text-3xl font-bold text-gray-600 dark:text-gray-400">{moves}</p>
                 </div>
                 <div>
-                  <p className="text-gray-700 text-sm font-medium">{t('jigsawPuzzle.timeLeft', 'Time Left')}</p>
+                  <p className="text-gray-700 dark:text-gray-300 text-sm font-medium">{t('jigsawPuzzle.timeLeft', 'Time Left')}</p>
                   <p className={`text-4xl font-bold ${timeLeft <= 10 ? 'text-red-500' : 'text-rose-600'}`}>
                     {timeLeft}s
                   </p>
                 </div>
               </div>
               {/* Progress Bar */}
-              <div className="mt-4 bg-gray-200 rounded-full h-3 overflow-hidden">
+              <div className="mt-4 bg-gray-200 dark:bg-slate-700 rounded-full h-3 overflow-hidden">
                 <motion.div
                   initial={{ width: 0 }}
                   animate={{ width: `${((level - 1) / MAX_LEVELS) * 100}%` }}
@@ -289,7 +289,7 @@ export default function JigsawPuzzlePage() {
             </div>
 
             {/* Puzzle Grid */}
-            <div className="bg-white rounded-2xl shadow-lg p-8 mb-6 text-center">
+            <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-8 mb-6 text-center">
               <p className="text-sm text-gray-500 mb-4">
                 {t('jigsawPuzzle.instruction', 'Click two pieces to swap them')}
               </p>
@@ -315,7 +315,7 @@ export default function JigsawPuzzlePage() {
                         isSelected
                           ? 'ring-4 ring-rose-500 ring-offset-2'
                           : 'hover:scale-105'
-                      } ${piece ? COLORS[piece.correctPosition % COLORS.length] : 'bg-gray-200'}`}
+                      } ${piece ? COLORS[piece.correctPosition % COLORS.length] : 'bg-gray-200 dark:bg-slate-700'}`}
                     >
                       {piece && isCorrect ? '✓' : piece ? piece.correctPosition + 1 : ''}
                     </motion.button>
@@ -331,23 +331,23 @@ export default function JigsawPuzzlePage() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="bg-white rounded-2xl shadow-lg p-8 text-center"
+            className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-8 text-center"
           >
             <div className="text-6xl mb-4">✅</div>
             <h2 className="text-4xl font-bold text-rose-600 mb-4">Level {level} Complete!</h2>
             <div className="bg-rose-50 rounded-xl p-6 mb-6">
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <p className="text-gray-700 text-sm font-medium">{t('jigsawPuzzle.moves', 'Moves')}</p>
+                  <p className="text-gray-700 dark:text-gray-300 text-sm font-medium">{t('jigsawPuzzle.moves', 'Moves')}</p>
                   <p className="text-3xl font-bold text-rose-600">{moves}</p>
                 </div>
                 <div>
-                  <p className="text-gray-700 text-sm font-medium">{t('jigsawPuzzle.levelScore', 'Level Score')}</p>
+                  <p className="text-gray-700 dark:text-gray-300 text-sm font-medium">{t('jigsawPuzzle.levelScore', 'Level Score')}</p>
                   <p className="text-3xl font-bold text-rose-600">{score}</p>
                 </div>
               </div>
               <div className="mt-4">
-                <p className="text-gray-700 text-sm font-medium">{t('jigsawPuzzle.totalScore', 'Total Score')}</p>
+                <p className="text-gray-700 dark:text-gray-300 text-sm font-medium">{t('jigsawPuzzle.totalScore', 'Total Score')}</p>
                 <p className="text-4xl font-bold text-pink-600">{totalScore + score}</p>
               </div>
             </div>
@@ -359,7 +359,7 @@ export default function JigsawPuzzlePage() {
             </button>
             <button
               onClick={startGame}
-              className="text-gray-600 hover:text-gray-800 font-medium"
+              className="text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:text-white font-medium"
             >
               {t('jigsawPuzzle.restart', 'Restart from Level 1')}
             </button>
@@ -371,12 +371,12 @@ export default function JigsawPuzzlePage() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="bg-white rounded-2xl shadow-lg p-8 text-center"
+            className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-8 text-center"
           >
             <div className="text-6xl mb-4">⏰</div>
-            <h2 className="text-4xl font-bold text-gray-800 mb-4">{t('jigsawPuzzle.timeUp', 'Time is up!')}</h2>
-            <div className="bg-orange-50 rounded-xl p-6 mb-6">
-              <p className="text-gray-700 text-sm font-medium">{t('jigsawPuzzle.totalScore', 'Total Score')}</p>
+            <h2 className="text-4xl font-bold text-gray-800 dark:text-white mb-4">{t('jigsawPuzzle.timeUp', 'Time is up!')}</h2>
+            <div className="bg-orange-50 dark:bg-slate-800 rounded-xl p-6 mb-6">
+              <p className="text-gray-700 dark:text-gray-300 text-sm font-medium">{t('jigsawPuzzle.totalScore', 'Total Score')}</p>
               <p className="text-3xl font-bold text-orange-600">{totalScore}</p>
             </div>
             <button
@@ -387,7 +387,7 @@ export default function JigsawPuzzlePage() {
             </button>
             <button
               onClick={startGame}
-              className="text-gray-600 hover:text-gray-800 font-medium"
+              className="text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:text-white font-medium"
             >
               {t('jigsawPuzzle.restart', 'Restart from Level 1')}
             </button>
@@ -399,15 +399,15 @@ export default function JigsawPuzzlePage() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="bg-white rounded-2xl shadow-lg p-8 text-center"
+            className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-8 text-center"
           >
             <div className="text-6xl mb-4">🎉</div>
             <h2 className="text-4xl font-bold text-rose-600 mb-4">{t('jigsawPuzzle.victory', 'Congratulations!')}</h2>
-            <p className="text-xl text-gray-700 font-medium mb-6">
+            <p className="text-xl text-gray-700 dark:text-gray-300 font-medium mb-6">
               {t('jigsawPuzzle.victoryMessage', 'You completed all {count} levels!', { count: MAX_LEVELS })}
             </p>
             <div className="bg-rose-50 rounded-xl p-6 mb-6">
-              <p className="text-gray-700 text-sm font-medium">{t('jigsawPuzzle.finalScore', 'Final Score')}</p>
+              <p className="text-gray-700 dark:text-gray-300 text-sm font-medium">{t('jigsawPuzzle.finalScore', 'Final Score')}</p>
               <p className="text-5xl font-bold text-rose-600">{totalScore + score}</p>
             </div>
             <button

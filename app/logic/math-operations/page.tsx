@@ -11,7 +11,7 @@ type Operation = '+' | '-' | '×' | '÷'
 
 export default function MathOperationsPage() {
   const { t } = useTranslation()
-  const { currentDifficulty, addSession } = useGameStore()
+  const { currentDifficulty, addSession, darkMode } = useGameStore()
 
   const [problem, setProblem] = useState<{ a: number, b: number, op: Operation, answer: number }>({ a: 0, b: 0, op: '+', answer: 0 })
   const [userAnswer, setUserAnswer] = useState('')
@@ -128,15 +128,15 @@ export default function MathOperationsPage() {
 
   if (gameOver) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50 flex items-center justify-center">
+      <div className="min-h-screen p-4 md:p-8 transition-colors duration-300 {darkMode ? "bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white" : "bg-gradient-to-br from-green-50 to-blue-50 flex items-center justify-center"}">
       <SettingsPanel />
         <motion.div
           initial={{ scale: 0.8, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
-          className="bg-white rounded-2xl p-8 shadow-xl text-center max-w-md"
+          className="bg-white dark:bg-slate-800 rounded-2xl p-8 shadow-xl text-center max-w-md"
         >
-          <h2 className="text-3xl font-bold text-gray-800 mb-4">Game Over!</h2>
-          <p className="text-xl text-gray-600 mb-2">Final Score: {score}</p>
+          <h2 className="text-3xl font-bold text-gray-800 dark:text-white mb-4">Game Over!</h2>
+          <p className="text-xl text-gray-600 dark:text-gray-400 mb-2">Final Score: {score}</p>
           <p className="text-lg text-gray-500 mb-6">Best Streak: {streak}</p>
           <button
             onClick={() => {
@@ -159,11 +159,11 @@ export default function MathOperationsPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50">
-      <header className="p-6 bg-white shadow-sm">
+      <header className="p-6 bg-white dark:bg-slate-800 shadow-sm">
         <Link href="/logic" className="text-green-500 hover:underline mb-4 block">
           ← Back
         </Link>
-        <h1 className="text-3xl font-bold text-gray-800">➕ Math Operations</h1>
+        <h1 className="text-3xl font-bold text-gray-800 dark:text-white">➕ Math Operations</h1>
       </header>
 
       <main className="container mx-auto px-4 py-8">
@@ -172,7 +172,7 @@ export default function MathOperationsPage() {
             <p className="font-bold text-green-600">Score: {score}</p>
             <p className="font-bold text-blue-600">Streak: {streak}🔥</p>
           </div>
-          <div className={`text-3xl font-bold mb-4 ${timeLeft <= 5 ? 'text-red-500' : 'text-gray-700'}`}>
+          <div className={`text-3xl font-bold mb-4 ${timeLeft <= 5 ? 'text-red-500' : 'text-gray-700 dark:text-gray-300'}`}>
             ⏱️ {timeLeft}s
           </div>
         </div>
@@ -180,9 +180,9 @@ export default function MathOperationsPage() {
         <motion.div
           initial={{ scale: 0.8, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
-          className="bg-white rounded-2xl p-12 shadow-xl max-w-md mx-auto mb-8"
+          className="bg-white dark:bg-slate-800 rounded-2xl p-12 shadow-xl max-w-md mx-auto mb-8"
         >
-          <p className="text-5xl font-bold text-center text-gray-800 mb-8">
+          <p className="text-5xl font-bold text-center text-gray-800 dark:text-white mb-8">
             {problem.a} {problem.op} {problem.b} = ?
           </p>
 
@@ -191,7 +191,7 @@ export default function MathOperationsPage() {
             value={userAnswer}
             onChange={(e) => setUserAnswer(e.target.value)}
             onKeyPress={(e) => e.key === 'Enter' && handleSubmit()}
-            className="w-full text-center text-4xl font-bold p-4 border-4 border-green-500 rounded-xl focus:outline-none focus:border-green-600 text-gray-800"
+            className="w-full text-center text-4xl font-bold p-4 border-4 border-green-500 rounded-xl focus:outline-none focus:border-green-600 text-gray-800 dark:text-white"
             placeholder="?"
             autoFocus
             style={{ WebkitTextFillColor: 'gray' }}
@@ -214,7 +214,7 @@ export default function MathOperationsPage() {
               setStreak(0)
               generateProblem()
             }}
-            className="text-gray-500 hover:text-gray-700 transition"
+            className="text-gray-500 hover:text-gray-700 dark:text-gray-300 transition"
           >
             Give Up
           </button>

@@ -55,11 +55,11 @@ const LEVEL_SETTINGS = [
 
 const WAIT_COLOR = 'bg-red-500'
 const ACTIVE_COLOR = 'bg-green-500'
-const TOO_EARLY_COLOR = 'bg-orange-500'
+const TOO_EARLY_COLOR = 'bg-orange-50 dark:bg-slate-8000'
 
 export default function QuickReactionPage() {
   const { t } = useTranslation()
-  const { addSession } = useGameStore()
+  const { addSession, darkMode } = useGameStore()
 
   const [gameState, setGameState] = useState<'menu' | 'waiting' | 'active' | 'early' | 'levelComplete' | 'gameOver' | 'victory'>('menu')
   const [currentRound, setCurrentRound] = useState(0)
@@ -197,17 +197,17 @@ export default function QuickReactionPage() {
   const rating = getRating(averageTime)
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen p-4 md:p-8 transition-colors duration-300 {darkMode ? "bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white" : "flex flex-col"}">
       <SettingsPanel />
       {/* Header */}
-      <header className="bg-white shadow-sm p-6">
+      <header className="bg-white dark:bg-slate-800 shadow-sm p-6">
         <Link
           href="/reaction"
-          className="inline-flex items-center text-gray-700 hover:text-gray-900 font-medium mb-4 text-lg"
+          className="inline-flex items-center text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white font-medium mb-4 text-lg"
         >
           <span className="mr-2">←</span> {t('back', 'Back')}
         </Link>
-        <h1 className="text-3xl font-bold text-gray-800">
+        <h1 className="text-3xl font-bold text-gray-800 dark:text-white">
           {t('quickReaction.title', 'Quick Reaction')}
         </h1>
       </header>
@@ -220,22 +220,22 @@ export default function QuickReactionPage() {
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              className="bg-white rounded-2xl shadow-lg p-8 text-center"
+              className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-8 text-center"
             >
-              <h2 className="text-3xl font-bold text-gray-800 mb-2">
+              <h2 className="text-3xl font-bold text-gray-800 dark:text-white mb-2">
                 Level {level}
               </h2>
               {level > 1 && (
-                <p className="text-lg text-gray-700 mb-4 font-medium">
+                <p className="text-lg text-gray-700 dark:text-gray-300 mb-4 font-medium">
                   Total Score: <span className="text-green-600 font-bold">{totalScore}</span>
                 </p>
               )}
-              <p className="text-lg text-gray-600 mb-6">
+              <p className="text-lg text-gray-600 dark:text-gray-400 mb-6">
                 {t('quickReaction.instructions', 'Wait for screen to turn GREEN, then click as fast as you can!')}
               </p>
               <div className="bg-green-50 rounded-xl p-4 mb-6 text-left">
-                <h3 className="font-bold text-gray-800 mb-2">{t('quickReaction.levelInfo', 'Level Settings')}:</h3>
-                <ul className="text-gray-700 space-y-1 font-medium">
+                <h3 className="font-bold text-gray-800 dark:text-white mb-2">{t('quickReaction.levelInfo', 'Level Settings')}:</h3>
+                <ul className="text-gray-700 dark:text-gray-300 space-y-1 font-medium">
                   <li>• {t('quickReaction.rounds', 'Rounds')}: {settings.rounds}</li>
                   <li>• {t('quickReaction.waitTime', 'Wait time')}: {settings.minWait / 1000}-{settings.maxWait / 1000}s</li>
                   <li>• {t('quickReaction.targetTime', 'Target Time')}: {settings.targetTime}ms</li>
@@ -254,15 +254,15 @@ export default function QuickReactionPage() {
           {(gameState === 'waiting' || gameState === 'active' || gameState === 'early') && (
             <>
               {/* Progress */}
-              <div className="bg-white rounded-2xl shadow-lg p-4 mb-6">
+              <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-4 mb-6">
                 <div className="flex justify-between items-center">
-                  <p className="text-gray-700 text-sm font-medium">{t('quickReaction.level', 'Level')}</p>
+                  <p className="text-gray-700 dark:text-gray-300 text-sm font-medium">{t('quickReaction.level', 'Level')}</p>
                   <p className="text-3xl font-bold text-green-600">{level}/{MAX_LEVELS}</p>
-                  <p className="text-gray-700 text-sm font-medium">{t('quickReaction.round', 'Round')}</p>
+                  <p className="text-gray-700 dark:text-gray-300 text-sm font-medium">{t('quickReaction.round', 'Round')}</p>
                   <p className="text-3xl font-bold text-blue-600">{currentRound}/{settings.rounds}</p>
                 </div>
                 {/* Progress Bar */}
-                <div className="mt-4 bg-gray-200 rounded-full h-3 overflow-hidden">
+                <div className="mt-4 bg-gray-200 dark:bg-slate-700 rounded-full h-3 overflow-hidden">
                   <motion.div
                     initial={{ width: 0 }}
                     animate={{ width: `${((currentRound) / settings.rounds) * 100}%` }}
@@ -332,7 +332,7 @@ export default function QuickReactionPage() {
               {/* Cancel Button */}
               <button
                 onClick={resetGame}
-                className="mt-6 w-full bg-gray-200 text-gray-700 text-xl font-bold py-3 rounded-xl hover:bg-gray-300 transition-all"
+                className="mt-6 w-full bg-gray-200 dark:bg-slate-700 text-gray-700 dark:text-gray-300 text-xl font-bold py-3 rounded-xl hover:bg-gray-300 transition-all"
               >
                 {t('quickReaction.cancel', 'Cancel')}
               </button>
@@ -344,7 +344,7 @@ export default function QuickReactionPage() {
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              className="bg-white rounded-2xl shadow-lg p-8 text-center"
+              className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-8 text-center"
             >
               <div className="text-6xl mb-4">✅</div>
               <h2 className="text-4xl font-bold text-green-600 mb-4">Level {level} Complete!</h2>
@@ -359,13 +359,13 @@ export default function QuickReactionPage() {
 
               {/* Average Time */}
               <div className="bg-green-50 rounded-xl p-6 mb-6">
-                <p className="text-gray-700 text-lg mb-2">
+                <p className="text-gray-700 dark:text-gray-300 text-lg mb-2">
                   {t('quickReaction.averageTime', 'Average Reaction Time')}
                 </p>
-                <p className="text-6xl font-bold text-gray-800">
+                <p className="text-6xl font-bold text-gray-800 dark:text-white">
                   {averageTime}ms
                 </p>
-                <p className="text-gray-600 mt-2">
+                <p className="text-gray-600 dark:text-gray-400 mt-2">
                   Target: {settings.targetTime}ms
                 </p>
               </div>
@@ -374,11 +374,11 @@ export default function QuickReactionPage() {
               <div className="bg-blue-50 rounded-xl p-6 mb-6">
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <p className="text-gray-700 text-sm font-medium">{t('quickReaction.levelScore', 'Level Score')}</p>
+                    <p className="text-gray-700 dark:text-gray-300 text-sm font-medium">{t('quickReaction.levelScore', 'Level Score')}</p>
                     <p className="text-3xl font-bold text-green-600">{levelScore}</p>
                   </div>
                   <div>
-                    <p className="text-gray-700 text-sm font-medium">{t('quickReaction.totalScore', 'Total Score')}</p>
+                    <p className="text-gray-700 dark:text-gray-300 text-sm font-medium">{t('quickReaction.totalScore', 'Total Score')}</p>
                     <p className="text-3xl font-bold text-blue-600">{totalScore + levelScore}</p>
                   </div>
                 </div>
@@ -392,7 +392,7 @@ export default function QuickReactionPage() {
               </button>
               <button
                 onClick={startGame}
-                className="text-gray-600 hover:text-gray-800 font-medium"
+                className="text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:text-white font-medium"
               >
                 {t('quickReaction.restart', 'Restart from Level 1')}
               </button>
@@ -404,12 +404,12 @@ export default function QuickReactionPage() {
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              className="bg-white rounded-2xl shadow-lg p-8 text-center"
+              className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-8 text-center"
             >
               <div className="text-6xl mb-4">❌</div>
-              <h2 className="text-4xl font-bold text-gray-800 mb-4">{t('quickReaction.gameOver', 'Game Over!')}</h2>
-              <div className="bg-orange-50 rounded-xl p-6 mb-6">
-                <p className="text-gray-700 text-sm font-medium">{t('quickReaction.finalScore', 'Final Score')}</p>
+              <h2 className="text-4xl font-bold text-gray-800 dark:text-white mb-4">{t('quickReaction.gameOver', 'Game Over!')}</h2>
+              <div className="bg-orange-50 dark:bg-slate-800 rounded-xl p-6 mb-6">
+                <p className="text-gray-700 dark:text-gray-300 text-sm font-medium">{t('quickReaction.finalScore', 'Final Score')}</p>
                 <p className="text-3xl font-bold text-orange-600">{totalScore}</p>
               </div>
               <button
@@ -420,7 +420,7 @@ export default function QuickReactionPage() {
               </button>
               <button
                 onClick={startGame}
-                className="text-gray-600 hover:text-gray-800 font-medium"
+                className="text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:text-white font-medium"
               >
                 {t('quickReaction.restart', 'Restart from Level 1')}
               </button>
@@ -432,15 +432,15 @@ export default function QuickReactionPage() {
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              className="bg-white rounded-2xl shadow-lg p-8 text-center"
+              className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-8 text-center"
             >
               <div className="text-6xl mb-4">🎉</div>
               <h2 className="text-4xl font-bold text-green-600 mb-4">{t('quickReaction.victory', 'Congratulations!')}</h2>
-              <p className="text-xl text-gray-700 font-medium mb-6">
+              <p className="text-xl text-gray-700 dark:text-gray-300 font-medium mb-6">
                 {t('quickReaction.victoryMessage', 'You completed all {count} levels!', { count: MAX_LEVELS })}
               </p>
               <div className="bg-green-50 rounded-xl p-6 mb-6">
-                <p className="text-gray-700 text-sm font-medium">{t('quickReaction.finalScore', 'Final Score')}</p>
+                <p className="text-gray-700 dark:text-gray-300 text-sm font-medium">{t('quickReaction.finalScore', 'Final Score')}</p>
                 <p className="text-5xl font-bold text-green-600">{totalScore + levelScore}</p>
               </div>
               <button

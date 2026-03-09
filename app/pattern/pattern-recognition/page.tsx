@@ -30,8 +30,8 @@ const COLOR_MAP: Record<ColorType, string> = {
   blue: 'bg-blue-500',
   green: 'bg-green-500',
   yellow: 'bg-yellow-500',
-  orange: 'bg-orange-500',
-  purple: 'bg-purple-500',
+  orange: 'bg-orange-50 dark:bg-slate-8000',
+  purple: 'bg-purple-50 dark:bg-slate-8000',
 }
 
 const SIZE_MAP: Record<'small' | 'medium' | 'large', string> = {
@@ -88,7 +88,7 @@ const LEVEL_SETTINGS = [
 
 export default function PatternRecognitionPage() {
   const { t } = useTranslation()
-  const { addSession } = useGameStore()
+  const { addSession, darkMode } = useGameStore()
 
   const [gameState, setGameState] = useState<'menu' | 'playing' | 'result' | 'victory'>('menu')
   const [pattern, setPattern] = useState<PatternItem[]>([])
@@ -352,21 +352,21 @@ export default function PatternRecognitionPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-cyan-50 via-white to-amber-50 p-4 md:p-8">
+    <div className="min-h-screen p-4 md:p-8 transition-colors duration-300 {darkMode ? "bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white" : "bg-gradient-to-br from-cyan-50 via-white to-amber-50 p-4 md:p-8"}">
       <SettingsPanel />
       <div className="max-w-4xl mx-auto">
         {/* Header */}
         <Link
           href="/pattern"
-          className="inline-flex items-center text-gray-700 hover:text-gray-900 font-medium mb-6 text-lg"
+          className="inline-flex items-center text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white font-medium mb-6 text-lg"
         >
           <span className="mr-2">←</span> {t('back', 'Back')}
         </Link>
 
-        <h1 className="text-3xl md:text-4xl font-bold text-gray-800 mb-2">
+        <h1 className="text-3xl md:text-4xl font-bold text-gray-800 dark:text-white mb-2">
           {t('patternRecognition.title', 'Pattern Recognition')}
         </h1>
-        <p className="text-lg text-gray-700 font-medium mb-8">
+        <p className="text-lg text-gray-700 dark:text-gray-300 font-medium mb-8">
           {t('patternRecognition.description', 'Identify the pattern and find what comes next!')}
         </p>
 
@@ -375,19 +375,19 @@ export default function PatternRecognitionPage() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="bg-white rounded-2xl shadow-lg p-8 text-center"
+            className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-8 text-center"
           >
-            <h2 className="text-3xl font-bold text-gray-800 mb-2">
+            <h2 className="text-3xl font-bold text-gray-800 dark:text-white mb-2">
               Level {level}
             </h2>
             {level > 1 && (
-              <p className="text-lg text-gray-700 mb-4 font-medium">
+              <p className="text-lg text-gray-700 dark:text-gray-300 mb-4 font-medium">
                 Total Score: <span className="text-cyan-600 font-bold">{totalScore}</span>
               </p>
             )}
             <div className="bg-cyan-50 rounded-xl p-4 mb-6 text-left">
-              <h3 className="font-bold text-gray-800 mb-2">Level Settings:</h3>
-              <ul className="text-gray-700 space-y-1 font-medium">
+              <h3 className="font-bold text-gray-800 dark:text-white mb-2">Level Settings:</h3>
+              <ul className="text-gray-700 dark:text-gray-300 space-y-1 font-medium">
                 <li>• Pattern Length: {settings.patternLength}</li>
                 <li>• Questions: {settings.questions}</li>
                 <li>• Shapes: {settings.shapes}</li>
@@ -407,23 +407,23 @@ export default function PatternRecognitionPage() {
         {gameState === 'playing' && (
           <>
             {/* Stats */}
-            <div className="bg-white rounded-2xl shadow-lg p-4 mb-6">
+            <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-4 mb-6">
               <div className="flex justify-around text-center">
                 <div>
-                  <p className="text-gray-700 text-sm font-medium">Level</p>
+                  <p className="text-gray-700 dark:text-gray-300 text-sm font-medium">Level</p>
                   <p className="text-3xl font-bold text-cyan-600">{level}/{MAX_LEVELS}</p>
                 </div>
                 <div>
-                  <p className="text-gray-700 text-sm font-medium">Question</p>
+                  <p className="text-gray-700 dark:text-gray-300 text-sm font-medium">Question</p>
                   <p className="text-3xl font-bold text-amber-600">{questionNumber + 1}/{settings.questions}</p>
                 </div>
                 <div>
-                  <p className="text-gray-700 text-sm font-medium">Score</p>
+                  <p className="text-gray-700 dark:text-gray-300 text-sm font-medium">Score</p>
                   <p className="text-3xl font-bold text-cyan-600">{score}</p>
                 </div>
               </div>
               {/* Progress Bar */}
-              <div className="mt-4 bg-gray-200 rounded-full h-3 overflow-hidden">
+              <div className="mt-4 bg-gray-200 dark:bg-slate-700 rounded-full h-3 overflow-hidden">
                 <motion.div
                   initial={{ width: 0 }}
                   animate={{ width: `${((questionNumber) / settings.questions) * 100}%` }}
@@ -433,8 +433,8 @@ export default function PatternRecognitionPage() {
             </div>
 
             {/* Pattern display */}
-            <div className="bg-white rounded-2xl shadow-lg p-6 mb-6">
-              <h2 className="text-2xl font-bold text-gray-800 mb-6 text-center">
+            <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-6 mb-6">
+              <h2 className="text-2xl font-bold text-gray-800 dark:text-white mb-6 text-center">
                 Complete the pattern:
               </h2>
               <div className="flex justify-center items-center gap-4 md:gap-8 flex-wrap">
@@ -466,8 +466,8 @@ export default function PatternRecognitionPage() {
             </div>
 
             {/* Options */}
-            <div className="bg-white rounded-2xl shadow-lg p-6 mb-6">
-              <h3 className="text-xl font-bold text-gray-800 mb-4 text-center">
+            <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-6 mb-6">
+              <h3 className="text-xl font-bold text-gray-800 dark:text-white mb-4 text-center">
                 What comes next?
               </h3>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -521,11 +521,11 @@ export default function PatternRecognitionPage() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="bg-white rounded-2xl shadow-lg p-8 text-center"
+            className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-8 text-center"
           >
             <div className="text-6xl mb-4">😔</div>
-            <h2 className="text-4xl font-bold text-gray-800 mb-4">Level {level} Failed</h2>
-            <p className="text-xl text-gray-700 font-medium mb-6">
+            <h2 className="text-4xl font-bold text-gray-800 dark:text-white mb-4">Level {level} Failed</h2>
+            <p className="text-xl text-gray-700 dark:text-gray-300 font-medium mb-6">
               You got {score} out of {settings.questions * 10} points needed
             </p>
             <button
@@ -542,15 +542,15 @@ export default function PatternRecognitionPage() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="bg-white rounded-2xl shadow-lg p-8 text-center"
+            className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-8 text-center"
           >
             <div className="text-6xl mb-4">🎉</div>
             <h2 className="text-4xl font-bold text-cyan-600 mb-4">Congratulations!</h2>
-            <p className="text-xl text-gray-700 font-medium mb-6">
+            <p className="text-xl text-gray-700 dark:text-gray-300 font-medium mb-6">
               You completed all {MAX_LEVELS} levels!
             </p>
             <div className="bg-cyan-50 rounded-xl p-6 mb-6">
-              <p className="text-gray-700 text-sm font-medium">Final Score</p>
+              <p className="text-gray-700 dark:text-gray-300 text-sm font-medium">Final Score</p>
               <p className="text-5xl font-bold text-cyan-600">{totalScore}</p>
             </div>
             <button

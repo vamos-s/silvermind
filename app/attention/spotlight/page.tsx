@@ -46,7 +46,7 @@ const SHAPES = ['⭐', '🔷', '🔶', '💎', '🌟', '🔴', '🟢', '🔵']
 
 export default function SpotlightPage() {
   const { t } = useTranslation()
-  const { addSession } = useGameStore()
+  const { addSession, darkMode } = useGameStore()
 
   const [gameState, setGameState] = useState<'menu' | 'playing' | 'levelComplete' | 'gameOver' | 'victory'>('menu')
   const [level, setLevel] = useState(1)
@@ -197,21 +197,21 @@ export default function SpotlightPage() {
   }, [level])
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-violet-50 via-white to-purple-50 p-4 md:p-8">
+    <div className="min-h-screen p-4 md:p-8 transition-colors duration-300 {darkMode ? "bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white" : "bg-gradient-to-br from-violet-50 via-white to-purple-50 p-4 md:p-8"}">
       <SettingsPanel />
       <div className="max-w-2xl mx-auto">
         {/* Header */}
         <Link
           href="/attention"
-          className="inline-flex items-center text-gray-700 hover:text-gray-900 font-medium mb-6 text-lg"
+          className="inline-flex items-center text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white font-medium mb-6 text-lg"
         >
           <span className="mr-2">←</span> {t('back', 'Back')}
         </Link>
 
-        <h1 className="text-3xl md:text-4xl font-bold text-gray-800 mb-2">
+        <h1 className="text-3xl md:text-4xl font-bold text-gray-800 dark:text-white mb-2">
           {t('spotlight.title', 'Spotlight')}
         </h1>
-        <p className="text-lg text-gray-700 font-medium mb-8">
+        <p className="text-lg text-gray-700 dark:text-gray-300 font-medium mb-8">
           {t('spotlight.description', 'Find hidden targets with your spotlight!')}
         </p>
 
@@ -220,15 +220,15 @@ export default function SpotlightPage() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="bg-white rounded-2xl shadow-lg p-8 text-center"
+            className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-8 text-center"
           >
             <div className="text-6xl mb-4">🔦</div>
-            <h2 className="text-3xl font-bold text-gray-800 mb-2">
+            <h2 className="text-3xl font-bold text-gray-800 dark:text-white mb-2">
               Level {level}
             </h2>
-            <div className="bg-violet-50 rounded-xl p-4 mb-6 text-left">
-              <h3 className="font-bold text-gray-800 mb-2">{t('spotlight.levelInfo', 'Level Settings')}:</h3>
-              <ul className="text-gray-700 space-y-1 font-medium">
+            <div className="bg-violet-50 dark:bg-slate-800 rounded-xl p-4 mb-6 text-left">
+              <h3 className="font-bold text-gray-800 dark:text-white mb-2">{t('spotlight.levelInfo', 'Level Settings')}:</h3>
+              <ul className="text-gray-700 dark:text-gray-300 space-y-1 font-medium">
                 <li>• {t('spotlight.gridSize', 'Grid')}: {gridCount} × {gridCount}</li>
                 <li>• {t('spotlight.spotlightSize', 'Spotlight')}: {spotlightSize} × {spotlightSize}</li>
                 <li>• {t('spotlight.timeLimit', 'Time Limit')}: {settings.timeLimit}s</li>
@@ -248,23 +248,23 @@ export default function SpotlightPage() {
         {gameState === 'playing' && (
           <>
             {/* Stats */}
-            <div className="bg-white rounded-2xl shadow-lg p-6 mb-6">
+            <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-6 mb-6">
               <div className="flex justify-around text-center">
                 <div>
-                  <p className="text-gray-700 text-sm font-medium">{t('spotlight.level', 'Level')}</p>
+                  <p className="text-gray-700 dark:text-gray-300 text-sm font-medium">{t('spotlight.level', 'Level')}</p>
                   <p className="text-3xl font-bold text-violet-600">{level}/{MAX_LEVELS}</p>
                 </div>
                 <div>
-                  <p className="text-gray-700 text-sm font-medium">{t('spotlight.score', 'Score')}</p>
+                  <p className="text-gray-700 dark:text-gray-300 text-sm font-medium">{t('spotlight.score', 'Score')}</p>
                   <p className="text-3xl font-bold text-purple-600">{totalScore}</p>
                 </div>
                 <div>
-                  <p className="text-gray-700 text-sm font-medium">{t('spotlight.timeLeft', 'Time')}</p>
+                  <p className="text-gray-700 dark:text-gray-300 text-sm font-medium">{t('spotlight.timeLeft', 'Time')}</p>
                   <p className={`text-3xl font-bold ${timeLeft <= 5 ? 'text-red-500' : 'text-violet-600'}`}>{timeLeft}s</p>
                 </div>
               </div>
               {/* Progress Bar */}
-              <div className="mt-4 bg-gray-200 rounded-full h-3 overflow-hidden">
+              <div className="mt-4 bg-gray-200 dark:bg-slate-700 rounded-full h-3 overflow-hidden">
                 <motion.div
                   initial={{ width: 0 }}
                   animate={{ width: `${((level - 1) / MAX_LEVELS) * 100}%` }}
@@ -274,10 +274,10 @@ export default function SpotlightPage() {
             </div>
 
             {/* Target Display */}
-            <div className="bg-white rounded-2xl shadow-lg p-4 mb-6 text-center">
-              <p className="text-gray-700 font-medium mb-2">{t('spotlight.findThisShape', 'Find this shape:')}</p>
+            <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-4 mb-6 text-center">
+              <p className="text-gray-700 dark:text-gray-300 font-medium mb-2">{t('spotlight.findThisShape', 'Find this shape:')}</p>
               <div className="text-5xl">{targetShape}</div>
-              <p className="text-gray-700 font-medium mt-2">{t('spotlight.progress', 'Progress')}: {foundTargets} / {totalTargets}</p>
+              <p className="text-gray-700 dark:text-gray-300 font-medium mt-2">{t('spotlight.progress', 'Progress')}: {foundTargets} / {totalTargets}</p>
             </div>
 
             {/* Game Grid */}
@@ -328,18 +328,18 @@ export default function SpotlightPage() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="bg-white rounded-2xl shadow-lg p-8 text-center"
+            className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-8 text-center"
           >
             <div className="text-6xl mb-4">✅</div>
             <h2 className="text-4xl font-bold text-violet-600 mb-4">Level {level} Complete!</h2>
-            <div className="bg-violet-50 rounded-xl p-6 mb-6">
+            <div className="bg-violet-50 dark:bg-slate-800 rounded-xl p-6 mb-6">
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <p className="text-gray-700 text-sm font-medium">{t('spotlight.levelScore', 'Level Score')}</p>
+                  <p className="text-gray-700 dark:text-gray-300 text-sm font-medium">{t('spotlight.levelScore', 'Level Score')}</p>
                   <p className="text-3xl font-bold text-violet-600">{Math.round(score)}</p>
                 </div>
                 <div>
-                  <p className="text-gray-700 text-sm font-medium">{t('spotlight.totalScore', 'Total Score')}</p>
+                  <p className="text-gray-700 dark:text-gray-300 text-sm font-medium">{t('spotlight.totalScore', 'Total Score')}</p>
                   <p className="text-3xl font-bold text-purple-600">{totalScore + Math.round(score)}</p>
                 </div>
               </div>
@@ -358,12 +358,12 @@ export default function SpotlightPage() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="bg-white rounded-2xl shadow-lg p-8 text-center"
+            className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-8 text-center"
           >
             <div className="text-6xl mb-4">❌</div>
-            <h2 className="text-4xl font-bold text-gray-800 mb-4">{t('spotlight.gameOver', 'Time\'s Up!')}</h2>
-            <div className="bg-orange-50 rounded-xl p-6 mb-6">
-              <p className="text-gray-700 text-sm font-medium">{t('spotlight.finalScore', 'Final Score')}</p>
+            <h2 className="text-4xl font-bold text-gray-800 dark:text-white mb-4">{t('spotlight.gameOver', 'Time\'s Up!')}</h2>
+            <div className="bg-orange-50 dark:bg-slate-800 rounded-xl p-6 mb-6">
+              <p className="text-gray-700 dark:text-gray-300 text-sm font-medium">{t('spotlight.finalScore', 'Final Score')}</p>
               <p className="text-3xl font-bold text-orange-600">{totalScore}</p>
             </div>
             <button
@@ -380,15 +380,15 @@ export default function SpotlightPage() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="bg-white rounded-2xl shadow-lg p-8 text-center"
+            className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-8 text-center"
           >
             <div className="text-6xl mb-4">🎉</div>
             <h2 className="text-4xl font-bold text-violet-600 mb-4">{t('spotlight.victory', 'Congratulations!')}</h2>
-            <p className="text-xl text-gray-700 font-medium mb-6">
+            <p className="text-xl text-gray-700 dark:text-gray-300 font-medium mb-6">
               {t('spotlight.victoryMessage', 'You completed all {count} levels!', { count: MAX_LEVELS })}
             </p>
-            <div className="bg-violet-50 rounded-xl p-6 mb-6">
-              <p className="text-gray-700 text-sm font-medium">{t('spotlight.finalScore', 'Final Score')}</p>
+            <div className="bg-violet-50 dark:bg-slate-800 rounded-xl p-6 mb-6">
+              <p className="text-gray-700 dark:text-gray-300 text-sm font-medium">{t('spotlight.finalScore', 'Final Score')}</p>
               <p className="text-5xl font-bold text-violet-600">{totalScore + Math.round(score)}</p>
             </div>
             <button

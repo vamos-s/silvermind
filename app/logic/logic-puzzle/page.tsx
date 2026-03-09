@@ -76,7 +76,7 @@ const MAX_LEVELS = 30
 
 export default function LogicPuzzlePage() {
   const { t } = useTranslation()
-  const { addSession } = useGameStore()
+  const { addSession, darkMode } = useGameStore()
 
   const [gameState, setGameState] = useState<'menu' | 'playing' | 'result'>('menu')
   const [level, setLevel] = useState(1)
@@ -213,21 +213,21 @@ export default function LogicPuzzlePage() {
   }, [])
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-blue-50 p-4 md:p-8">
+    <div className="min-h-screen p-4 md:p-8 transition-colors duration-300 {darkMode ? "bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white" : "bg-gradient-to-br from-green-50 via-white to-blue-50 p-4 md:p-8"}">
       <SettingsPanel />
       <div className="max-w-2xl mx-auto">
         {/* Header */}
         <Link
           href="/logic"
-          className="inline-flex items-center text-gray-700 hover:text-gray-900 font-medium mb-6 text-lg"
+          className="inline-flex items-center text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white font-medium mb-6 text-lg"
         >
           <span className="mr-2">←</span> {t('back', 'Back')}
         </Link>
 
-        <h1 className="text-3xl md:text-4xl font-bold text-gray-800 mb-2">
+        <h1 className="text-3xl md:text-4xl font-bold text-gray-800 dark:text-white mb-2">
           {t('logicPuzzle.title', 'Logic Puzzle')}
         </h1>
-        <p className="text-lg text-gray-700 font-medium mb-8">
+        <p className="text-lg text-gray-700 dark:text-gray-300 font-medium mb-8">
           {t('logicPuzzle.description', 'Use clues to arrange boxes from smallest to largest!')}
         </p>
 
@@ -236,22 +236,22 @@ export default function LogicPuzzlePage() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="bg-white rounded-2xl shadow-lg p-8 text-center"
+            className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-8 text-center"
           >
-            <h2 className="text-3xl font-bold text-gray-800 mb-2">
+            <h2 className="text-3xl font-bold text-gray-800 dark:text-white mb-2">
               Level {level}
             </h2>
             {level > 1 && (
-              <p className="text-lg text-gray-700 mb-4 font-medium">
+              <p className="text-lg text-gray-700 dark:text-gray-300 mb-4 font-medium">
                 Total Score: <span className="text-green-600 font-bold">{totalScore}</span>
               </p>
             )}
-            <p className="text-lg text-gray-600 mb-6">
+            <p className="text-lg text-gray-600 dark:text-gray-400 mb-6">
               {t('logicPuzzle.instructions', 'Read the clues, then drag boxes to arrange them from smallest to largest.')}
             </p>
             <div className="bg-green-50 rounded-xl p-4 mb-6 text-left">
-              <h3 className="font-bold text-gray-800 mb-2">{t('logicPuzzle.levelInfo', 'Level Settings')}:</h3>
-              <ul className="text-gray-700 space-y-1 font-medium">
+              <h3 className="font-bold text-gray-800 dark:text-white mb-2">{t('logicPuzzle.levelInfo', 'Level Settings')}:</h3>
+              <ul className="text-gray-700 dark:text-gray-300 space-y-1 font-medium">
                 <li>• {t('logicPuzzle.boxes', 'Boxes')}: {settings.boxCount}</li>
                 <li>• {t('logicPuzzle.clues', 'Clues')}: {settings.clueCount}</li>
               </ul>
@@ -269,23 +269,23 @@ export default function LogicPuzzlePage() {
         {gameState === 'playing' && puzzle && (
           <>
             {/* Stats */}
-            <div className="bg-white rounded-2xl shadow-lg p-4 mb-6">
+            <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-4 mb-6">
               <div className="flex justify-around text-center">
                 <div>
-                  <p className="text-gray-700 text-sm font-medium">{t('logicPuzzle.level', 'Level')}</p>
+                  <p className="text-gray-700 dark:text-gray-300 text-sm font-medium">{t('logicPuzzle.level', 'Level')}</p>
                   <p className="text-3xl font-bold text-green-600">{level}/{MAX_LEVELS}</p>
                 </div>
                 <div>
-                  <p className="text-gray-700 text-sm font-medium">{t('logicPuzzle.score', 'Score')}</p>
+                  <p className="text-gray-700 dark:text-gray-300 text-sm font-medium">{t('logicPuzzle.score', 'Score')}</p>
                   <p className="text-3xl font-bold text-blue-600">{totalScore}</p>
                 </div>
                 <div>
-                  <p className="text-gray-700 text-sm font-medium">{t('logicPuzzle.attempts', 'Attempts')}</p>
+                  <p className="text-gray-700 dark:text-gray-300 text-sm font-medium">{t('logicPuzzle.attempts', 'Attempts')}</p>
                   <p className="text-3xl font-bold text-green-600">{attempts}</p>
                 </div>
               </div>
               {/* Progress Bar */}
-              <div className="mt-4 bg-gray-200 rounded-full h-3 overflow-hidden">
+              <div className="mt-4 bg-gray-200 dark:bg-slate-700 rounded-full h-3 overflow-hidden">
                 <motion.div
                   initial={{ width: 0 }}
                   animate={{ width: `${((level - 1) / MAX_LEVELS) * 100}%` }}
@@ -295,8 +295,8 @@ export default function LogicPuzzlePage() {
             </div>
 
             {/* Clues */}
-            <div className="bg-white rounded-2xl shadow-lg p-6 mb-6">
-              <h2 className="text-2xl font-bold text-gray-800 mb-4">
+            <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-6 mb-6">
+              <h2 className="text-2xl font-bold text-gray-800 dark:text-white mb-4">
                 {t('logicPuzzle.clues', 'Clues')}
               </h2>
               <ul className="space-y-3">
@@ -305,22 +305,22 @@ export default function LogicPuzzlePage() {
                     <span className="bg-green-100 text-green-800 rounded-full w-8 h-8 flex items-center justify-center font-bold mr-3 flex-shrink-0">
                       {index + 1}
                     </span>
-                    <span className="text-lg text-gray-700 pt-1">{clue}</span>
+                    <span className="text-lg text-gray-700 dark:text-gray-300 pt-1">{clue}</span>
                   </li>
                 ))}
               </ul>
             </div>
 
             {/* Drag and drop area */}
-            <div className="bg-white rounded-2xl shadow-lg p-6 mb-6">
+            <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-6 mb-6">
               <div className="flex justify-between items-center mb-4">
-                <h2 className="text-2xl font-bold text-gray-800">
+                <h2 className="text-2xl font-bold text-gray-800 dark:text-white">
                   {t('logicPuzzle.boxes', 'Boxes')}
                 </h2>
                 <button
                   onClick={resetPuzzle}
                   disabled={showAnswer}
-                  className="bg-gray-200 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-300 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="bg-gray-200 dark:bg-slate-700 text-gray-700 dark:text-gray-300 px-4 py-2 rounded-lg hover:bg-gray-300 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {t('logicPuzzle.reset', 'Reset')}
                 </button>
@@ -345,15 +345,15 @@ export default function LogicPuzzlePage() {
                         <div className={`${colorInfo.bg} rounded-full w-12 h-12 flex items-center justify-center text-2xl font-bold`}>
                           {box.color[0]}
                         </div>
-                        <span className="text-2xl font-bold text-gray-800">
+                        <span className="text-2xl font-bold text-gray-800 dark:text-white">
                           {box.color} Box
                         </span>
                       </div>
                       <div className="flex items-center gap-2">
-                        <span className="text-lg text-gray-700 mr-4">
+                        <span className="text-lg text-gray-700 dark:text-gray-300 mr-4">
                           {showAnswer ? `Size: ${box.size}` : ''}
                         </span>
-                        <div className="bg-gray-200 rounded-lg px-3 py-1 text-gray-600">
+                        <div className="bg-gray-200 dark:bg-slate-700 rounded-lg px-3 py-1 text-gray-600 dark:text-gray-400">
                           #{index + 1}
                         </div>
                       </div>
@@ -389,15 +389,15 @@ export default function LogicPuzzlePage() {
                       : t('logicPuzzle.incorrect', 'Not quite right!')}
                   </h3>
                   {isCorrect && (
-                    <p className="text-xl text-gray-700 mt-2">
+                    <p className="text-xl text-gray-700 dark:text-gray-300 mt-2">
                       {t('logicPuzzle.levelScore', 'Level Score')}: <span className="font-bold text-green-600">{Math.max(10, 100 - ((attempts - 1) * 10))}</span>
                     </p>
                   )}
                 </div>
 
                 {!isCorrect && (
-                  <div className="bg-white rounded-xl p-4 mb-4">
-                    <h4 className="text-xl font-bold text-gray-800 mb-2">
+                  <div className="bg-white dark:bg-slate-800 rounded-xl p-4 mb-4">
+                    <h4 className="text-xl font-bold text-gray-800 dark:text-white mb-2">
                       {t('logicPuzzle.correctOrder', 'Correct Order:')}
                     </h4>
                     <div className="flex gap-2 flex-wrap">
@@ -405,8 +405,8 @@ export default function LogicPuzzlePage() {
                         const colorInfo = getColorInfo(box.color)
                         return (
                           <div key={box.id} className={`${colorInfo.bg} ${colorInfo.border} border-2 rounded-lg px-3 py-2`}>
-                            <span className="font-bold text-gray-800">{box.color[0]}</span>
-                            <span className="text-sm text-gray-600 ml-1">({box.size})</span>
+                            <span className="font-bold text-gray-800 dark:text-white">{box.color[0]}</span>
+                            <span className="text-sm text-gray-600 dark:text-gray-400 ml-1">({box.size})</span>
                           </div>
                         )
                       })}
@@ -418,7 +418,7 @@ export default function LogicPuzzlePage() {
                   {!isCorrect && (
                     <button
                       onClick={resetPuzzle}
-                      className="flex-1 bg-gray-200 text-gray-700 text-xl font-bold py-3 rounded-lg hover:bg-gray-300 transition-all"
+                      className="flex-1 bg-gray-200 dark:bg-slate-700 text-gray-700 dark:text-gray-300 text-xl font-bold py-3 rounded-lg hover:bg-gray-300 transition-all"
                     >
                       {t('logicPuzzle.tryAgain', 'Try Again')}
                     </button>
@@ -442,15 +442,15 @@ export default function LogicPuzzlePage() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="bg-white rounded-2xl shadow-lg p-8 text-center"
+            className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-8 text-center"
           >
             <div className="text-6xl mb-4">🎉</div>
             <h2 className="text-4xl font-bold text-green-600 mb-4">{t('logicPuzzle.victory', 'Congratulations!')}</h2>
-            <p className="text-xl text-gray-700 font-medium mb-6">
+            <p className="text-xl text-gray-700 dark:text-gray-300 font-medium mb-6">
               {t('logicPuzzle.victoryMessage', 'You completed all {count} levels!', { count: MAX_LEVELS })}
             </p>
             <div className="bg-green-50 rounded-xl p-6 mb-6">
-              <p className="text-gray-700 text-sm font-medium">{t('logicPuzzle.finalScore', 'Final Score')}</p>
+              <p className="text-gray-700 dark:text-gray-300 text-sm font-medium">{t('logicPuzzle.finalScore', 'Final Score')}</p>
               <p className="text-5xl font-bold text-green-600">{totalScore}</p>
             </div>
             <button

@@ -44,7 +44,7 @@ const LEVEL_SETTINGS = [
 
 export default function SequenceMemoryPage() {
   const { t } = useTranslation()
-  const { addSession } = useGameStore()
+  const { addSession, darkMode } = useGameStore()
 
   const [gameState, setGameState] = useState<'menu' | 'showing' | 'playing' | 'levelComplete' | 'gameOver' | 'victory'>('menu')
   const [sequence, setSequence] = useState<number[]>([])
@@ -184,21 +184,21 @@ export default function SequenceMemoryPage() {
   }, [gridSize])
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50 p-4 md:p-8">
+    <div className="min-h-screen p-4 md:p-8 transition-colors duration-300 {darkMode ? "bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white" : "bg-gradient-to-br from-indigo-50 via-white to-purple-50 p-4 md:p-8"}">
       <SettingsPanel />
       <div className="max-w-2xl mx-auto">
         {/* Header */}
         <Link
           href="/memory"
-          className="inline-flex items-center text-gray-700 hover:text-gray-900 font-medium mb-6 text-lg"
+          className="inline-flex items-center text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white font-medium mb-6 text-lg"
         >
           <span className="mr-2">←</span> {t('back', 'Back')}
         </Link>
 
-        <h1 className="text-3xl md:text-4xl font-bold text-gray-800 mb-2">
+        <h1 className="text-3xl md:text-4xl font-bold text-gray-800 dark:text-white mb-2">
           {t('sequenceMemory.title', 'Sequence Memory')}
         </h1>
-        <p className="text-lg text-gray-700 font-medium mb-8">
+        <p className="text-lg text-gray-700 dark:text-gray-300 font-medium mb-8">
           {t('sequenceMemory.description', 'Watch the sequence, then repeat it!')}
         </p>
 
@@ -207,19 +207,19 @@ export default function SequenceMemoryPage() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="bg-white rounded-2xl shadow-lg p-8 text-center"
+            className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-8 text-center"
           >
-            <h2 className="text-3xl font-bold text-gray-800 mb-2">
+            <h2 className="text-3xl font-bold text-gray-800 dark:text-white mb-2">
               Level {level}
             </h2>
             {level > 1 && (
-              <p className="text-lg text-gray-700 mb-4 font-medium">
+              <p className="text-lg text-gray-700 dark:text-gray-300 mb-4 font-medium">
                 Total Score: <span className="text-indigo-600 font-bold">{totalScore}</span>
               </p>
             )}
-            <div className="bg-indigo-50 rounded-xl p-4 mb-6 text-left">
-              <h3 className="font-bold text-gray-800 mb-2">{t('sequenceMemory.levelInfo', 'Level Settings')}:</h3>
-              <ul className="text-gray-700 space-y-1 font-medium">
+            <div className="bg-indigo-50 dark:bg-slate-800 rounded-xl p-4 mb-6 text-left">
+              <h3 className="font-bold text-gray-800 dark:text-white mb-2">{t('sequenceMemory.levelInfo', 'Level Settings')}:</h3>
+              <ul className="text-gray-700 dark:text-gray-300 space-y-1 font-medium">
                 <li>• {t('sequenceMemory.gridSize', 'Grid')}: {gridSize} × {gridSize}</li>
                 <li>• {t('sequenceMemory.sequenceLength', 'Sequence Length')}: {getSequenceLength()}</li>
               </ul>
@@ -237,19 +237,19 @@ export default function SequenceMemoryPage() {
         {(gameState === 'showing' || gameState === 'playing') && (
           <>
             {/* Stats */}
-            <div className="bg-white rounded-2xl shadow-lg p-6 mb-6">
+            <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-6 mb-6">
               <div className="flex justify-around text-center">
                 <div>
-                  <p className="text-gray-700 text-sm font-medium">{t('sequenceMemory.level', 'Level')}</p>
+                  <p className="text-gray-700 dark:text-gray-300 text-sm font-medium">{t('sequenceMemory.level', 'Level')}</p>
                   <p className="text-3xl font-bold text-indigo-600">{level}/{MAX_LEVELS}</p>
                 </div>
                 <div>
-                  <p className="text-gray-700 text-sm font-medium">{t('sequenceMemory.score', 'Score')}</p>
+                  <p className="text-gray-700 dark:text-gray-300 text-sm font-medium">{t('sequenceMemory.score', 'Score')}</p>
                   <p className="text-3xl font-bold text-purple-600">{totalScore}</p>
                 </div>
               </div>
               {/* Progress Bar */}
-              <div className="mt-4 bg-gray-200 rounded-full h-3 overflow-hidden">
+              <div className="mt-4 bg-gray-200 dark:bg-slate-700 rounded-full h-3 overflow-hidden">
                 <motion.div
                   initial={{ width: 0 }}
                   animate={{ width: `${((level - 1) / MAX_LEVELS) * 100}%` }}
@@ -281,7 +281,7 @@ export default function SequenceMemoryPage() {
             </div>
 
             {/* Grid */}
-            <div className="bg-white rounded-2xl shadow-lg p-6 mb-6">
+            <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-6 mb-6">
               <div
                 className="grid gap-3 mx-auto"
                 style={{
@@ -298,14 +298,14 @@ export default function SequenceMemoryPage() {
                     disabled={gameState !== 'playing'}
                     className={`${getCellSize()} rounded-xl transition-all shadow-md ${
                       showingIndex === index
-                        ? 'bg-indigo-500 scale-110 shadow-lg ring-4 ring-indigo-300'
+                        ? 'bg-indigo-50 dark:bg-slate-8000 scale-110 shadow-lg ring-4 ring-indigo-300'
                         : clickedIndex === index && isWrong
                         ? 'bg-red-500 scale-110 shadow-lg ring-4 ring-red-300'
                         : clickedIndex === index
                         ? 'bg-green-500 scale-110 shadow-lg ring-4 ring-green-300'
                         : gameState === 'playing'
-                        ? 'bg-gray-200 hover:bg-gray-300'
-                        : 'bg-gray-200'
+                        ? 'bg-gray-200 dark:bg-slate-700 hover:bg-gray-300'
+                        : 'bg-gray-200 dark:bg-slate-700'
                     }`}
                     animate={showingIndex === index ? {
                       scale: [1, 1.1, 1],
@@ -326,18 +326,18 @@ export default function SequenceMemoryPage() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="bg-white rounded-2xl shadow-lg p-8 text-center"
+            className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-8 text-center"
           >
             <div className="text-6xl mb-4">✅</div>
             <h2 className="text-4xl font-bold text-indigo-600 mb-4">Level {level} Complete!</h2>
-            <div className="bg-indigo-50 rounded-xl p-6 mb-6">
+            <div className="bg-indigo-50 dark:bg-slate-800 rounded-xl p-6 mb-6">
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <p className="text-gray-700 text-sm font-medium">{t('sequenceMemory.levelScore', 'Level Score')}</p>
+                  <p className="text-gray-700 dark:text-gray-300 text-sm font-medium">{t('sequenceMemory.levelScore', 'Level Score')}</p>
                   <p className="text-3xl font-bold text-indigo-600">{Math.round(score)}</p>
                 </div>
                 <div>
-                  <p className="text-gray-700 text-sm font-medium">{t('sequenceMemory.totalScore', 'Total Score')}</p>
+                  <p className="text-gray-700 dark:text-gray-300 text-sm font-medium">{t('sequenceMemory.totalScore', 'Total Score')}</p>
                   <p className="text-3xl font-bold text-purple-600">{totalScore + Math.round(score)}</p>
                 </div>
               </div>
@@ -350,7 +350,7 @@ export default function SequenceMemoryPage() {
             </button>
             <button
               onClick={startGame}
-              className="text-gray-600 hover:text-gray-800 font-medium"
+              className="text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:text-white font-medium"
             >
               {t('sequenceMemory.restart', 'Restart from Level 1')}
             </button>
@@ -362,12 +362,12 @@ export default function SequenceMemoryPage() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="bg-white rounded-2xl shadow-lg p-8 text-center"
+            className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-8 text-center"
           >
             <div className="text-6xl mb-4">❌</div>
-            <h2 className="text-4xl font-bold text-gray-800 mb-4">{t('sequenceMemory.gameOver', 'Game Over!')}</h2>
-            <div className="bg-orange-50 rounded-xl p-6 mb-6">
-              <p className="text-gray-700 text-sm font-medium">{t('sequenceMemory.finalScore', 'Final Score')}</p>
+            <h2 className="text-4xl font-bold text-gray-800 dark:text-white mb-4">{t('sequenceMemory.gameOver', 'Game Over!')}</h2>
+            <div className="bg-orange-50 dark:bg-slate-800 rounded-xl p-6 mb-6">
+              <p className="text-gray-700 dark:text-gray-300 text-sm font-medium">{t('sequenceMemory.finalScore', 'Final Score')}</p>
               <p className="text-3xl font-bold text-orange-600">{totalScore}</p>
             </div>
             <button
@@ -378,7 +378,7 @@ export default function SequenceMemoryPage() {
             </button>
             <button
               onClick={startGame}
-              className="text-gray-600 hover:text-gray-800 font-medium"
+              className="text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:text-white font-medium"
             >
               {t('sequenceMemory.restart', 'Restart from Level 1')}
             </button>
@@ -390,15 +390,15 @@ export default function SequenceMemoryPage() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="bg-white rounded-2xl shadow-lg p-8 text-center"
+            className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-8 text-center"
           >
             <div className="text-6xl mb-4">🎉</div>
             <h2 className="text-4xl font-bold text-indigo-600 mb-4">{t('sequenceMemory.victory', 'Congratulations!')}</h2>
-            <p className="text-xl text-gray-700 font-medium mb-6">
+            <p className="text-xl text-gray-700 dark:text-gray-300 font-medium mb-6">
               {t('sequenceMemory.victoryMessage', 'You completed all {count} levels!', { count: MAX_LEVELS })}
             </p>
-            <div className="bg-indigo-50 rounded-xl p-6 mb-6">
-              <p className="text-gray-700 text-sm font-medium">{t('sequenceMemory.finalScore', 'Final Score')}</p>
+            <div className="bg-indigo-50 dark:bg-slate-800 rounded-xl p-6 mb-6">
+              <p className="text-gray-700 dark:text-gray-300 text-sm font-medium">{t('sequenceMemory.finalScore', 'Final Score')}</p>
               <p className="text-5xl font-bold text-indigo-600">{totalScore + Math.round(score)}</p>
             </div>
             <button

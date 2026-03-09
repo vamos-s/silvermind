@@ -66,7 +66,7 @@ const REFERENCE_POINT = { x: 50, y: 50 }
 
 export default function DistanceJudgmentPage() {
   const { t } = useTranslation()
-  const { addSession } = useGameStore()
+  const { addSession, darkMode } = useGameStore()
 
   const [gameState, setGameState] = useState<'menu' | 'showing' | 'input' | 'levelComplete' | 'gameOver' | 'victory'>('menu')
   const [comparisons, setComparisons] = useState<Comparison[]>([])
@@ -217,21 +217,21 @@ export default function DistanceJudgmentPage() {
   const currentComparison = comparisons[currentComparisonIndex]
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-sky-50 via-white to-blue-50 p-4 md:p-8">
+    <div className="min-h-screen p-4 md:p-8 transition-colors duration-300 {darkMode ? "bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white" : "bg-gradient-to-br from-sky-50 via-white to-blue-50 p-4 md:p-8"}">
       <SettingsPanel />
       <div className="max-w-2xl mx-auto">
         {/* Header */}
         <Link
           href="/spatial"
-          className="inline-flex items-center text-gray-700 hover:text-gray-900 font-medium mb-6 text-lg"
+          className="inline-flex items-center text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white font-medium mb-6 text-lg"
         >
           <span className="mr-2">←</span> {t('back', 'Back')}
         </Link>
 
-        <h1 className="text-3xl md:text-4xl font-bold text-gray-800 mb-2">
+        <h1 className="text-3xl md:text-4xl font-bold text-gray-800 dark:text-white mb-2">
           {t('distanceJudgment.title', 'Distance Judgment')}
         </h1>
-        <p className="text-lg text-gray-700 font-medium mb-8">
+        <p className="text-lg text-gray-700 dark:text-gray-300 font-medium mb-8">
           {t('distanceJudgment.description', 'Which item is closer to the center point?')}
         </p>
 
@@ -240,19 +240,19 @@ export default function DistanceJudgmentPage() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="bg-white rounded-2xl shadow-lg p-8 text-center"
+            className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-8 text-center"
           >
-            <h2 className="text-3xl font-bold text-gray-800 mb-2">
+            <h2 className="text-3xl font-bold text-gray-800 dark:text-white mb-2">
               Level {level}
             </h2>
             {level > 1 && (
-              <p className="text-lg text-gray-700 mb-4 font-medium">
+              <p className="text-lg text-gray-700 dark:text-gray-300 mb-4 font-medium">
                 Total Score: <span className="text-sky-600 font-bold">{totalScore}</span>
               </p>
             )}
             <div className="bg-sky-50 rounded-xl p-4 mb-6 text-left">
-              <h3 className="font-bold text-gray-800 mb-2">{t('distanceJudgment.levelInfo', 'Level Settings')}:</h3>
-              <ul className="text-gray-700 space-y-1 font-medium">
+              <h3 className="font-bold text-gray-800 dark:text-white mb-2">{t('distanceJudgment.levelInfo', 'Level Settings')}:</h3>
+              <ul className="text-gray-700 dark:text-gray-300 space-y-1 font-medium">
                 <li>• {t('distanceJudgment.comparisonCount', 'Comparison Count')}: {settings.comparisonCount}</li>
                 <li>• {t('distanceJudgment.inputTime', 'Time Limit')}: {settings.inputTime}s</li>
               </ul>
@@ -268,8 +268,8 @@ export default function DistanceJudgmentPage() {
 
         {/* Showing comparison */}
         {gameState === 'showing' && (
-          <div className="bg-white rounded-2xl shadow-lg p-8 text-center">
-            <p className="text-xl text-gray-600 mb-4 font-medium">
+          <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-8 text-center">
+            <p className="text-xl text-gray-600 dark:text-gray-400 mb-4 font-medium">
               {t('distanceJudgment.memorize', 'Memorize the positions!')}
             </p>
             <div className="relative w-full aspect-square bg-gradient-to-br from-sky-100 to-blue-100 rounded-xl overflow-hidden">
@@ -321,27 +321,27 @@ export default function DistanceJudgmentPage() {
         {gameState === 'input' && (
           <>
             {/* Stats */}
-            <div className="bg-white rounded-2xl shadow-lg p-6 mb-6">
+            <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-6 mb-6">
               <div className="flex justify-between items-center">
                 <div>
-                  <p className="text-gray-700 text-sm font-medium">{t('distanceJudgment.question', 'Question')}</p>
+                  <p className="text-gray-700 dark:text-gray-300 text-sm font-medium">{t('distanceJudgment.question', 'Question')}</p>
                   <p className="text-3xl font-bold text-sky-600">
                     {currentComparisonIndex + 1}/{comparisons.length}
                   </p>
                 </div>
                 <div>
-                  <p className="text-gray-700 text-sm font-medium">{t('distanceJudgment.score', 'Score')}</p>
+                  <p className="text-gray-700 dark:text-gray-300 text-sm font-medium">{t('distanceJudgment.score', 'Score')}</p>
                   <p className="text-3xl font-bold text-blue-600">{totalScore}</p>
                 </div>
                 <div>
-                  <p className="text-gray-700 text-sm font-medium">{t('distanceJudgment.timeLeft', 'Time Left')}</p>
+                  <p className="text-gray-700 dark:text-gray-300 text-sm font-medium">{t('distanceJudgment.timeLeft', 'Time Left')}</p>
                   <p className={`text-4xl font-bold ${timeLeft <= 10 ? 'text-red-500' : 'text-sky-600'}`}>
                     {timeLeft}s
                   </p>
                 </div>
               </div>
               {/* Progress Bar */}
-              <div className="mt-4 bg-gray-200 rounded-full h-3 overflow-hidden">
+              <div className="mt-4 bg-gray-200 dark:bg-slate-700 rounded-full h-3 overflow-hidden">
                 <motion.div
                   initial={{ width: 0 }}
                   animate={{ width: `${((currentComparisonIndex) / comparisons.length) * 100}%` }}
@@ -351,10 +351,10 @@ export default function DistanceJudgmentPage() {
             </div>
 
             {/* Question area */}
-            <div className="bg-white rounded-2xl shadow-lg p-8 mb-6 text-center">
+            <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-8 mb-6 text-center">
               {currentComparison && (
                 <>
-                  <p className="text-2xl font-bold text-gray-800 mb-6">
+                  <p className="text-2xl font-bold text-gray-800 dark:text-white mb-6">
                     {t('distanceJudgment.whichIsCloser', 'Which is closer to the center?')}
                   </p>
 
@@ -402,7 +402,7 @@ export default function DistanceJudgmentPage() {
                             ? '✅ Correct!'
                             : '❌ Incorrect!'}
                         </p>
-                        <p className="text-gray-700">
+                        <p className="text-gray-700 dark:text-gray-300">
                           {t('distanceJudgment.correctAnswer', 'Correct Answer')}: {currentComparison.correctAnswer === 'closer' ? 'A' : 'B'}
                         </p>
                       </div>
@@ -446,7 +446,7 @@ export default function DistanceJudgmentPage() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="bg-white rounded-2xl shadow-lg p-8 text-center"
+            className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-8 text-center"
           >
             <div className="text-6xl mb-4">
               {score > 0 ? '✅' : '❌'}
@@ -460,24 +460,24 @@ export default function DistanceJudgmentPage() {
                   <p className="text-6xl font-bold text-sky-600 mb-2">
                     {selectedAnswers.filter((answer, index) => answer === comparisons[index]?.correctAnswer).length}/{comparisons.length}
                   </p>
-                  <p className="text-xl text-gray-600">
+                  <p className="text-xl text-gray-600 dark:text-gray-400">
                     {t('distanceJudgment.correctAnswers', 'Correct Answers')}
                   </p>
                 </div>
                 <div className="grid grid-cols-2 gap-4 mt-4">
                   <div>
-                    <p className="text-gray-700 text-sm font-medium">{t('distanceJudgment.levelScore', 'Level Score')}</p>
+                    <p className="text-gray-700 dark:text-gray-300 text-sm font-medium">{t('distanceJudgment.levelScore', 'Level Score')}</p>
                     <p className="text-3xl font-bold text-sky-600">{score}</p>
                   </div>
                   <div>
-                    <p className="text-gray-700 text-sm font-medium">{t('distanceJudgment.totalScore', 'Total Score')}</p>
+                    <p className="text-gray-700 dark:text-gray-300 text-sm font-medium">{t('distanceJudgment.totalScore', 'Total Score')}</p>
                     <p className="text-3xl font-bold text-blue-600">{totalScore + score}</p>
                   </div>
                 </div>
               </div>
             ) : (
               <div className="bg-red-50 rounded-xl p-6 mb-6">
-                <p className="text-gray-700 text-sm font-medium">{t('distanceJudgment.levelScore', 'Level Score')}</p>
+                <p className="text-gray-700 dark:text-gray-300 text-sm font-medium">{t('distanceJudgment.levelScore', 'Level Score')}</p>
                 <p className="text-3xl font-bold text-red-600">{score}</p>
               </div>
             )}
@@ -489,7 +489,7 @@ export default function DistanceJudgmentPage() {
             </button>
             <button
               onClick={startGame}
-              className="text-gray-600 hover:text-gray-800 font-medium"
+              className="text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:text-white font-medium"
             >
               {t('distanceJudgment.restart', 'Restart from Level 1')}
             </button>
@@ -501,15 +501,15 @@ export default function DistanceJudgmentPage() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="bg-white rounded-2xl shadow-lg p-8 text-center"
+            className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-8 text-center"
           >
             <div className="text-6xl mb-4">🎉</div>
             <h2 className="text-4xl font-bold text-sky-600 mb-4">{t('distanceJudgment.victory', 'Congratulations!')}</h2>
-            <p className="text-xl text-gray-700 font-medium mb-6">
+            <p className="text-xl text-gray-700 dark:text-gray-300 font-medium mb-6">
               {t('distanceJudgment.victoryMessage', 'You completed all {count} levels!', { count: MAX_LEVELS })}
             </p>
             <div className="bg-sky-50 rounded-xl p-6 mb-6">
-              <p className="text-gray-700 text-sm font-medium">{t('distanceJudgment.finalScore', 'Final Score')}</p>
+              <p className="text-gray-700 dark:text-gray-300 text-sm font-medium">{t('distanceJudgment.finalScore', 'Final Score')}</p>
               <p className="text-5xl font-bold text-sky-600">{totalScore + score}</p>
             </div>
             <button

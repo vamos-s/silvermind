@@ -74,7 +74,7 @@ const LEVEL_SETTINGS = [
 
 export default function WordRecallPage() {
   const { t, i18n } = useTranslation()
-  const { addSession } = useGameStore()
+  const { addSession, darkMode } = useGameStore()
 
   const [gameState, setGameState] = useState<'menu' | 'showing' | 'input' | 'levelComplete' | 'gameOver' | 'victory'>('menu')
   const [words, setWords] = useState<string[]>([])
@@ -202,21 +202,21 @@ export default function WordRecallPage() {
   }, [gameState, timeLeft])
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-violet-50 via-white to-pink-50 p-4 md:p-8">
+    <div className="min-h-screen p-4 md:p-8 transition-colors duration-300 {darkMode ? "bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white" : "bg-gradient-to-br from-violet-50 via-white to-pink-50 p-4 md:p-8"}">
       <SettingsPanel />
       <div className="max-w-2xl mx-auto">
         {/* Header */}
         <Link
           href="/memory"
-          className="inline-flex items-center text-gray-700 hover:text-gray-900 font-medium mb-6 text-lg"
+          className="inline-flex items-center text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white font-medium mb-6 text-lg"
         >
           <span className="mr-2">←</span> {t('back', 'Back')}
         </Link>
 
-        <h1 className="text-3xl md:text-4xl font-bold text-gray-800 mb-2">
+        <h1 className="text-3xl md:text-4xl font-bold text-gray-800 dark:text-white mb-2">
           {t('wordRecall.title', 'Word Recall')}
         </h1>
-        <p className="text-lg text-gray-700 font-medium mb-8">
+        <p className="text-lg text-gray-700 dark:text-gray-300 font-medium mb-8">
           {t('wordRecall.description', 'Remember the words and type them!')}
         </p>
 
@@ -225,19 +225,19 @@ export default function WordRecallPage() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="bg-white rounded-2xl shadow-lg p-8 text-center"
+            className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-8 text-center"
           >
-            <h2 className="text-3xl font-bold text-gray-800 mb-2">
+            <h2 className="text-3xl font-bold text-gray-800 dark:text-white mb-2">
               Level {level}
             </h2>
             {level > 1 && (
-              <p className="text-lg text-gray-700 mb-4 font-medium">
+              <p className="text-lg text-gray-700 dark:text-gray-300 mb-4 font-medium">
                 Total Score: <span className="text-violet-600 font-bold">{totalScore}</span>
               </p>
             )}
-            <div className="bg-violet-50 rounded-xl p-4 mb-6 text-left">
-              <h3 className="font-bold text-gray-800 mb-2">{t('wordRecall.levelInfo', 'Level Settings')}:</h3>
-              <ul className="text-gray-700 space-y-1 font-medium">
+            <div className="bg-violet-50 dark:bg-slate-800 rounded-xl p-4 mb-6 text-left">
+              <h3 className="font-bold text-gray-800 dark:text-white mb-2">{t('wordRecall.levelInfo', 'Level Settings')}:</h3>
+              <ul className="text-gray-700 dark:text-gray-300 space-y-1 font-medium">
                 <li>• {t('wordRecall.wordCount', 'Word Count')}: {settings.wordCount}</li>
                 <li>• {t('wordRecall.displayTime', 'Display Time')}: {settings.duration / 1000}s per word</li>
                 <li>• {t('wordRecall.inputTime', 'Input Time')}: {settings.inputTime}s</li>
@@ -254,7 +254,7 @@ export default function WordRecallPage() {
 
         {/* Showing words */}
         {gameState === 'showing' && (
-          <div className="bg-white rounded-2xl shadow-lg p-12 text-center min-h-[400px] flex flex-col justify-center">
+          <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-12 text-center min-h-[400px] flex flex-col justify-center">
             <AnimatePresence mode="wait">
               <motion.div
                 key={currentWordIndex}
@@ -278,25 +278,25 @@ export default function WordRecallPage() {
         {gameState === 'input' && (
           <>
             {/* Stats */}
-            <div className="bg-white rounded-2xl shadow-lg p-6 mb-6">
+            <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-6 mb-6">
               <div className="flex justify-between items-center">
                 <div>
-                  <p className="text-gray-700 text-sm font-medium">{t('wordRecall.level', 'Level')}</p>
+                  <p className="text-gray-700 dark:text-gray-300 text-sm font-medium">{t('wordRecall.level', 'Level')}</p>
                   <p className="text-3xl font-bold text-violet-600">{level}/{MAX_LEVELS}</p>
                 </div>
                 <div>
-                  <p className="text-gray-700 text-sm font-medium">{t('wordRecall.score', 'Score')}</p>
+                  <p className="text-gray-700 dark:text-gray-300 text-sm font-medium">{t('wordRecall.score', 'Score')}</p>
                   <p className="text-3xl font-bold text-pink-600">{totalScore}</p>
                 </div>
                 <div>
-                  <p className="text-gray-700 text-sm font-medium">{t('wordRecall.timeLeft', 'Time Left')}</p>
+                  <p className="text-gray-700 dark:text-gray-300 text-sm font-medium">{t('wordRecall.timeLeft', 'Time Left')}</p>
                   <p className={`text-4xl font-bold ${timeLeft <= 10 ? 'text-red-500' : 'text-violet-600'}`}>
                     {timeLeft}s
                   </p>
                 </div>
               </div>
               {/* Progress Bar */}
-              <div className="mt-4 bg-gray-200 rounded-full h-3 overflow-hidden">
+              <div className="mt-4 bg-gray-200 dark:bg-slate-700 rounded-full h-3 overflow-hidden">
                 <motion.div
                   initial={{ width: 0 }}
                   animate={{ width: `${((level - 1) / MAX_LEVELS) * 100}%` }}
@@ -306,18 +306,18 @@ export default function WordRecallPage() {
             </div>
 
             {/* Input area */}
-            <div className="bg-white rounded-2xl shadow-lg p-8 mb-6">
-              <p className="text-2xl font-bold text-gray-800 mb-4 text-center">
+            <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-8 mb-6">
+              <p className="text-2xl font-bold text-gray-800 dark:text-white mb-4 text-center">
                 {t('wordRecall.enterWords', 'Enter the words you remember')}
               </p>
-              <p className="text-gray-600 mb-4 text-center">
+              <p className="text-gray-600 dark:text-gray-400 mb-4 text-center">
                 {t('wordRecall.separateByCommas', 'Separate words with commas or spaces')}
               </p>
               <textarea
                 value={userInput}
                 onChange={(e) => setUserInput(e.target.value)}
                 placeholder={t('wordRecall.placeholder', 'apple, banana, orange')}
-                className="w-full p-6 text-2xl border-4 border-gray-300 rounded-xl focus:border-violet-300 focus:outline-none resize-none min-h-[200px] text-gray-800 placeholder-gray-500"
+                className="w-full p-6 text-2xl border-4 border-gray-300 rounded-xl focus:border-violet-300 focus:outline-none resize-none min-h-[200px] text-gray-800 dark:text-white placeholder-gray-500"
                 autoFocus
               />
               <button
@@ -335,26 +335,26 @@ export default function WordRecallPage() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="bg-white rounded-2xl shadow-lg p-8 text-center"
+            className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-8 text-center"
           >
             <div className="text-6xl mb-4">✅</div>
             <h2 className="text-4xl font-bold text-violet-600 mb-4">Level {level} Complete!</h2>
-            <div className="bg-violet-50 rounded-xl p-6 mb-6">
+            <div className="bg-violet-50 dark:bg-slate-800 rounded-xl p-6 mb-6">
               <div className="text-center mb-4">
                 <p className="text-6xl font-bold text-violet-600 mb-2">
                   {correctWords.length}/{words.length}
                 </p>
-                <p className="text-xl text-gray-600">
+                <p className="text-xl text-gray-600 dark:text-gray-400">
                   {t('wordRecall.correctWords', 'Correct words')}
                 </p>
               </div>
               <div className="grid grid-cols-2 gap-4 mt-4">
                 <div>
-                  <p className="text-gray-700 text-sm font-medium">{t('wordRecall.levelScore', 'Level Score')}</p>
+                  <p className="text-gray-700 dark:text-gray-300 text-sm font-medium">{t('wordRecall.levelScore', 'Level Score')}</p>
                   <p className="text-3xl font-bold text-violet-600">{score}</p>
                 </div>
                 <div>
-                  <p className="text-gray-700 text-sm font-medium">{t('wordRecall.totalScore', 'Total Score')}</p>
+                  <p className="text-gray-700 dark:text-gray-300 text-sm font-medium">{t('wordRecall.totalScore', 'Total Score')}</p>
                   <p className="text-3xl font-bold text-pink-600">{totalScore + score}</p>
                 </div>
               </div>
@@ -367,7 +367,7 @@ export default function WordRecallPage() {
             </button>
             <button
               onClick={startGame}
-              className="text-gray-600 hover:text-gray-800 font-medium"
+              className="text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:text-white font-medium"
             >
               {t('wordRecall.restart', 'Restart from Level 1')}
             </button>
@@ -379,12 +379,12 @@ export default function WordRecallPage() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="bg-white rounded-2xl shadow-lg p-8 text-center"
+            className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-8 text-center"
           >
             <div className="text-6xl mb-4">❌</div>
-            <h2 className="text-4xl font-bold text-gray-800 mb-4">{t('wordRecall.gameOver', 'Game Over!')}</h2>
-            <div className="bg-orange-50 rounded-xl p-6 mb-6">
-              <p className="text-gray-700 text-sm font-medium">{t('wordRecall.finalScore', 'Final Score')}</p>
+            <h2 className="text-4xl font-bold text-gray-800 dark:text-white mb-4">{t('wordRecall.gameOver', 'Game Over!')}</h2>
+            <div className="bg-orange-50 dark:bg-slate-800 rounded-xl p-6 mb-6">
+              <p className="text-gray-700 dark:text-gray-300 text-sm font-medium">{t('wordRecall.finalScore', 'Final Score')}</p>
               <p className="text-3xl font-bold text-orange-600">{totalScore}</p>
             </div>
             <button
@@ -395,7 +395,7 @@ export default function WordRecallPage() {
             </button>
             <button
               onClick={startGame}
-              className="text-gray-600 hover:text-gray-800 font-medium"
+              className="text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:text-white font-medium"
             >
               {t('wordRecall.restart', 'Restart from Level 1')}
             </button>
@@ -407,15 +407,15 @@ export default function WordRecallPage() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="bg-white rounded-2xl shadow-lg p-8 text-center"
+            className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-8 text-center"
           >
             <div className="text-6xl mb-4">🎉</div>
             <h2 className="text-4xl font-bold text-violet-600 mb-4">{t('wordRecall.victory', 'Congratulations!')}</h2>
-            <p className="text-xl text-gray-700 font-medium mb-6">
+            <p className="text-xl text-gray-700 dark:text-gray-300 font-medium mb-6">
               {t('wordRecall.victoryMessage', 'You completed all {count} levels!', { count: MAX_LEVELS })}
             </p>
-            <div className="bg-violet-50 rounded-xl p-6 mb-6">
-              <p className="text-gray-700 text-sm font-medium">{t('wordRecall.finalScore', 'Final Score')}</p>
+            <div className="bg-violet-50 dark:bg-slate-800 rounded-xl p-6 mb-6">
+              <p className="text-gray-700 dark:text-gray-300 text-sm font-medium">{t('wordRecall.finalScore', 'Final Score')}</p>
               <p className="text-5xl font-bold text-violet-600">{totalScore + score}</p>
             </div>
             <button

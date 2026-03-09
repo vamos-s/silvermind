@@ -12,7 +12,7 @@ const MAX_LEVELS = 30
 
 export default function SequenceCompletionPage() {
   const { t } = useTranslation()
-  const { addSession } = useGameStore()
+  const { addSession, darkMode } = useGameStore()
 
   const [gameState, setGameState] = useState<'menu' | 'showing' | 'input' | 'levelComplete' | 'gameOver' | 'victory'>('menu')
   const [sequence, setSequence] = useState<string[]>([])
@@ -59,8 +59,8 @@ export default function SequenceCompletionPage() {
         { name: 'Blue', class: 'bg-blue-500 text-white' },
         { name: 'Green', class: 'bg-green-500 text-white' },
         { name: 'Yellow', class: 'bg-yellow-500 text-black' },
-        { name: 'Purple', class: 'bg-purple-500 text-white' },
-        { name: 'Orange', class: 'bg-orange-500 text-white' },
+        { name: 'Purple', class: 'bg-purple-50 dark:bg-slate-8000 text-white' },
+        { name: 'Orange', class: 'bg-orange-50 dark:bg-slate-8000 text-white' },
       ]
       const patternLength = Math.min(3, Math.floor(settings.sequenceLength / 2))
       const pattern = []
@@ -141,21 +141,21 @@ export default function SequenceCompletionPage() {
   }, [gameState, timeLeft])
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-amber-50 via-white to-orange-50 p-4 md:p-8">
+    <div className="min-h-screen p-4 md:p-8 transition-colors duration-300 {darkMode ? "bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white" : "bg-gradient-to-br from-amber-50 via-white to-orange-50 p-4 md:p-8"}">
       <SettingsPanel />
       <div className="max-w-2xl mx-auto">
         {/* Header */}
         <Link
           href="/pattern"
-          className="inline-flex items-center text-gray-700 hover:text-gray-900 font-medium mb-6 text-lg"
+          className="inline-flex items-center text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white font-medium mb-6 text-lg"
         >
           <span className="mr-2">←</span> {t('back', 'Back')}
         </Link>
 
-        <h1 className="text-3xl md:text-4xl font-bold text-gray-800 mb-2">
+        <h1 className="text-3xl md:text-4xl font-bold text-gray-800 dark:text-white mb-2">
           {t('sequenceCompletion.title', 'Sequence Completion')}
         </h1>
-        <p className="text-lg text-gray-700 font-medium mb-8">
+        <p className="text-lg text-gray-700 dark:text-gray-300 font-medium mb-8">
           {t('sequenceCompletion.description', 'Find the pattern and complete the sequence!')}
         </p>
 
@@ -164,19 +164,19 @@ export default function SequenceCompletionPage() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="bg-white rounded-2xl shadow-lg p-8 text-center"
+            className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-8 text-center"
           >
-            <h2 className="text-3xl font-bold text-gray-800 mb-2">
+            <h2 className="text-3xl font-bold text-gray-800 dark:text-white mb-2">
               Level {level}
             </h2>
             {level > 1 && (
-              <p className="text-lg text-gray-700 mb-4 font-medium">
+              <p className="text-lg text-gray-700 dark:text-gray-300 mb-4 font-medium">
                 Total Score: <span className="text-amber-600 font-bold">{totalScore}</span>
               </p>
             )}
             <div className="bg-amber-50 rounded-xl p-4 mb-6 text-left">
-              <h3 className="font-bold text-gray-800 mb-2">{t('sequenceCompletion.levelInfo', 'Level Settings')}:</h3>
-              <ul className="text-gray-700 space-y-1 font-medium">
+              <h3 className="font-bold text-gray-800 dark:text-white mb-2">{t('sequenceCompletion.levelInfo', 'Level Settings')}:</h3>
+              <ul className="text-gray-700 dark:text-gray-300 space-y-1 font-medium">
                 <li>• {t('sequenceCompletion.type', 'Type')}: {settings.type.toUpperCase()}</li>
                 <li>• {t('sequenceCompletion.sequenceLength', 'Sequence Length')}: {settings.sequenceLength}</li>
                 <li>• {t('sequenceCompletion.displayTime', 'Display Time')}: {settings.displayTime / 1000}s</li>
@@ -194,8 +194,8 @@ export default function SequenceCompletionPage() {
 
         {/* Showing sequence */}
         {gameState === 'showing' && (
-          <div className="bg-white rounded-2xl shadow-lg p-8 text-center">
-            <p className="text-xl text-gray-600 mb-4 font-medium">
+          <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-8 text-center">
+            <p className="text-xl text-gray-600 dark:text-gray-400 mb-4 font-medium">
               {t('sequenceCompletion.memorize', 'Memorize the pattern!')}
             </p>
             <div className="flex flex-wrap justify-center gap-3 mb-4">
@@ -222,25 +222,25 @@ export default function SequenceCompletionPage() {
         {gameState === 'input' && (
           <>
             {/* Stats */}
-            <div className="bg-white rounded-2xl shadow-lg p-6 mb-6">
+            <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-6 mb-6">
               <div className="flex justify-between items-center">
                 <div>
-                  <p className="text-gray-700 text-sm font-medium">{t('sequenceCompletion.level', 'Level')}</p>
+                  <p className="text-gray-700 dark:text-gray-300 text-sm font-medium">{t('sequenceCompletion.level', 'Level')}</p>
                   <p className="text-3xl font-bold text-amber-600">{level}/{MAX_LEVELS}</p>
                 </div>
                 <div>
-                  <p className="text-gray-700 text-sm font-medium">{t('sequenceCompletion.score', 'Score')}</p>
+                  <p className="text-gray-700 dark:text-gray-300 text-sm font-medium">{t('sequenceCompletion.score', 'Score')}</p>
                   <p className="text-3xl font-bold text-orange-600">{totalScore}</p>
                 </div>
                 <div>
-                  <p className="text-gray-700 text-sm font-medium">{t('sequenceCompletion.timeLeft', 'Time Left')}</p>
+                  <p className="text-gray-700 dark:text-gray-300 text-sm font-medium">{t('sequenceCompletion.timeLeft', 'Time Left')}</p>
                   <p className={`text-4xl font-bold ${timeLeft <= 10 ? 'text-red-500' : 'text-amber-600'}`}>
                     {timeLeft}s
                   </p>
                 </div>
               </div>
               {/* Progress Bar */}
-              <div className="mt-4 bg-gray-200 rounded-full h-3 overflow-hidden">
+              <div className="mt-4 bg-gray-200 dark:bg-slate-700 rounded-full h-3 overflow-hidden">
                 <motion.div
                   initial={{ width: 0 }}
                   animate={{ width: `${((level - 1) / MAX_LEVELS) * 100}%` }}
@@ -250,8 +250,8 @@ export default function SequenceCompletionPage() {
             </div>
 
             {/* Input area */}
-            <div className="bg-white rounded-2xl shadow-lg p-8 mb-6 text-center">
-              <p className="text-2xl font-bold text-gray-800 mb-4">
+            <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-8 mb-6 text-center">
+              <p className="text-2xl font-bold text-gray-800 dark:text-white mb-4">
                 {t('sequenceCompletion.nextItem', 'What comes next?')}
               </p>
               <div className="flex flex-wrap justify-center gap-2 mb-6">
@@ -261,7 +261,7 @@ export default function SequenceCompletionPage() {
                     className={`px-3 py-2 rounded-lg font-medium ${
                       settings.type === 'color'
                         ? ''
-                        : 'bg-gray-100 text-gray-700'
+                        : 'bg-gray-100 dark:bg-slate-700 text-gray-700 dark:text-gray-300'
                     }`}
                   >
                     {item}
@@ -276,7 +276,7 @@ export default function SequenceCompletionPage() {
                 value={userInput}
                 onChange={(e) => setUserInput(e.target.value)}
                 placeholder={t('sequenceCompletion.placeholder', 'Enter the next item')}
-                className="w-full p-6 text-2xl border-4 border-gray-300 rounded-xl focus:border-amber-300 focus:outline-none mb-6 text-center text-gray-800 placeholder-gray-500"
+                className="w-full p-6 text-2xl border-4 border-gray-300 rounded-xl focus:border-amber-300 focus:outline-none mb-6 text-center text-gray-800 dark:text-white placeholder-gray-500"
                 autoFocus
                 whileFocus={{ scale: 1.01 }}
                 onKeyPress={(e) => {
@@ -302,7 +302,7 @@ export default function SequenceCompletionPage() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="bg-white rounded-2xl shadow-lg p-8 text-center"
+            className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-8 text-center"
           >
             <div className="text-6xl mb-4">
               {score > 0 ? '✅' : '❌'}
@@ -312,24 +312,24 @@ export default function SequenceCompletionPage() {
             </h2>
             {score > 0 ? (
               <div className="bg-amber-50 rounded-xl p-6 mb-6">
-                <p className="text-gray-700 mb-2">{t('sequenceCompletion.correctAnswer', 'Correct Answer')}:</p>
+                <p className="text-gray-700 dark:text-gray-300 mb-2">{t('sequenceCompletion.correctAnswer', 'Correct Answer')}:</p>
                 <p className="text-3xl font-bold text-amber-600">{correctAnswer}</p>
                 <div className="grid grid-cols-2 gap-4 mt-4">
                   <div>
-                    <p className="text-gray-700 text-sm font-medium">{t('sequenceCompletion.levelScore', 'Level Score')}</p>
+                    <p className="text-gray-700 dark:text-gray-300 text-sm font-medium">{t('sequenceCompletion.levelScore', 'Level Score')}</p>
                     <p className="text-3xl font-bold text-amber-600">{score}</p>
                   </div>
                   <div>
-                    <p className="text-gray-700 text-sm font-medium">{t('sequenceCompletion.totalScore', 'Total Score')}</p>
+                    <p className="text-gray-700 dark:text-gray-300 text-sm font-medium">{t('sequenceCompletion.totalScore', 'Total Score')}</p>
                     <p className="text-3xl font-bold text-orange-600">{totalScore + score}</p>
                   </div>
                 </div>
               </div>
             ) : (
               <div className="bg-red-50 rounded-xl p-6 mb-6">
-                <p className="text-gray-700 mb-2">{t('sequenceCompletion.yourAnswer', 'Your Answer')}:</p>
+                <p className="text-gray-700 dark:text-gray-300 mb-2">{t('sequenceCompletion.yourAnswer', 'Your Answer')}:</p>
                 <p className="text-2xl font-bold text-red-600">{userInput || '---'}</p>
-                <p className="text-gray-700 mt-4">{t('sequenceCompletion.correctAnswer', 'Correct Answer')}:</p>
+                <p className="text-gray-700 dark:text-gray-300 mt-4">{t('sequenceCompletion.correctAnswer', 'Correct Answer')}:</p>
                 <p className="text-2xl font-bold text-green-600">{correctAnswer}</p>
               </div>
             )}
@@ -341,7 +341,7 @@ export default function SequenceCompletionPage() {
             </button>
             <button
               onClick={startGame}
-              className="text-gray-600 hover:text-gray-800 font-medium"
+              className="text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:text-white font-medium"
             >
               {t('sequenceCompletion.restart', 'Restart from Level 1')}
             </button>
@@ -353,15 +353,15 @@ export default function SequenceCompletionPage() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="bg-white rounded-2xl shadow-lg p-8 text-center"
+            className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-8 text-center"
           >
             <div className="text-6xl mb-4">🎉</div>
             <h2 className="text-4xl font-bold text-amber-600 mb-4">{t('sequenceCompletion.victory', 'Congratulations!')}</h2>
-            <p className="text-xl text-gray-700 font-medium mb-6">
+            <p className="text-xl text-gray-700 dark:text-gray-300 font-medium mb-6">
               {t('sequenceCompletion.victoryMessage', 'You completed all {count} levels!', { count: MAX_LEVELS })}
             </p>
             <div className="bg-amber-50 rounded-xl p-6 mb-6">
-              <p className="text-gray-700 text-sm font-medium">{t('sequenceCompletion.finalScore', 'Final Score')}</p>
+              <p className="text-gray-700 dark:text-gray-300 text-sm font-medium">{t('sequenceCompletion.finalScore', 'Final Score')}</p>
               <p className="text-5xl font-bold text-amber-600">{totalScore + score}</p>
             </div>
             <button

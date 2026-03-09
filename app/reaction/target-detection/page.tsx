@@ -62,11 +62,11 @@ const LEVEL_SETTINGS = [
 ]
 
 const TARGET_COLOR = 'bg-red-500'
-const DISTRACTOR_COLORS = ['bg-blue-500', 'bg-green-500', 'bg-yellow-500', 'bg-purple-500', 'bg-orange-500']
+const DISTRACTOR_COLORS = ['bg-blue-500', 'bg-green-500', 'bg-yellow-500', 'bg-purple-50 dark:bg-slate-8000', 'bg-orange-50 dark:bg-slate-8000']
 
 export default function TargetDetectionPage() {
   const { t } = useTranslation()
-  const { addSession } = useGameStore()
+  const { addSession, darkMode } = useGameStore()
 
   const [gameState, setGameState] = useState<'menu' | 'showing' | 'input' | 'levelComplete' | 'gameOver' | 'victory'>('menu')
   const [targets, setTargets] = useState<Target[]>([])
@@ -192,21 +192,21 @@ export default function TargetDetectionPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-red-50 via-white to-orange-50 p-4 md:p-8">
+    <div className="min-h-screen p-4 md:p-8 transition-colors duration-300 {darkMode ? "bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white" : "bg-gradient-to-br from-red-50 via-white to-orange-50 p-4 md:p-8"}">
       <SettingsPanel />
       <div className="max-w-2xl mx-auto">
         {/* Header */}
         <Link
           href="/reaction"
-          className="inline-flex items-center text-gray-700 hover:text-gray-900 font-medium mb-6 text-lg"
+          className="inline-flex items-center text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white font-medium mb-6 text-lg"
         >
           <span className="mr-2">←</span> {t('back', 'Back')}
         </Link>
 
-        <h1 className="text-3xl md:text-4xl font-bold text-gray-800 mb-2">
+        <h1 className="text-3xl md:text-4xl font-bold text-gray-800 dark:text-white mb-2">
           {t('targetDetection.title', 'Target Detection')}
         </h1>
-        <p className="text-lg text-gray-700 font-medium mb-8">
+        <p className="text-lg text-gray-700 dark:text-gray-300 font-medium mb-8">
           {t('targetDetection.description', 'Find the red target as fast as you can!')}
         </p>
 
@@ -215,19 +215,19 @@ export default function TargetDetectionPage() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="bg-white rounded-2xl shadow-lg p-8 text-center"
+            className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-8 text-center"
           >
-            <h2 className="text-3xl font-bold text-gray-800 mb-2">
+            <h2 className="text-3xl font-bold text-gray-800 dark:text-white mb-2">
               Level {level}
             </h2>
             {level > 1 && (
-              <p className="text-lg text-gray-700 mb-4 font-medium">
+              <p className="text-lg text-gray-700 dark:text-gray-300 mb-4 font-medium">
                 Total Score: <span className="text-red-600 font-bold">{totalScore}</span>
               </p>
             )}
             <div className="bg-red-50 rounded-xl p-4 mb-6 text-left">
-              <h3 className="font-bold text-gray-800 mb-2">{t('targetDetection.levelInfo', 'Level Settings')}:</h3>
-              <ul className="text-gray-700 space-y-1 font-medium">
+              <h3 className="font-bold text-gray-800 dark:text-white mb-2">{t('targetDetection.levelInfo', 'Level Settings')}:</h3>
+              <ul className="text-gray-700 dark:text-gray-300 space-y-1 font-medium">
                 <li>• {t('targetDetection.targetCount', 'Target Count')}: {settings.targetCount}</li>
                 <li>• {t('targetDetection.displayTime', 'Display Time')}: {settings.displayTime}ms</li>
                 <li>• {t('targetDetection.inputTime', 'Time Limit')}: {settings.inputTime}s</li>
@@ -244,8 +244,8 @@ export default function TargetDetectionPage() {
 
         {/* Showing targets */}
         {gameState === 'showing' && (
-          <div className="bg-white rounded-2xl shadow-lg p-8 text-center">
-            <p className="text-xl text-gray-600 mb-4 font-medium">
+          <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-8 text-center">
+            <p className="text-xl text-gray-600 dark:text-gray-400 mb-4 font-medium">
               {t('targetDetection.memorize', 'Watch carefully!')}
             </p>
             <div className="relative w-full aspect-square bg-gradient-to-br from-red-100 to-orange-100 rounded-xl overflow-hidden">
@@ -273,25 +273,25 @@ export default function TargetDetectionPage() {
         {gameState === 'input' && (
           <>
             {/* Stats */}
-            <div className="bg-white rounded-2xl shadow-lg p-6 mb-6">
+            <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-6 mb-6">
               <div className="flex justify-between items-center">
                 <div>
-                  <p className="text-gray-700 text-sm font-medium">{t('targetDetection.level', 'Level')}</p>
+                  <p className="text-gray-700 dark:text-gray-300 text-sm font-medium">{t('targetDetection.level', 'Level')}</p>
                   <p className="text-3xl font-bold text-red-600">{level}/{MAX_LEVELS}</p>
                 </div>
                 <div>
-                  <p className="text-gray-700 text-sm font-medium">{t('targetDetection.score', 'Score')}</p>
+                  <p className="text-gray-700 dark:text-gray-300 text-sm font-medium">{t('targetDetection.score', 'Score')}</p>
                   <p className="text-3xl font-bold text-orange-600">{totalScore}</p>
                 </div>
                 <div>
-                  <p className="text-gray-700 text-sm font-medium">{t('targetDetection.timeLeft', 'Time Left')}</p>
+                  <p className="text-gray-700 dark:text-gray-300 text-sm font-medium">{t('targetDetection.timeLeft', 'Time Left')}</p>
                   <p className={`text-4xl font-bold ${timeLeft <= 5 ? 'text-red-500' : 'text-red-600'}`}>
                     {timeLeft}s
                   </p>
                 </div>
               </div>
               {/* Progress Bar */}
-              <div className="mt-4 bg-gray-200 rounded-full h-3 overflow-hidden">
+              <div className="mt-4 bg-gray-200 dark:bg-slate-700 rounded-full h-3 overflow-hidden">
                 <motion.div
                   initial={{ width: 0 }}
                   animate={{ width: `${((level - 1) / MAX_LEVELS) * 100}%` }}
@@ -301,8 +301,8 @@ export default function TargetDetectionPage() {
             </div>
 
             {/* Click area */}
-            <div className="bg-white rounded-2xl shadow-lg p-8 mb-6 text-center">
-              <p className="text-xl text-gray-600 mb-4 font-medium">
+            <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-8 mb-6 text-center">
+              <p className="text-xl text-gray-600 dark:text-gray-400 mb-4 font-medium">
                 {t('targetDetection.clickTarget', 'Click the red target!')}
               </p>
               <div className="relative w-full aspect-square bg-gradient-to-br from-red-100 to-orange-100 rounded-xl overflow-hidden">
@@ -344,7 +344,7 @@ export default function TargetDetectionPage() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="bg-white rounded-2xl shadow-lg p-8 text-center"
+            className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-8 text-center"
           >
             <div className="text-6xl mb-4">
               {score > 0 ? '✅' : '❌'}
@@ -356,28 +356,28 @@ export default function TargetDetectionPage() {
               <div className="bg-red-50 rounded-xl p-6 mb-6">
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <p className="text-gray-700 text-sm font-medium">{t('targetDetection.correctClicks', 'Correct')}</p>
+                    <p className="text-gray-700 dark:text-gray-300 text-sm font-medium">{t('targetDetection.correctClicks', 'Correct')}</p>
                     <p className="text-3xl font-bold text-green-600">{correctClicks}</p>
                   </div>
                   <div>
-                    <p className="text-gray-700 text-sm font-medium">{t('targetDetection.missedClicks', 'Missed')}</p>
+                    <p className="text-gray-700 dark:text-gray-300 text-sm font-medium">{t('targetDetection.missedClicks', 'Missed')}</p>
                     <p className="text-3xl font-bold text-red-600">{missedClicks}</p>
                   </div>
                 </div>
                 <div className="grid grid-cols-2 gap-4 mt-4">
                   <div>
-                    <p className="text-gray-700 text-sm font-medium">{t('targetDetection.levelScore', 'Level Score')}</p>
+                    <p className="text-gray-700 dark:text-gray-300 text-sm font-medium">{t('targetDetection.levelScore', 'Level Score')}</p>
                     <p className="text-3xl font-bold text-red-600">{score}</p>
                   </div>
                   <div>
-                    <p className="text-gray-700 text-sm font-medium">{t('targetDetection.totalScore', 'Total Score')}</p>
+                    <p className="text-gray-700 dark:text-gray-300 text-sm font-medium">{t('targetDetection.totalScore', 'Total Score')}</p>
                     <p className="text-3xl font-bold text-orange-600">{totalScore + score}</p>
                   </div>
                 </div>
               </div>
             ) : (
               <div className="bg-red-50 rounded-xl p-6 mb-6">
-                <p className="text-gray-700 text-sm font-medium">{t('targetDetection.levelScore', 'Level Score')}</p>
+                <p className="text-gray-700 dark:text-gray-300 text-sm font-medium">{t('targetDetection.levelScore', 'Level Score')}</p>
                 <p className="text-3xl font-bold text-red-600">{score}</p>
               </div>
             )}
@@ -389,7 +389,7 @@ export default function TargetDetectionPage() {
             </button>
             <button
               onClick={startGame}
-              className="text-gray-600 hover:text-gray-800 font-medium"
+              className="text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:text-white font-medium"
             >
               {t('targetDetection.restart', 'Restart from Level 1')}
             </button>
@@ -401,15 +401,15 @@ export default function TargetDetectionPage() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="bg-white rounded-2xl shadow-lg p-8 text-center"
+            className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-8 text-center"
           >
             <div className="text-6xl mb-4">🎉</div>
             <h2 className="text-4xl font-bold text-red-600 mb-4">{t('targetDetection.victory', 'Congratulations!')}</h2>
-            <p className="text-xl text-gray-700 font-medium mb-6">
+            <p className="text-xl text-gray-700 dark:text-gray-300 font-medium mb-6">
               {t('targetDetection.victoryMessage', 'You completed all {count} levels!', { count: MAX_LEVELS })}
             </p>
             <div className="bg-red-50 rounded-xl p-6 mb-6">
-              <p className="text-gray-700 text-sm font-medium">{t('targetDetection.finalScore', 'Final Score')}</p>
+              <p className="text-gray-700 dark:text-gray-300 text-sm font-medium">{t('targetDetection.finalScore', 'Final Score')}</p>
               <p className="text-5xl font-bold text-red-600">{totalScore + score}</p>
             </div>
             <button

@@ -46,7 +46,7 @@ const SHAPES = ['⭐', '🔷', '🔶', '💎', '🌟', '🔴', '🟢', '🔵', '
 
 export default function FindDifferencePage() {
   const { t } = useTranslation()
-  const { addSession } = useGameStore()
+  const { addSession, darkMode } = useGameStore()
 
   const [gameState, setGameState] = useState<'menu' | 'playing' | 'levelComplete' | 'gameOver' | 'victory'>('menu')
   const [level, setLevel] = useState(1)
@@ -229,21 +229,21 @@ export default function FindDifferencePage() {
   }, [differences])
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-violet-50 via-white to-purple-50 p-4 md:p-8">
+    <div className="min-h-screen p-4 md:p-8 transition-colors duration-300 {darkMode ? "bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white" : "bg-gradient-to-br from-violet-50 via-white to-purple-50 p-4 md:p-8"}">
       <SettingsPanel />
       <div className="max-w-4xl mx-auto">
         {/* Header */}
         <Link
           href="/attention"
-          className="inline-flex items-center text-gray-700 hover:text-gray-900 font-medium mb-6 text-lg"
+          className="inline-flex items-center text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white font-medium mb-6 text-lg"
         >
           <span className="mr-2">←</span> {t('back', 'Back')}
         </Link>
 
-        <h1 className="text-3xl md:text-4xl font-bold text-gray-800 mb-2">
+        <h1 className="text-3xl md:text-4xl font-bold text-gray-800 dark:text-white mb-2">
           {t('findDifference.title', 'Find Difference')}
         </h1>
-        <p className="text-lg text-gray-700 font-medium mb-8">
+        <p className="text-lg text-gray-700 dark:text-gray-300 font-medium mb-8">
           {t('findDifference.description', 'Find the differences between the two images!')}
         </p>
 
@@ -252,15 +252,15 @@ export default function FindDifferencePage() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="bg-white rounded-2xl shadow-lg p-8 text-center"
+            className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-8 text-center"
           >
             <div className="text-6xl mb-4">🔍</div>
-            <h2 className="text-3xl font-bold text-gray-800 mb-2">
+            <h2 className="text-3xl font-bold text-gray-800 dark:text-white mb-2">
               Level {level}
             </h2>
-            <div className="bg-violet-50 rounded-xl p-4 mb-6 text-left">
-              <h3 className="font-bold text-gray-800 mb-2">{t('findDifference.levelInfo', 'Level Settings')}:</h3>
-              <ul className="text-gray-700 space-y-1 font-medium">
+            <div className="bg-violet-50 dark:bg-slate-800 rounded-xl p-4 mb-6 text-left">
+              <h3 className="font-bold text-gray-800 dark:text-white mb-2">{t('findDifference.levelInfo', 'Level Settings')}:</h3>
+              <ul className="text-gray-700 dark:text-gray-300 space-y-1 font-medium">
                 <li>• {t('findDifference.gridSize', 'Grid')}: {gridSize} × {gridSize}</li>
                 <li>• {t('findDifference.differences', 'Differences')}: {settings.differences}</li>
                 <li>• {t('findDifference.timeLimit', 'Time Limit')}: {settings.timeLimit}s</li>
@@ -280,39 +280,39 @@ export default function FindDifferencePage() {
         {gameState === 'playing' && (
           <>
             {/* Stats */}
-            <div className="bg-white rounded-2xl shadow-lg p-6 mb-6">
+            <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-6 mb-6">
               <div className="flex justify-around text-center">
                 <div>
-                  <p className="text-gray-700 text-sm font-medium">{t('findDifference.level', 'Level')}</p>
+                  <p className="text-gray-700 dark:text-gray-300 text-sm font-medium">{t('findDifference.level', 'Level')}</p>
                   <p className="text-3xl font-bold text-violet-600">{level}/{MAX_LEVELS}</p>
                 </div>
                 <div>
-                  <p className="text-gray-700 text-sm font-medium">{t('findDifference.score', 'Score')}</p>
+                  <p className="text-gray-700 dark:text-gray-300 text-sm font-medium">{t('findDifference.score', 'Score')}</p>
                   <p className="text-3xl font-bold text-purple-600">{totalScore}</p>
                 </div>
                 <div>
-                  <p className="text-gray-700 text-sm font-medium">{t('findDifference.timeLeft', 'Time')}</p>
+                  <p className="text-gray-700 dark:text-gray-300 text-sm font-medium">{t('findDifference.timeLeft', 'Time')}</p>
                   <p className={`text-3xl font-bold ${timeLeft <= 10 ? 'text-red-500' : 'text-violet-600'}`}>{timeLeft}s</p>
                 </div>
                 <div>
-                  <p className="text-gray-700 text-sm font-medium">{t('findDifference.progress', 'Progress')}</p>
+                  <p className="text-gray-700 dark:text-gray-300 text-sm font-medium">{t('findDifference.progress', 'Progress')}</p>
                   <p className="text-3xl font-bold text-violet-600">{foundDifferences.size}/{differences.size}</p>
                 </div>
                 <div>
-                  <p className="text-gray-700 text-sm font-medium">{t('findDifference.lives', 'Lives')}</p>
+                  <p className="text-gray-700 dark:text-gray-300 text-sm font-medium">{t('findDifference.lives', 'Lives')}</p>
                   <p className={`text-3xl font-bold ${wrongAttempts >= MAX_WRONG_ATTEMPTS - 1 ? 'text-red-500' : 'text-violet-600'}`}>
                     {MAX_WRONG_ATTEMPTS - wrongAttempts}/{MAX_WRONG_ATTEMPTS}
                   </p>
                 </div>
                 <div>
-                  <p className="text-gray-700 text-sm font-medium">{t('findDifference.hints', 'Hints')}</p>
+                  <p className="text-gray-700 dark:text-gray-300 text-sm font-medium">{t('findDifference.hints', 'Hints')}</p>
                   <p className={`text-3xl font-bold ${hintsUsedCount >= MAX_HINTS_PER_GAME - 1 ? 'text-red-500' : 'text-violet-600'}`}>
                     {MAX_HINTS_PER_GAME - hintsUsedCount}/{MAX_HINTS_PER_GAME}
                   </p>
                 </div>
               </div>
               {/* Progress Bar */}
-              <div className="mt-4 bg-gray-200 rounded-full h-3 overflow-hidden">
+              <div className="mt-4 bg-gray-200 dark:bg-slate-700 rounded-full h-3 overflow-hidden">
                 <motion.div
                   initial={{ width: 0 }}
                   animate={{ width: `${((level - 1) / MAX_LEVELS) * 100}%` }}
@@ -324,8 +324,8 @@ export default function FindDifferencePage() {
             {/* Game Grids */}
             <div className="grid md:grid-cols-2 gap-6 mb-6">
               {/* Left Grid */}
-              <div className="bg-white rounded-2xl shadow-lg p-4">
-                <p className="text-center font-bold text-gray-700 mb-4">{t('findDifference.original', 'Original')}</p>
+              <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-4">
+                <p className="text-center font-bold text-gray-700 dark:text-gray-300 mb-4">{t('findDifference.original', 'Original')}</p>
                 <div
                   className="grid gap-2 aspect-square"
                   style={{ gridTemplateColumns: `repeat(${gridSize}, 1fr)` }}
@@ -333,7 +333,7 @@ export default function FindDifferencePage() {
                   {Array.from({ length: totalCells }).map((_, index) => (
                     <div
                       key={index}
-                      className="aspect-square bg-gray-100 rounded-lg flex items-center justify-center text-xl md:text-2xl"
+                      className="aspect-square bg-gray-100 dark:bg-slate-700 rounded-lg flex items-center justify-center text-xl md:text-2xl"
                     >
                       {getCellShape(index, false)}
                     </div>
@@ -342,8 +342,8 @@ export default function FindDifferencePage() {
               </div>
 
               {/* Right Grid */}
-              <div className="bg-white rounded-2xl shadow-lg p-4">
-                <p className="text-center font-bold text-gray-700 mb-4">{t('findDifference.different', 'Find Differences')}</p>
+              <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-4">
+                <p className="text-center font-bold text-gray-700 dark:text-gray-300 mb-4">{t('findDifference.different', 'Find Differences')}</p>
                 <div
                   className="grid gap-2 aspect-square"
                   style={{ gridTemplateColumns: `repeat(${gridSize}, 1fr)` }}
@@ -367,7 +367,7 @@ export default function FindDifferencePage() {
                             ? 'bg-red-500 text-white animate-pulse'
                             : isHinted
                             ? 'bg-yellow-400 animate-pulse ring-4 ring-yellow-300'
-                            : 'bg-gray-100'
+                            : 'bg-gray-100 dark:bg-slate-700'
                         }`}
                       >
                         {isFound ? '✓' : isWrong ? '✗' : getCellShape(index, true)}
@@ -400,18 +400,18 @@ export default function FindDifferencePage() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="bg-white rounded-2xl shadow-lg p-8 text-center"
+            className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-8 text-center"
           >
             <div className="text-6xl mb-4">✅</div>
             <h2 className="text-4xl font-bold text-violet-600 mb-4">Level {level} Complete!</h2>
-            <div className="bg-violet-50 rounded-xl p-6 mb-6">
+            <div className="bg-violet-50 dark:bg-slate-800 rounded-xl p-6 mb-6">
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <p className="text-gray-700 text-sm font-medium">{t('findDifference.levelScore', 'Level Score')}</p>
+                  <p className="text-gray-700 dark:text-gray-300 text-sm font-medium">{t('findDifference.levelScore', 'Level Score')}</p>
                   <p className="text-3xl font-bold text-violet-600">{Math.round(score)}</p>
                 </div>
                 <div>
-                  <p className="text-gray-700 text-sm font-medium">{t('findDifference.totalScore', 'Total Score')}</p>
+                  <p className="text-gray-700 dark:text-gray-300 text-sm font-medium">{t('findDifference.totalScore', 'Total Score')}</p>
                   <p className="text-3xl font-bold text-purple-600">{totalScore + Math.round(score)}</p>
                 </div>
               </div>
@@ -430,21 +430,21 @@ export default function FindDifferencePage() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="bg-white rounded-2xl shadow-lg p-8 text-center"
+            className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-8 text-center"
           >
             <div className="text-6xl mb-4">{gameOverReason === 'lives' ? '💔' : '❌'}</div>
-            <h2 className="text-4xl font-bold text-gray-800 mb-4">
+            <h2 className="text-4xl font-bold text-gray-800 dark:text-white mb-4">
               {gameOverReason === 'lives'
                 ? t('findDifference.noLives', 'No Lives Left!')
                 : t('findDifference.gameOver', 'Time\'s Up!')}
             </h2>
-            <p className="text-lg text-gray-700 font-medium mb-4">
+            <p className="text-lg text-gray-700 dark:text-gray-300 font-medium mb-4">
               {gameOverReason === 'lives'
                 ? t('findDifference.usedAllLives', 'You used all {count} lives.', { count: MAX_WRONG_ATTEMPTS })
                 : t('findDifference.timeRanOut', 'Time ran out!')}
             </p>
-            <div className="bg-orange-50 rounded-xl p-6 mb-6">
-              <p className="text-gray-700 text-sm font-medium">{t('findDifference.finalScore', 'Final Score')}</p>
+            <div className="bg-orange-50 dark:bg-slate-800 rounded-xl p-6 mb-6">
+              <p className="text-gray-700 dark:text-gray-300 text-sm font-medium">{t('findDifference.finalScore', 'Final Score')}</p>
               <p className="text-3xl font-bold text-orange-600">{totalScore}</p>
             </div>
             <button
@@ -461,15 +461,15 @@ export default function FindDifferencePage() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="bg-white rounded-2xl shadow-lg p-8 text-center"
+            className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-8 text-center"
           >
             <div className="text-6xl mb-4">🎉</div>
             <h2 className="text-4xl font-bold text-violet-600 mb-4">{t('findDifference.victory', 'Congratulations!')}</h2>
-            <p className="text-xl text-gray-700 font-medium mb-6">
+            <p className="text-xl text-gray-700 dark:text-gray-300 font-medium mb-6">
               {t('findDifference.victoryMessage', 'You completed all {count} levels!', { count: MAX_LEVELS })}
             </p>
-            <div className="bg-violet-50 rounded-xl p-6 mb-6">
-              <p className="text-gray-700 text-sm font-medium">{t('findDifference.finalScore', 'Final Score')}</p>
+            <div className="bg-violet-50 dark:bg-slate-800 rounded-xl p-6 mb-6">
+              <p className="text-gray-700 dark:text-gray-300 text-sm font-medium">{t('findDifference.finalScore', 'Final Score')}</p>
               <p className="text-5xl font-bold text-violet-600">{totalScore + Math.round(score)}</p>
             </div>
             <button

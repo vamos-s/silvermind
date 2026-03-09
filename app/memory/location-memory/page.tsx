@@ -22,7 +22,7 @@ const ALL_ICONS = ICONS.all
 
 export default function LocationMemoryPage() {
   const { t } = useTranslation()
-  const { addSession } = useGameStore()
+  const { addSession, darkMode } = useGameStore()
 
   const [gameState, setGameState] = useState<'menu' | 'showing' | 'input' | 'levelComplete' | 'gameOver' | 'victory'>('menu')
   const [items, setItems] = useState<LocationItem[]>([])
@@ -155,21 +155,21 @@ export default function LocationMemoryPage() {
   }, [gameState, timeLeft])
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-white to-teal-50 p-4 md:p-8">
+    <div className="min-h-screen p-4 md:p-8 transition-colors duration-300 {darkMode ? "bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white" : "bg-gradient-to-br from-emerald-50 via-white to-teal-50 p-4 md:p-8"}">
       <SettingsPanel />
       <div className="max-w-2xl mx-auto">
         {/* Header */}
         <Link
           href="/memory"
-          className="inline-flex items-center text-gray-700 hover:text-gray-900 font-medium mb-6 text-lg"
+          className="inline-flex items-center text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white font-medium mb-6 text-lg"
         >
           <span className="mr-2">←</span> {t('back', 'Back')}
         </Link>
 
-        <h1 className="text-3xl md:text-4xl font-bold text-gray-800 mb-2">
+        <h1 className="text-3xl md:text-4xl font-bold text-gray-800 dark:text-white mb-2">
           {t('locationMemory.title', 'Location Memory')}
         </h1>
-        <p className="text-lg text-gray-700 font-medium mb-8">
+        <p className="text-lg text-gray-700 dark:text-gray-300 font-medium mb-8">
           {t('locationMemory.description', 'Remember where items are located!')}
         </p>
 
@@ -178,19 +178,19 @@ export default function LocationMemoryPage() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="bg-white rounded-2xl shadow-lg p-8 text-center"
+            className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-8 text-center"
           >
-            <h2 className="text-3xl font-bold text-gray-800 mb-2">
+            <h2 className="text-3xl font-bold text-gray-800 dark:text-white mb-2">
               Level {level}
             </h2>
             {level > 1 && (
-              <p className="text-lg text-gray-700 mb-4 font-medium">
+              <p className="text-lg text-gray-700 dark:text-gray-300 mb-4 font-medium">
                 Total Score: <span className="text-emerald-600 font-bold">{totalScore}</span>
               </p>
             )}
             <div className="bg-emerald-50 rounded-xl p-4 mb-6 text-left">
-              <h3 className="font-bold text-gray-800 mb-2">{t('locationMemory.levelInfo', 'Level Settings')}:</h3>
-              <ul className="text-gray-700 space-y-1 font-medium">
+              <h3 className="font-bold text-gray-800 dark:text-white mb-2">{t('locationMemory.levelInfo', 'Level Settings')}:</h3>
+              <ul className="text-gray-700 dark:text-gray-300 space-y-1 font-medium">
                 <li>• {t('locationMemory.itemCount', 'Item Count')}: {settings.itemCount}</li>
                 <li>• {t('locationMemory.displayTime', 'Display Time')}: {settings.displayTime / 1000}s</li>
                 <li>• {t('locationMemory.inputTime', 'Input Time')}: {settings.inputTime}s</li>
@@ -207,8 +207,8 @@ export default function LocationMemoryPage() {
 
         {/* Showing items */}
         {gameState === 'showing' && (
-          <div className="bg-white rounded-2xl shadow-lg p-8 text-center">
-            <p className="text-xl text-gray-600 mb-4 font-medium">
+          <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-8 text-center">
+            <p className="text-xl text-gray-600 dark:text-gray-400 mb-4 font-medium">
               {t('locationMemory.memorize', 'Memorize the locations!')}
             </p>
             <div className="relative w-full aspect-square bg-gradient-to-br from-emerald-100 to-teal-100 rounded-xl overflow-hidden">
@@ -238,25 +238,25 @@ export default function LocationMemoryPage() {
         {gameState === 'input' && (
           <>
             {/* Stats */}
-            <div className="bg-white rounded-2xl shadow-lg p-6 mb-6">
+            <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-6 mb-6">
               <div className="flex justify-between items-center">
                 <div>
-                  <p className="text-gray-700 text-sm font-medium">{t('locationMemory.level', 'Level')}</p>
+                  <p className="text-gray-700 dark:text-gray-300 text-sm font-medium">{t('locationMemory.level', 'Level')}</p>
                   <p className="text-3xl font-bold text-emerald-600">{level}/{MAX_LEVELS}</p>
                 </div>
                 <div>
-                  <p className="text-gray-700 text-sm font-medium">{t('locationMemory.score', 'Score')}</p>
+                  <p className="text-gray-700 dark:text-gray-300 text-sm font-medium">{t('locationMemory.score', 'Score')}</p>
                   <p className="text-3xl font-bold text-teal-600">{totalScore}</p>
                 </div>
                 <div>
-                  <p className="text-gray-700 text-sm font-medium">{t('locationMemory.timeLeft', 'Time Left')}</p>
+                  <p className="text-gray-700 dark:text-gray-300 text-sm font-medium">{t('locationMemory.timeLeft', 'Time Left')}</p>
                   <p className={`text-4xl font-bold ${timeLeft <= 10 ? 'text-red-500' : 'text-emerald-600'}`}>
                     {timeLeft}s
                   </p>
                 </div>
               </div>
               {/* Progress Bar */}
-              <div className="mt-4 bg-gray-200 rounded-full h-3 overflow-hidden">
+              <div className="mt-4 bg-gray-200 dark:bg-slate-700 rounded-full h-3 overflow-hidden">
                 <motion.div
                   initial={{ width: 0 }}
                   animate={{ width: `${((level - 1) / MAX_LEVELS) * 100}%` }}
@@ -266,8 +266,8 @@ export default function LocationMemoryPage() {
             </div>
 
             {/* Click area */}
-            <div className="bg-white rounded-2xl shadow-lg p-8 mb-6 text-center">
-              <p className="text-xl text-gray-600 mb-4 font-medium">
+            <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-8 mb-6 text-center">
+              <p className="text-xl text-gray-600 dark:text-gray-400 mb-4 font-medium">
                 {t('locationMemory.clickLocations', 'Click where items were located!')}
               </p>
               <p className="text-sm text-gray-500 mb-6">
@@ -330,7 +330,7 @@ export default function LocationMemoryPage() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="bg-white rounded-2xl shadow-lg p-8 text-center"
+            className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-8 text-center"
           >
             <div className="text-6xl mb-4">✅</div>
             <h2 className="text-4xl font-bold text-emerald-600 mb-4">Level {level} Complete!</h2>
@@ -339,17 +339,17 @@ export default function LocationMemoryPage() {
                 <p className="text-6xl font-bold text-emerald-600 mb-2">
                   {correctCount}/{items.length}
                 </p>
-                <p className="text-xl text-gray-600">
+                <p className="text-xl text-gray-600 dark:text-gray-400">
                   {t('locationMemory.correctLocations', 'Correct locations')}
                 </p>
               </div>
               <div className="grid grid-cols-2 gap-4 mt-4">
                 <div>
-                  <p className="text-gray-700 text-sm font-medium">{t('locationMemory.levelScore', 'Level Score')}</p>
+                  <p className="text-gray-700 dark:text-gray-300 text-sm font-medium">{t('locationMemory.levelScore', 'Level Score')}</p>
                   <p className="text-3xl font-bold text-emerald-600">{score}</p>
                 </div>
                 <div>
-                  <p className="text-gray-700 text-sm font-medium">{t('locationMemory.totalScore', 'Total Score')}</p>
+                  <p className="text-gray-700 dark:text-gray-300 text-sm font-medium">{t('locationMemory.totalScore', 'Total Score')}</p>
                   <p className="text-3xl font-bold text-teal-600">{totalScore + score}</p>
                 </div>
               </div>
@@ -362,7 +362,7 @@ export default function LocationMemoryPage() {
             </button>
             <button
               onClick={startGame}
-              className="text-gray-600 hover:text-gray-800 font-medium"
+              className="text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:text-white font-medium"
             >
               {t('locationMemory.restart', 'Restart from Level 1')}
             </button>
@@ -374,15 +374,15 @@ export default function LocationMemoryPage() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="bg-white rounded-2xl shadow-lg p-8 text-center"
+            className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-8 text-center"
           >
             <div className="text-6xl mb-4">🎉</div>
             <h2 className="text-4xl font-bold text-emerald-600 mb-4">{t('locationMemory.victory', 'Congratulations!')}</h2>
-            <p className="text-xl text-gray-700 font-medium mb-6">
+            <p className="text-xl text-gray-700 dark:text-gray-300 font-medium mb-6">
               {t('locationMemory.victoryMessage', 'You completed all {count} levels!', { count: MAX_LEVELS })}
             </p>
             <div className="bg-emerald-50 rounded-xl p-6 mb-6">
-              <p className="text-gray-700 text-sm font-medium">{t('locationMemory.finalScore', 'Final Score')}</p>
+              <p className="text-gray-700 dark:text-gray-300 text-sm font-medium">{t('locationMemory.finalScore', 'Final Score')}</p>
               <p className="text-5xl font-bold text-emerald-600">{totalScore + score}</p>
             </div>
             <button

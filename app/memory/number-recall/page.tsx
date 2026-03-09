@@ -11,7 +11,7 @@ const MAX_LEVELS = 30
 
 export default function NumberRecallPage() {
   const { t } = useTranslation()
-  const { addSession } = useGameStore()
+  const { addSession, darkMode } = useGameStore()
 
   const [gameState, setGameState] = useState<'menu' | 'showing' | 'input' | 'levelComplete' | 'gameOver' | 'victory'>('menu')
   const [sequence, setSequence] = useState<number[]>([])
@@ -113,17 +113,17 @@ export default function NumberRecallPage() {
   }, [playerInput])
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 p-4 md:p-8">
+    <div className="min-h-screen p-4 md:p-8 transition-colors duration-300 {darkMode ? "bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white" : "bg-gradient-to-br from-blue-50 to-purple-50 p-4 md:p-8"}">
       <SettingsPanel />
       <div className="max-w-lg mx-auto">
         <header className="mb-6">
-          <Link href="/memory" className="text-gray-700 hover:text-gray-900 font-medium mb-4 block">
+          <Link href="/memory" className="text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white font-medium mb-4 block">
             ← {t('back', 'Back')}
           </Link>
-          <h1 className="text-3xl font-bold text-gray-800 mt-4">
+          <h1 className="text-3xl font-bold text-gray-800 dark:text-white mt-4">
             🔢 {t('numberRecall.title', 'Number Recall')}
           </h1>
-          <p className="text-lg text-gray-700 font-medium">
+          <p className="text-lg text-gray-700 dark:text-gray-300 font-medium">
             {t('numberRecall.description', 'Remember and repeat the number sequence!')}
           </p>
         </header>
@@ -132,17 +132,17 @@ export default function NumberRecallPage() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="bg-white rounded-2xl shadow-lg p-8 text-center"
+            className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-8 text-center"
           >
-            <h2 className="text-3xl font-bold text-gray-800 mb-2">Level {level}</h2>
+            <h2 className="text-3xl font-bold text-gray-800 dark:text-white mb-2">Level {level}</h2>
             {level > 1 && (
-              <p className="text-lg text-gray-700 mb-4 font-medium">
+              <p className="text-lg text-gray-700 dark:text-gray-300 mb-4 font-medium">
                 Total Score: <span className="text-blue-600 font-bold">{totalScore}</span>
               </p>
             )}
             <div className="bg-blue-50 rounded-xl p-4 mb-6 text-left">
-              <h3 className="font-bold text-gray-800 mb-2">{t('numberRecall.levelInfo', 'Level Settings')}:</h3>
-              <ul className="text-gray-700 space-y-1 font-medium">
+              <h3 className="font-bold text-gray-800 dark:text-white mb-2">{t('numberRecall.levelInfo', 'Level Settings')}:</h3>
+              <ul className="text-gray-700 dark:text-gray-300 space-y-1 font-medium">
                 <li>• {t('numberRecall.sequenceLength', 'Sequence Length')}: {getSequenceLength()}</li>
                 <li>• {t('numberRecall.displayTime', 'Display Time')}: {Math.round(getDisplayTime() / 100) / 10}s</li>
               </ul>
@@ -154,8 +154,8 @@ export default function NumberRecallPage() {
         )}
 
         {gameState === 'showing' && (
-          <motion.div initial={{ scale: 0.8 }} animate={{ scale: 1 }} className="bg-white rounded-2xl p-12 shadow-xl text-center">
-            <p className="text-xl text-gray-700 font-medium mb-6">{t('numberRecall.remember', 'Remember this sequence:')}</p>
+          <motion.div initial={{ scale: 0.8 }} animate={{ scale: 1 }} className="bg-white dark:bg-slate-800 rounded-2xl p-12 shadow-xl text-center">
+            <p className="text-xl text-gray-700 dark:text-gray-300 font-medium mb-6">{t('numberRecall.remember', 'Remember this sequence:')}</p>
             <p className={`font-bold text-blue-600 tracking-widest ${sequence.length <= 6 ? 'text-6xl' : sequence.length <= 10 ? 'text-4xl' : 'text-2xl'}`}>
               {sequence.join('')}
             </p>
@@ -164,19 +164,19 @@ export default function NumberRecallPage() {
 
         {gameState === 'input' && (
           <>
-            <div className="bg-white rounded-2xl shadow-lg p-6 mb-6">
+            <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-6 mb-6">
               <div className="flex justify-center gap-8 text-2xl mb-4">
                 <p className="font-bold text-blue-600">{t('numberRecall.level', 'Level')}: {level}/{MAX_LEVELS}</p>
                 <p className="font-bold text-purple-600">{t('numberRecall.score', 'Score')}: {totalScore}</p>
               </div>
-              <div className="bg-gray-200 rounded-full h-3 overflow-hidden">
+              <div className="bg-gray-200 dark:bg-slate-700 rounded-full h-3 overflow-hidden">
                 <motion.div initial={{ width: 0 }} animate={{ width: `${((level - 1) / MAX_LEVELS) * 100}%` }} className="bg-gradient-to-r from-blue-500 to-purple-500 h-full" />
               </div>
             </div>
 
-            <div className="bg-white rounded-xl p-6 shadow-lg mb-6">
-              <p className="text-center text-xl text-gray-700 font-medium mb-4">{t('numberRecall.yourAnswer', 'Your answer:')}</p>
-              <input type="text" value={playerInput} readOnly className={`w-full bg-gray-100 rounded-lg p-4 text-center font-bold tracking-widest text-gray-800 border-2 border-transparent ${sequence.length <= 6 ? 'text-4xl h-16' : sequence.length <= 10 ? 'text-2xl h-14' : 'text-xl h-12'}`} placeholder={'_'.repeat(sequence.length)} />
+            <div className="bg-white dark:bg-slate-800 rounded-xl p-6 shadow-lg mb-6">
+              <p className="text-center text-xl text-gray-700 dark:text-gray-300 font-medium mb-4">{t('numberRecall.yourAnswer', 'Your answer:')}</p>
+              <input type="text" value={playerInput} readOnly className={`w-full bg-gray-100 dark:bg-slate-700 rounded-lg p-4 text-center font-bold tracking-widest text-gray-800 dark:text-white border-2 border-transparent ${sequence.length <= 6 ? 'text-4xl h-16' : sequence.length <= 10 ? 'text-2xl h-14' : 'text-xl h-12'}`} placeholder={'_'.repeat(sequence.length)} />
             </div>
 
             <div className="grid grid-cols-3 gap-4">
@@ -190,41 +190,41 @@ export default function NumberRecallPage() {
         )}
 
         {gameState === 'levelComplete' && (
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="bg-white rounded-2xl shadow-lg p-8 text-center">
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-8 text-center">
             <div className="text-6xl mb-4">✅</div>
             <h2 className="text-4xl font-bold text-blue-600 mb-4">Level {level} Complete!</h2>
-            <p className="text-xl text-gray-700 font-medium mb-6">{t('numberRecall.sequence', 'Sequence')}: {sequence.join('')}</p>
+            <p className="text-xl text-gray-700 dark:text-gray-300 font-medium mb-6">{t('numberRecall.sequence', 'Sequence')}: {sequence.join('')}</p>
             <div className="bg-blue-50 rounded-xl p-6 mb-6">
               <div className="grid grid-cols-2 gap-4">
-                <div><p className="text-gray-700 text-sm font-medium">{t('numberRecall.levelScore', 'Level Score')}</p><p className="text-3xl font-bold text-blue-600">{Math.round(score)}</p></div>
-                <div><p className="text-gray-700 text-sm font-medium">{t('numberRecall.totalScore', 'Total Score')}</p><p className="text-3xl font-bold text-blue-600">{totalScore + Math.round(score)}</p></div>
+                <div><p className="text-gray-700 dark:text-gray-300 text-sm font-medium">{t('numberRecall.levelScore', 'Level Score')}</p><p className="text-3xl font-bold text-blue-600">{Math.round(score)}</p></div>
+                <div><p className="text-gray-700 dark:text-gray-300 text-sm font-medium">{t('numberRecall.totalScore', 'Total Score')}</p><p className="text-3xl font-bold text-blue-600">{totalScore + Math.round(score)}</p></div>
               </div>
             </div>
             <button onClick={nextLevel} className="bg-gradient-to-r from-blue-500 to-purple-500 text-white text-2xl font-bold py-4 px-12 rounded-xl hover:from-blue-600 hover:to-purple-600 shadow-lg transition-all w-full mb-3">{level < MAX_LEVELS ? `Next Level ${level + 1}` : 'View Final Score'}</button>
-            <button onClick={startGame} className="text-gray-600 hover:text-gray-800 font-medium">{t('numberRecall.restart', 'Restart from Level 1')}</button>
+            <button onClick={startGame} className="text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:text-white font-medium">{t('numberRecall.restart', 'Restart from Level 1')}</button>
           </motion.div>
         )}
 
         {gameState === 'gameOver' && (
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="bg-white rounded-2xl shadow-lg p-8 text-center">
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-8 text-center">
             <div className="text-6xl mb-4">❌</div>
-            <h2 className="text-4xl font-bold text-gray-800 mb-4">{t('numberRecall.gameOver', 'Game Over!')}</h2>
-            <p className="text-lg text-gray-700 font-medium mb-2">{t('numberRecall.correctSequence', 'Correct sequence:')}</p>
+            <h2 className="text-4xl font-bold text-gray-800 dark:text-white mb-4">{t('numberRecall.gameOver', 'Game Over!')}</h2>
+            <p className="text-lg text-gray-700 dark:text-gray-300 font-medium mb-2">{t('numberRecall.correctSequence', 'Correct sequence:')}</p>
             <p className="text-2xl font-bold text-blue-600 mb-2">{sequence.join('')}</p>
-            <p className="text-lg text-gray-700 font-medium mb-2">{t('numberRecall.yourAnswer', 'Your answer:')}</p>
+            <p className="text-lg text-gray-700 dark:text-gray-300 font-medium mb-2">{t('numberRecall.yourAnswer', 'Your answer:')}</p>
             <p className="text-2xl font-bold text-red-500 mb-6">{playerInput}</p>
-            <div className="bg-orange-50 rounded-xl p-6 mb-6"><p className="text-gray-700 text-sm font-medium">{t('numberRecall.finalScore', 'Final Score')}</p><p className="text-3xl font-bold text-orange-600">{totalScore}</p></div>
+            <div className="bg-orange-50 dark:bg-slate-800 rounded-xl p-6 mb-6"><p className="text-gray-700 dark:text-gray-300 text-sm font-medium">{t('numberRecall.finalScore', 'Final Score')}</p><p className="text-3xl font-bold text-orange-600">{totalScore}</p></div>
             <button onClick={startGame} className="bg-gradient-to-r from-orange-500 to-red-500 text-white text-2xl font-bold py-4 px-12 rounded-xl hover:from-orange-600 hover:to-red-600 shadow-lg transition-all w-full mb-3">{t('tryAgain', 'Try Again')}</button>
-            <button onClick={startGame} className="text-gray-600 hover:text-gray-800 font-medium">{t('numberRecall.restart', 'Restart from Level 1')}</button>
+            <button onClick={startGame} className="text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:text-white font-medium">{t('numberRecall.restart', 'Restart from Level 1')}</button>
           </motion.div>
         )}
 
         {gameState === 'victory' && (
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="bg-white rounded-2xl shadow-lg p-8 text-center">
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-8 text-center">
             <div className="text-6xl mb-4">🎉</div>
             <h2 className="text-4xl font-bold text-blue-600 mb-4">{t('numberRecall.victory', 'Congratulations!')}</h2>
-            <p className="text-xl text-gray-700 font-medium mb-6">{t('numberRecall.victoryMessage', 'You completed all {count} levels!', { count: MAX_LEVELS })}</p>
-            <div className="bg-blue-50 rounded-xl p-6 mb-6"><p className="text-gray-700 text-sm font-medium">{t('numberRecall.finalScore', 'Final Score')}</p><p className="text-5xl font-bold text-blue-600">{totalScore + Math.round(score)}</p></div>
+            <p className="text-xl text-gray-700 dark:text-gray-300 font-medium mb-6">{t('numberRecall.victoryMessage', 'You completed all {count} levels!', { count: MAX_LEVELS })}</p>
+            <div className="bg-blue-50 rounded-xl p-6 mb-6"><p className="text-gray-700 dark:text-gray-300 text-sm font-medium">{t('numberRecall.finalScore', 'Final Score')}</p><p className="text-5xl font-bold text-blue-600">{totalScore + Math.round(score)}</p></div>
             <button onClick={startGame} className="bg-gradient-to-r from-blue-500 to-purple-500 text-white text-2xl font-bold py-4 px-12 rounded-xl hover:from-blue-600 hover:to-purple-600 shadow-lg transition-all w-full">{t('playAgain', 'Play Again')}</button>
           </motion.div>
         )}
