@@ -195,7 +195,7 @@ export default function WordChainPage() {
     // Check chain rule
     const requiredLetter = wordCount === 0 ? currentWord[currentWord.length - 1] : currentWord[currentWord.length - 1]
     if (word[0].toLowerCase() !== requiredLetter.toLowerCase()) {
-      setMessage({ type: 'error', text: `Word must start with "${requiredLetter.toUpperCase()}"` })
+      setMessage({ type: 'error', text: `Word must start with "${requiredLetter.toUpperCase()}` })
       setUserInput('')
       return
     }
@@ -225,7 +225,7 @@ export default function WordChainPage() {
     setUsedWords(prev => new Set([...prev, word]))
     setWordCount(prev => prev + 1)
     setUserInput('')
-    setMessage({ type: 'success', text: `Good! Now start with "${word[word.length - 1].toUpperCase()}"` })
+    setMessage({ type: 'success', text: `Good! Now start with "${word[word.length - 1].toUpperCase()}` })
 
     // Check win condition
     if (wordCount + 1 >= settings.wordsNeeded) {
@@ -405,7 +405,7 @@ export default function WordChainPage() {
                 type="text"
                 value={userInput}
                 onChange={(e) => setUserInput(e.target.value)}
-                placeholder={`${t('wordChain.enterWord', 'Enter word starting with')} "${currentWord[currentWord.length - 1].toUpperCase()}"`}
+                placeholder={`${t('wordChain.enterWord', 'Enter word starting with')} "${currentWord[currentWord.length - 1].toUpperCase()}`}
                 className="w-full p-4 text-xl border-2 border-gray-300 dark:border-gray-500 rounded-xl focus:border-orange-400 focus:outline-none text-center text-gray-800 placeholder-gray-500 dark:placeholder-gray-400"
                 autoFocus
                 autoComplete="off"
