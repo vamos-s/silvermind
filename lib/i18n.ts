@@ -667,8 +667,18 @@ const resources = {
       locked: 'ロック',
       totalAchievements: '総実績',
       achievementUnlocked: '実績解除！',
+      achievement: {
+        first_play: { title: '最初の一歩', description: '最初のゲームをプレイする' },
+        score_100: { title: 'センチュリー', description: '任意のゲームで100点を取る' },
+        score_500: { title: 'ハーフミレニアム', description: '任意のゲームで500点を取る' },
+        play_all_games: { title: '探検家', description: '利用可能なすべてのゲームをプレイする' },
+        streak_3: { title: '3日連続', description: '3日連続でゲームをプレイする' },
+        streak_7: { title: '週間ウォリアー', description: '7日連続でゲームをプレイする' },
+        perfect_score: { title: '完璧主義者', description: '任意のゲームで完璧なスコアを取る' }
+      },
       challengesTitle: '日次チャレンジ',
       todayChallenges: '今日のチャレンジ',
+      yesterday: '昨日',
       completed: '完了',
       inProgress: '進行中',
       notStarted: '未開始',
@@ -677,6 +687,8 @@ const resources = {
       score: 'スコア',
       complete: '完了',
       master: 'マスター',
+      challengeType: { score: 'スコア', complete: '完了', master: 'マスター' },
+
       memory: '記憶力',
       pattern: 'パターン',
       logic: '論理',
@@ -773,8 +785,18 @@ const resources = {
       locked: '锁定',
       totalAchievements: '总成就',
       achievementUnlocked: '成就解锁！',
+      achievement: {
+        first_play: { title: '第一步', description: '玩你的第一个游戏' },
+        score_100: { title: '百年', description: '任意游戏中获得100分' },
+        score_500: { title: '半千年', description: '任意游戏中获得500分' },
+        play_all_games: { title: '探索者', description: '玩所有可用游戏' },
+        streak_3: { title: '三天连续', description: '连续3天玩游戏' },
+        streak_7: { title: '周战士', description: '连续7天玩游戏' },
+        perfect_score: { title: '完美主义者', description: '任意游戏中获得完美分数' }
+      },
       challengesTitle: '每日挑战',
       todayChallenges: '今日挑战',
+      yesterday: '昨天',
       completed: '已完成',
       inProgress: '进行中',
       notStarted: '未开始',
@@ -783,6 +805,8 @@ const resources = {
       score: '得分',
       complete: '完成',
       master: '精通',
+      challengeType: { score: '得分', complete: '完成', master: '精通' },
+
       memory: '记忆力',
       pattern: '模式',
       logic: '逻辑',
@@ -879,8 +903,18 @@ const resources = {
       locked: 'Bloqueado',
       totalAchievements: 'Total de logros',
       achievementUnlocked: '¡Logro desbloqueado!',
+      achievement: {
+        first_play: { title: 'Primeros Pasos', description: 'Juega tu primer juego' },
+        score_100: { title: 'Centuria', description: 'Obtén 100 puntos en cualquier juego' },
+        score_500: { title: 'Medio Milenio', description: 'Obtén 500 puntos en cualquier juego' },
+        play_all_games: { title: 'Explorador', description: 'Juega todos los juegos disponibles' },
+        streak_3: { title: 'Racha de Tres', description: 'Juega por 3 días consecutivos' },
+        streak_7: { title: 'Guerrero Semanal', description: 'Juega por 7 días consecutivos' },
+        perfect_score: { title: 'Perfeccionista', description: 'Obtén un puntaje perfecto en cualquier juego' }
+      },
       challengesTitle: 'Desafíos Diarios',
       todayChallenges: 'Desafíos de hoy',
+      yesterday: 'Ayer',
       completed: 'Completado',
       inProgress: 'En progreso',
       notStarted: 'No iniciado',
@@ -889,6 +923,8 @@ const resources = {
       score: 'Puntuación',
       complete: 'Completar',
       master: 'Maestro',
+      challengeType: { score: 'Puntuación', complete: 'Completar', master: 'Maestro' },
+
       memory: 'Memoria',
       pattern: 'Patrón',
       logic: 'Lógica',
@@ -985,8 +1021,18 @@ const resources = {
       locked: 'Verrouillé',
       totalAchievements: 'Total des réalisations',
       achievementUnlocked: 'Réalisation débloquée !',
+      achievement: {
+        first_play: { title: 'Premiers Pas', description: 'Jouez votre premier jeu' },
+        score_100: { title: 'Centenaire', description: 'Obtenez 100 points dans n\'importe quel jeu' },
+        score_500: { title: 'Demi-Millénaire', description: 'Obtenez 500 points dans n\'importe quel jeu' },
+        play_all_games: { title: 'Explorateur', description: 'Jouez tous les jeux disponibles' },
+        streak_3: { title: 'Série de Trois', description: 'Jouez pendant 3 jours consécutifs' },
+        streak_7: { title: 'Guerrier de la Semaine', description: 'Jouez pendant 7 jours consécutifs' },
+        perfect_score: { title: 'Perfectionniste', description: 'Obtenez un score parfait dans n\'importe quel jeu' }
+      },
       challengesTitle: 'Défis quotidiens',
       todayChallenges: 'Défis du jour',
+      yesterday: 'Hier',
       completed: 'Terminé',
       inProgress: 'En cours',
       notStarted: 'Non commencé',
@@ -995,6 +1041,8 @@ const resources = {
       score: 'Score',
       complete: 'Compléter',
       master: 'Maître',
+      challengeType: { score: 'Score', complete: 'Compléter', master: 'Maître' },
+
       memory: 'Mémoire',
       pattern: 'Motif',
       logic: 'Logique',
@@ -1497,3 +1545,5 @@ i18n
   })
 
 export default i18n
+
+// Note: Added achievement, yesterday, challengeType translations to all languages
