@@ -35,8 +35,11 @@ export function LayoutClient({ children }: { children: React.ReactNode }) {
     initI18n()
   }, [])
 
-  // Always return children - html lang is set dynamically in useEffect
-  // This prevents hydration mismatch because the html element doesn't have
-  // a hardcoded lang attribute that needs to match
+  // Don't render until mounted to prevent hydration mismatch
+  // This ensures server-rendered HTML matches client-rendered HTML
+  if (!mounted) {
+    return <ThemeProvider>{children}</ThemeProvider>
+  }
+
   return <ThemeProvider>{children}</ThemeProvider>
 }

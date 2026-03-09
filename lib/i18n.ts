@@ -1539,7 +1539,7 @@ i18n
   .use(initReactI18next)
   .init({
     resources,
-    lng: undefined, // Will be set by browser detection in layout-client.tsx
+    lng: 'en', // Default to English initially, will be changed by browser detection
     fallbackLng: 'en',
     interpolation: { escapeValue: false }
   })
