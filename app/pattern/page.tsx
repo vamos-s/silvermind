@@ -23,8 +23,8 @@ export default function PatternPage() {
         <div className="max-w-6xl mx-auto">
           <Link href="/">
             <motion.button
-              whileHover={ scale: 1.05 }
-              whileTap={ scale: 0.95 }
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
               className={`px-3 py-2 md:px-4 rounded-lg text-sm md:text-base ${darkMode ? 'text-indigo-400 hover:text-indigo-300' : 'text-indigo-600 hover:text-indigo-700'}`}
             >
               ← {t('back')}
