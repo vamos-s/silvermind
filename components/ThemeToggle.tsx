@@ -57,7 +57,7 @@ export function ThemeToggle() {
   if (!mounted) {
     return (
       <button
-        className="cursor-pointer p-2 rounded-full bg-white/80 backdrop-blur-sm shadow-lg transition-all duration-300 hover:scale-110"
+        className="cursor-pointer p-2 rounded-full bg-gradient-to-br from-purple-100 to-pink-100 dark:from-purple-900/50 dark:to-pink-900/50 backdrop-blur-sm shadow-lg transition-all duration-300 hover:scale-110 border border-purple-200 dark:border-purple-700"
         aria-label="Toggle theme"
       >
         <span className="w-6 h-6 block"></span>
@@ -68,7 +68,7 @@ export function ThemeToggle() {
   return (
     <button
       onClick={toggleTheme}
-      className="cursor-pointer p-2 rounded-full bg-white/80 backdrop-blur-sm shadow-lg dark:bg-gray-800/80 transition-all duration-300 hover:scale-110 group"
+      className="cursor-pointer p-2 rounded-full bg-gradient-to-br from-purple-100 to-pink-100 dark:from-purple-600/50 dark:to-pink-600/50 backdrop-blur-sm shadow-lg transition-all duration-300 hover:scale-110 group border border-purple-200 dark:border-purple-500"
       aria-label="Toggle theme"
     >
       {isDark ? (

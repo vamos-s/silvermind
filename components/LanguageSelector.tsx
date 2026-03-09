@@ -33,9 +33,9 @@ export function LanguageSelector() {
   if (!mounted) {
     return (
       <div className="relative z-50">
-        <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-white/80 backdrop-blur-sm shadow-md">
+        <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm shadow-md">
           <span className="text-xl">🇺🇸</span>
-          <span className="text-sm font-medium text-gray-700">EN</span>
+          <span className="text-sm font-medium text-gray-700 dark:text-gray-200">English</span>
         </div>
       </div>
     )
@@ -54,14 +54,14 @@ export function LanguageSelector() {
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center gap-2 px-3 py-2 rounded-lg bg-white/80 backdrop-blur-sm shadow-md hover:bg-white/90 transition-colors"
+        className="flex items-center gap-2 px-3 py-2 rounded-lg bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm shadow-md hover:bg-white/90 dark:hover:bg-gray-700/90 transition-colors"
       >
         <span className="text-xl">{currentLang.flag}</span>
-        <span className="text-sm font-medium text-gray-700">{currentLang.name}</span>
+        <span className="text-sm font-medium text-gray-700 dark:text-gray-200">{currentLang.name}</span>
         <motion.span
           animate={{ rotate: isOpen ? 180 : 0 }}
           transition={{ duration: 0.2 }}
-          className="text-gray-500"
+          className="text-gray-500 dark:text-gray-400"
         >
           ▼
         </motion.span>
@@ -74,7 +74,7 @@ export function LanguageSelector() {
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: -10 }}
             transition={{ duration: 0.2 }}
-            className="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-xl overflow-hidden border border-gray-100"
+            className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-xl shadow-xl overflow-hidden border border-gray-100 dark:border-gray-700"
           >
             <div className="py-2 max-h-80 overflow-y-auto">
               {languages.map((lang) => (
@@ -83,14 +83,14 @@ export function LanguageSelector() {
                   onClick={() => handleLanguageChange(lang.code)}
                   className={`w-full flex items-center gap-3 px-4 py-2 text-sm transition-colors ${
                     lang.code === i18n.language
-                      ? 'bg-indigo-50 text-indigo-700 font-medium'
-                      : 'text-gray-700 hover:bg-gray-50'
+                      ? 'bg-indigo-50 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300 font-medium'
+                      : 'text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700/50'
                   }`}
                 >
                   <span className="text-xl">{lang.flag}</span>
                   <span>{lang.name}</span>
                   {lang.code === i18n.language && (
-                    <span className="ml-auto text-indigo-600">✓</span>
+                    <span className="ml-auto text-indigo-600 dark:text-indigo-400">✓</span>
                   )}
                 </button>
               ))}
