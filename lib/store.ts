@@ -106,6 +106,7 @@ interface GameStore {
   setCurrentGame: (gameId: string | null) => void
   addSession: (session: GameSession) => void
   toggleDarkMode: () => void
+  syncDarkMode: () => void
   updateBestScore: (gameId: string, difficulty: Difficulty, score: number) => void
   unlockAchievement: (achievement: AchievementType) => void
   checkAchievements: (session: GameSession, accuracy?: number) => void
