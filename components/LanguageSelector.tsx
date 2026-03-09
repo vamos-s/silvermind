@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { motion, AnimatePresence } from 'framer-motion'
 
@@ -20,8 +20,25 @@ const languages = [
 export function LanguageSelector() {
   const { i18n } = useTranslation()
   const [isOpen, setIsOpen] = useState(false)
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
 
   const currentLang = languages.find(l => l.code === i18n.language) || languages[0]
+
+  // Prevent hydration mismatch by not rendering until mounted
+  if (!mounted) {
+    return (
+      <div className="relative z-50">
+        <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-white/80 backdrop-blur-sm shadow-md">
+          <span className="text-xl">🇺🇸</span>
+          <span className="text-sm font-medium text-gray-700">EN</span>
+        </div>
+      </div>
+    )
+  }
 
   const handleLanguageChange = (langCode: string) => {
     i18n.changeLanguage(langCode)
