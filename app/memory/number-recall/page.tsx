@@ -113,7 +113,7 @@ export default function NumberRecallPage() {
   }, [playerInput])
 
   return (
-    <div className={`min-h-screen p-3 md:p-4 lg:p-8 transition-colors duration-300 ${darkMode ? "bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white" : "bg-gradient-to-br from-blue-50 to-purple-50 p-4 md:p-8"}`}>
+    <div className={`min-h-screen p-3 md:p-4 lg:p-8 transition-colors duration-300 ${darkMode ? "bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white" : "bg-gradient-to-br from-blue-50 to-purple-50 dark:from-slate-800 dark:to-slate-800 p-4 md:p-8"}`}>
       <SettingsPanel />
       <div className="max-w-lg mx-auto">
         <header className="mb-6">
@@ -140,7 +140,7 @@ export default function NumberRecallPage() {
                 Total Score: <span className="text-blue-600 font-bold">{totalScore}</span>
               </p>
             )}
-            <div className="bg-blue-50 rounded-xl p-4 mb-6 text-left">
+            <div className="bg-blue-50 dark:bg-slate-700 rounded-xl p-4 mb-6 text-left">
               <h3 className="font-bold text-gray-800 dark:text-white mb-2">{t('numberRecall.levelInfo', 'Level Settings')}:</h3>
               <ul className="text-gray-700 dark:text-gray-300 space-y-1 font-medium">
                 <li>• {t('numberRecall.sequenceLength', 'Sequence Length')}: {getSequenceLength()}</li>
@@ -181,10 +181,10 @@ export default function NumberRecallPage() {
 
             <div className="grid grid-cols-3 gap-4">
               {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((num) => (
-                <motion.button key={num} whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} onClick={() => handleNumberClick(num)} className="bg-blue-500 text-white text-2xl md:text-3xl lg:text-4xl font-bold py-4 rounded-xl shadow-lg hover:bg-blue-600 transition">{num}</motion.button>
+                <motion.button key={num} whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} onClick={() => handleNumberClick(num)} className="bg-blue-50 dark:bg-slate-7000 text-white text-2xl md:text-3xl lg:text-4xl font-bold py-4 rounded-xl shadow-lg hover:bg-blue-600 transition">{num}</motion.button>
               ))}
-              <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} onClick={handleDelete} className="bg-red-500 text-white text-lg md:text-xl lg:text-2xl font-bold py-4 rounded-xl shadow-lg hover:bg-red-600 transition">⌫</motion.button>
-              <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} onClick={() => handleNumberClick(0)} className="bg-blue-500 text-white text-2xl md:text-3xl lg:text-4xl font-bold py-4 rounded-xl shadow-lg hover:bg-blue-600 transition">0</motion.button>
+              <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} onClick={handleDelete} className="bg-red-50 dark:bg-slate-7000 text-white text-lg md:text-xl lg:text-2xl font-bold py-4 rounded-xl shadow-lg hover:bg-red-600 transition">⌫</motion.button>
+              <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} onClick={() => handleNumberClick(0)} className="bg-blue-50 dark:bg-slate-7000 text-white text-2xl md:text-3xl lg:text-4xl font-bold py-4 rounded-xl shadow-lg hover:bg-blue-600 transition">0</motion.button>
             </div>
           </>
         )}
@@ -194,7 +194,7 @@ export default function NumberRecallPage() {
             <div className="text-6xl mb-4">✅</div>
             <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-blue-600 mb-4">Level {level} Complete!</h2>
             <p className="text-xl text-gray-700 dark:text-gray-300 font-medium mb-6">{t('numberRecall.sequence', 'Sequence')}: {sequence.join('')}</p>
-            <div className="bg-blue-50 rounded-xl p-6 mb-6">
+            <div className="bg-blue-50 dark:bg-slate-700 rounded-xl p-6 mb-6">
               <div className="grid grid-cols-2 gap-4">
                 <div><p className="text-gray-700 dark:text-gray-300 text-sm font-medium">{t('numberRecall.levelScore', 'Level Score')}</p><p className="text-xl md:text-2xl lg:text-3xl font-bold text-blue-600">{Math.round(score)}</p></div>
                 <div><p className="text-gray-700 dark:text-gray-300 text-sm font-medium">{t('numberRecall.totalScore', 'Total Score')}</p><p className="text-xl md:text-2xl lg:text-3xl font-bold text-blue-600">{totalScore + Math.round(score)}</p></div>
@@ -224,7 +224,7 @@ export default function NumberRecallPage() {
             <div className="text-6xl mb-4">🎉</div>
             <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-blue-600 mb-4">{t('numberRecall.victory', 'Congratulations!')}</h2>
             <p className="text-xl text-gray-700 dark:text-gray-300 font-medium mb-6">{t('numberRecall.victoryMessage', 'You completed all {count} levels!', { count: MAX_LEVELS })}</p>
-            <div className="bg-blue-50 rounded-xl p-6 mb-6"><p className="text-gray-700 dark:text-gray-300 text-sm font-medium">{t('numberRecall.finalScore', 'Final Score')}</p><p className="text-5xl font-bold text-blue-600">{totalScore + Math.round(score)}</p></div>
+            <div className="bg-blue-50 dark:bg-slate-700 rounded-xl p-6 mb-6"><p className="text-gray-700 dark:text-gray-300 text-sm font-medium">{t('numberRecall.finalScore', 'Final Score')}</p><p className="text-5xl font-bold text-blue-600">{totalScore + Math.round(score)}</p></div>
             <button onClick={startGame} className="bg-gradient-to-r from-blue-500 to-purple-500 text-white text-lg md:text-xl lg:text-2xl font-bold py-4 px-12 rounded-xl hover:from-blue-600 hover:to-purple-600 shadow-lg transition-all w-full">{t('playAgain', 'Play Again')}</button>
           </motion.div>
         )}

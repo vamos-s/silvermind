@@ -311,8 +311,8 @@ export default function CubeNavigationPage() {
               whileTap={{ scale: 0.95 }}
               className={`
                 w-12 h-12 sm:w-14 sm:h-14 rounded-lg border-2 flex items-center justify-center font-bold text-sm cursor-pointer transition-all
-                ${cell.isStart ? 'bg-green-500 border-green-600 text-white' : ''}
-                ${cell.isGoal ? 'bg-yellow-500 border-yellow-600 text-white' : ''}
+                ${cell.isStart ? 'bg-green-50 dark:bg-slate-7000 border-green-600 text-white' : ''}
+                ${cell.isGoal ? 'bg-yellow-50 dark:bg-slate-7000 border-yellow-600 text-white' : ''}
                 ${cell.isObstacle ? 'bg-gray-700 border-gray-800 text-white' : ''}
                 ${!cell.isStart && !cell.isGoal && !cell.isObstacle ? (darkMode ? 'bg-slate-600 border-slate-700' : 'bg-gray-100 border-gray-300 dark:border-gray-500') : ''}
                 ${cell.isVisited && !cell.isStart && !cell.isGoal ? 'bg-blue-200 border-blue-300 dark:bg-blue-800 dark:border-blue-900' : ''}
@@ -331,7 +331,7 @@ export default function CubeNavigationPage() {
   }
 
   return (
-    <div className={`min-h-screen ${darkMode ? 'bg-gradient-to-br from-slate-900 to-slate-800' : 'bg-gradient-to-br from-orange-50 via-white to-amber-50'} p-4 md:p-8`}>
+    <div className={`min-h-screen ${darkMode ? 'bg-gradient-to-br from-slate-900 to-slate-800' : 'bg-gradient-to-br from-orange-50 via-white to-amber-50 dark:from-slate-800 dark:via-slate-900 dark:to-slate-800'} p-4 md:p-8`}>
       <div className="max-w-2xl mx-auto">
         {/* Header */}
         <Link
@@ -363,7 +363,7 @@ export default function CubeNavigationPage() {
                 Total Score: <span className="text-orange-600 font-bold">{totalScore}</span>
               </p>
             )}
-            <div className={`rounded-xl p-4 mb-6 text-left ${darkMode ? 'bg-slate-700' : 'bg-orange-50'}`}>
+            <div className={`rounded-xl p-4 mb-6 text-left ${darkMode ? 'bg-slate-700' : 'bg-orange-50 dark:bg-slate-700'}`}>
               <h3 className={`font-bold ${darkMode ? 'text-slate-50' : 'text-gray-800'} mb-2`}>{t('cubeNavigation.levelInfo', 'Level Settings')}:</h3>
               <ul className={`space-y-1 font-medium ${darkMode ? 'text-slate-300' : 'text-gray-700'}`}>
                 <li>• {t('cubeNavigation.cubeSize', 'Cube Size')}: {settings.cubeSize}x{settings.cubeSize}x{settings.cubeSize}</li>
@@ -432,7 +432,7 @@ export default function CubeNavigationPage() {
               </div>
 
               {/* Current position */}
-              <div className={`mt-6 text-center ${darkMode ? 'bg-slate-700' : 'bg-orange-50'} rounded-xl p-4`}>
+              <div className={`mt-6 text-center ${darkMode ? 'bg-slate-700' : 'bg-orange-50 dark:bg-slate-700'} rounded-xl p-4`}>
                 <p className={`font-medium ${darkMode ? 'text-slate-300' : 'text-gray-700'}`}>
                   {t('cubeNavigation.currentPosition', 'Current Position')}: ({playerPosition.x}, {playerPosition.y}, {playerPosition.z})
                 </p>
@@ -524,7 +524,7 @@ export default function CubeNavigationPage() {
                   {levelWon ? t('cubeNavigation.goalReached', 'Goal Reached!') : t('cubeNavigation.failed', 'Failed!')}
                 </h2>
                 {levelWon && (
-                  <div className={`rounded-xl p-6 mb-6 ${darkMode ? 'bg-slate-700' : 'bg-green-50'}`}>
+                  <div className={`rounded-xl p-6 mb-6 ${darkMode ? 'bg-slate-700' : 'bg-green-50 dark:bg-slate-700'}`}>
                     <div className="grid grid-cols-2 gap-4">
                       <div>
                         <p className={`text-sm font-medium ${darkMode ? 'text-slate-300' : 'text-gray-700'}`}>{t('cubeNavigation.movesUsed', 'Moves Used')}</p>
@@ -581,7 +581,7 @@ export default function CubeNavigationPage() {
               {totalScore > 0 ? `Level ${level} Complete!` : 'Level Failed!'}
             </h2>
             {totalScore > 0 ? (
-              <div className={`rounded-xl p-6 mb-6 ${darkMode ? 'bg-slate-700' : 'bg-orange-50'}`}>
+              <div className={`rounded-xl p-6 mb-6 ${darkMode ? 'bg-slate-700' : 'bg-orange-50 dark:bg-slate-700'}`}>
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <p className={`text-sm font-medium ${darkMode ? 'text-slate-300' : 'text-gray-700'}`}>{t('cubeNavigation.levelScore', 'Level Score')}</p>
@@ -594,7 +594,7 @@ export default function CubeNavigationPage() {
                 </div>
               </div>
             ) : (
-              <div className={`rounded-xl p-6 mb-6 ${darkMode ? 'bg-red-900/30' : 'bg-red-50'}`}>
+              <div className={`rounded-xl p-6 mb-6 ${darkMode ? 'bg-red-900/30' : 'bg-red-50 dark:bg-slate-700'}`}>
                 <p className={`text-sm font-medium ${darkMode ? 'text-slate-300' : 'text-gray-700'}`}>{t('cubeNavigation.levelScore', 'Level Score')}</p>
                 <p className="text-xl md:text-2xl lg:text-3xl font-bold text-red-500">{score}</p>
               </div>
@@ -626,7 +626,7 @@ export default function CubeNavigationPage() {
             <p className={`text-xl ${darkMode ? 'text-slate-300' : 'text-gray-700'} font-medium mb-6`}>
               {t('cubeNavigation.victoryMessage', 'You completed all {count} levels!', { count: MAX_LEVELS })}
             </p>
-            <div className={`rounded-xl p-6 mb-6 ${darkMode ? 'bg-slate-700' : 'bg-orange-50'}`}>
+            <div className={`rounded-xl p-6 mb-6 ${darkMode ? 'bg-slate-700' : 'bg-orange-50 dark:bg-slate-700'}`}>
               <p className={`text-sm font-medium ${darkMode ? 'text-slate-300' : 'text-gray-700'}`}>{t('cubeNavigation.finalScore', 'Final Score')}</p>
               <p className="text-5xl font-bold text-orange-600">{totalScore + score}</p>
             </div>

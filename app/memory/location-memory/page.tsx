@@ -155,7 +155,7 @@ export default function LocationMemoryPage() {
   }, [gameState, timeLeft])
 
   return (
-    <div className={`min-h-screen p-3 md:p-4 lg:p-8 transition-colors duration-300 ${darkMode ? "bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white" : "bg-gradient-to-br from-emerald-50 via-white to-teal-50 p-4 md:p-8"}`}>
+    <div className={`min-h-screen p-3 md:p-4 lg:p-8 transition-colors duration-300 ${darkMode ? "bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white" : "bg-gradient-to-br from-emerald-50 via-white to-teal-50 dark:from-slate-800 dark:via-slate-900 dark:to-slate-800 p-4 md:p-8"}`}>
       <SettingsPanel />
       <div className="max-w-2xl mx-auto">
         {/* Header */}
@@ -211,7 +211,7 @@ export default function LocationMemoryPage() {
             <p className="text-xl text-gray-600 dark:text-gray-400 mb-4 font-medium">
               {t('locationMemory.memorize', 'Memorize the locations!')}
             </p>
-            <div className="relative w-full aspect-square bg-gradient-to-br from-emerald-100 to-teal-100 rounded-xl overflow-hidden">
+            <div className="relative w-full aspect-square bg-gradient-to-br from-emerald-100 to-teal-100 dark:from-slate-800 dark:to-slate-800 rounded-xl overflow-hidden">
               <AnimatePresence>
                 {items.map((item, index) => (
                   <motion.div
@@ -274,7 +274,7 @@ export default function LocationMemoryPage() {
                 {t('locationMemory.selected', 'Selected')}: {selectedItems.length}/{settings.itemCount}
               </p>
               <div
-                className="relative w-full aspect-square bg-gradient-to-br from-emerald-100 to-teal-100 rounded-xl overflow-hidden cursor-crosshair"
+                className="relative w-full aspect-square bg-gradient-to-br from-emerald-100 to-teal-100 dark:from-slate-800 dark:to-slate-800 rounded-xl overflow-hidden cursor-crosshair"
                 onClick={(e) => {
                   if (gameState !== 'input' || selectedItems.length >= settings.itemCount) return
 

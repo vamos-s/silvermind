@@ -205,7 +205,7 @@ export default function WordAssociationPage() {
   const currentQuestion = questions[currentQuestionIndex]
 
   return (
-    <div className={`min-h-screen p-3 md:p-4 lg:p-8 transition-colors duration-300 ${darkMode ? "bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white" : "bg-gradient-to-br from-fuchsia-50 via-white to-pink-50 p-4 md:p-8"}`}>
+    <div className={`min-h-screen p-3 md:p-4 lg:p-8 transition-colors duration-300 ${darkMode ? "bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white" : "bg-gradient-to-br from-fuchsia-50 via-white to-pink-50 dark:from-slate-800 dark:via-slate-900 dark:to-slate-800 p-4 md:p-8"}`}>
       <SettingsPanel />
       <div className="max-w-2xl mx-auto">
         {/* Header */}
@@ -238,7 +238,7 @@ export default function WordAssociationPage() {
                 Total Score: <span className="text-fuchsia-600 font-bold">{totalScore}</span>
               </p>
             )}
-            <div className="bg-fuchsia-50 rounded-xl p-4 mb-6 text-left">
+            <div className="bg-fuchsia-50 dark:bg-slate-700 rounded-xl p-4 mb-6 text-left">
               <h3 className="font-bold text-gray-800 dark:text-white mb-2">{t('wordAssociation.levelInfo', 'Level Settings')}:</h3>
               <ul className="text-gray-700 dark:text-gray-300 space-y-1 font-medium">
                 <li>• {t('wordAssociation.questionCount', 'Question Count')}: {settings.questionCount}</li>
@@ -262,8 +262,8 @@ export default function WordAssociationPage() {
               {t('wordAssociation.memorize', 'Remember the category!')}
             </p>
             {currentQuestion && (
-              <div className="bg-gradient-to-br from-fuchsia-100 to-pink-100 rounded-2xl p-12">
-                <p className="text-5xl md:text-6xl font-bold text-fuchsia-600">
+              <div className="bg-gradient-to-br from-fuchsia-100 to-pink-100 dark:from-slate-800 dark:to-slate-800 dark:from-slate-700 dark:to-slate-600 rounded-2xl p-12">
+                <p className="text-5xl md:text-6xl font-bold text-fuchsia-600 dark:text-fuchsia-300">
                   {currentQuestion.word}
                 </p>
               </div>
@@ -308,8 +308,8 @@ export default function WordAssociationPage() {
             <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-8 mb-6 text-center">
               {currentQuestion && (
                 <>
-                  <div className="bg-gradient-to-br from-fuchsia-100 to-pink-100 rounded-2xl p-8 mb-6">
-                    <p className="text-4xl md:text-5xl font-bold text-fuchsia-600">
+                  <div className="bg-gradient-to-br from-fuchsia-100 to-pink-100 dark:from-slate-800 dark:to-slate-800 dark:from-slate-700 dark:to-slate-600 rounded-2xl p-8 mb-6">
+                    <p className="text-4xl md:text-5xl font-bold text-fuchsia-600 dark:text-fuchsia-300">
                       {currentQuestion.word}
                     </p>
                   </div>
@@ -318,8 +318,8 @@ export default function WordAssociationPage() {
                     <div className="mb-6">
                       <div className={`p-4 rounded-xl ${
                         selectedAnswers[currentQuestionIndex] === currentQuestion.correctIndex
-                          ? 'bg-green-50 border-2 border-green-500'
-                          : 'bg-red-50 border-2 border-red-500'
+                          ? 'bg-green-50 dark:bg-slate-700 border-2 border-green-500'
+                          : 'bg-red-50 dark:bg-slate-700 border-2 border-red-500'
                       }`}>
                         <p className="text-lg font-bold mb-2">
                           {selectedAnswers[currentQuestionIndex] === currentQuestion.correctIndex
@@ -382,7 +382,7 @@ export default function WordAssociationPage() {
               {score > 0 ? `Level ${level} Complete!` : 'Level Failed!'}
             </h2>
             {score > 0 ? (
-              <div className="bg-fuchsia-50 rounded-xl p-6 mb-6">
+              <div className="bg-fuchsia-50 dark:bg-slate-700 rounded-xl p-6 mb-6">
                 <div className="text-center mb-4">
                   <p className="text-6xl font-bold text-fuchsia-600 mb-2">
                     {correctCount}/{questions.length}
@@ -403,7 +403,7 @@ export default function WordAssociationPage() {
                 </div>
               </div>
             ) : (
-              <div className="bg-red-50 rounded-xl p-6 mb-6">
+              <div className="bg-red-50 dark:bg-slate-700 rounded-xl p-6 mb-6">
                 <p className="text-gray-700 dark:text-gray-300 text-sm font-medium">{t('wordAssociation.levelScore', 'Level Score')}</p>
                 <p className="text-xl md:text-2xl lg:text-3xl font-bold text-red-600">{score}</p>
               </div>
@@ -435,7 +435,7 @@ export default function WordAssociationPage() {
             <p className="text-xl text-gray-700 dark:text-gray-300 font-medium mb-6">
               {t('wordAssociation.victoryMessage', 'You completed all {count} levels!', { count: MAX_LEVELS })}
             </p>
-            <div className="bg-fuchsia-50 rounded-xl p-6 mb-6">
+            <div className="bg-fuchsia-50 dark:bg-slate-700 rounded-xl p-6 mb-6">
               <p className="text-gray-700 dark:text-gray-300 text-sm font-medium">{t('wordAssociation.finalScore', 'Final Score')}</p>
               <p className="text-5xl font-bold text-fuchsia-600">{totalScore + score}</p>
             </div>

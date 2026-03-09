@@ -233,7 +233,7 @@ export default function QuickReactionPage() {
               <p className="text-lg text-gray-600 dark:text-gray-400 mb-6">
                 {t('quickReaction.instructions', 'Wait for screen to turn GREEN, then click as fast as you can!')}
               </p>
-              <div className="bg-green-50 rounded-xl p-4 mb-6 text-left">
+              <div className="bg-green-50 dark:bg-slate-700 rounded-xl p-4 mb-6 text-left">
                 <h3 className="font-bold text-gray-800 dark:text-white mb-2">{t('quickReaction.levelInfo', 'Level Settings')}:</h3>
                 <ul className="text-gray-700 dark:text-gray-300 space-y-1 font-medium">
                   <li>• {t('quickReaction.rounds', 'Rounds')}: {settings.rounds}</li>
@@ -358,7 +358,7 @@ export default function QuickReactionPage() {
               </p>
 
               {/* Average Time */}
-              <div className="bg-green-50 rounded-xl p-6 mb-6">
+              <div className="bg-green-50 dark:bg-slate-700 rounded-xl p-6 mb-6">
                 <p className="text-gray-700 dark:text-gray-300 text-lg mb-2">
                   {t('quickReaction.averageTime', 'Average Reaction Time')}
                 </p>
@@ -371,7 +371,7 @@ export default function QuickReactionPage() {
               </div>
 
               {/* Score */}
-              <div className="bg-blue-50 rounded-xl p-6 mb-6">
+              <div className="bg-blue-50 dark:bg-slate-700 rounded-xl p-6 mb-6">
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <p className="text-gray-700 dark:text-gray-300 text-sm font-medium">{t('quickReaction.levelScore', 'Level Score')}</p>
@@ -439,7 +439,7 @@ export default function QuickReactionPage() {
               <p className="text-xl text-gray-700 dark:text-gray-300 font-medium mb-6">
                 {t('quickReaction.victoryMessage', 'You completed all {count} levels!', { count: MAX_LEVELS })}
               </p>
-              <div className="bg-green-50 rounded-xl p-6 mb-6">
+              <div className="bg-green-50 dark:bg-slate-700 rounded-xl p-6 mb-6">
                 <p className="text-gray-700 dark:text-gray-300 text-sm font-medium">{t('quickReaction.finalScore', 'Final Score')}</p>
                 <p className="text-5xl font-bold text-green-600">{totalScore + levelScore}</p>
               </div>

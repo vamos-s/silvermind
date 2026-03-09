@@ -21,7 +21,7 @@ export default function SpatialPage() {
   const { darkMode } = useGameStore()
 
   return (
-    <div className={`min-h-screen ${darkMode ? 'bg-gradient-to-br from-slate-900 to-slate-800' : 'bg-gradient-to-br from-blue-50 to-purple-50'}`}>
+    <div className={`min-h-screen ${darkMode ? 'bg-gradient-to-br from-slate-900 to-slate-800' : 'bg-gradient-to-br from-blue-50 to-purple-50 dark:from-slate-800 dark:to-slate-800'}`}>
       <header className={`p-4 md:p-6 shadow-sm ${darkMode ? 'bg-slate-900' : 'bg-white'}`}>
         <div className="max-w-6xl mx-auto">
           <Link href="/">

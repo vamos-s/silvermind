@@ -233,7 +233,7 @@ export default function WordScramblePage() {
   }, [gameState, timeLeft, totalScore, addSession, settings.timeLimit])
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-orange-50 via-white to-amber-50 p-4 md:p-8">
+    <div className="min-h-screen bg-gradient-to-br from-orange-50 via-white to-amber-50 dark:from-slate-800 dark:via-slate-900 dark:to-slate-800 p-4 md:p-8">
       <div className="max-w-2xl mx-auto">
         {/* Header */}
         <Link
@@ -261,7 +261,7 @@ export default function WordScramblePage() {
             <h2 className="text-xl md:text-2xl lg:text-3xl font-bold text-gray-800 mb-2">
               Level {level}
             </h2>
-            <div className="bg-orange-50 rounded-xl p-4 mb-6 text-left">
+            <div className="bg-orange-50 dark:bg-slate-700 rounded-xl p-4 mb-6 text-left">
               <h3 className="font-bold text-gray-800 mb-2">{t('wordScramble.levelInfo', 'Level Settings')}:</h3>
               <ul className="text-gray-700 space-y-1 font-medium">
                 <li>• {t('wordScramble.wordLength', 'Word Length')}: {settings.wordLength} letters</li>
@@ -337,7 +337,7 @@ export default function WordScramblePage() {
                     key={index}
                     className={`w-10 h-10 md:w-14 md:h-14 rounded-lg flex items-center justify-center text-xl md:text-lg md:text-xl lg:text-2xl font-bold transition-all ${
                       userGuess[index]
-                        ? 'bg-green-500 text-white'
+                        ? 'bg-green-50 dark:bg-slate-7000 text-white'
                         : 'bg-gray-100 text-gray-400'
                     }`}
                   >
@@ -374,7 +374,7 @@ export default function WordScramblePage() {
                   disabled={hintsRemaining <= 0}
                   className={`flex-1 font-bold py-3 px-4 rounded-lg transition-all ${
                     hintsRemaining > 0
-                      ? 'bg-yellow-400 hover:bg-yellow-500 text-gray-800'
+                      ? 'bg-yellow-400 hover:bg-yellow-50 dark:bg-slate-7000 text-gray-800'
                       : 'bg-gray-300 text-gray-500 cursor-not-allowed'
                   }`}
                 >
@@ -382,7 +382,7 @@ export default function WordScramblePage() {
                 </button>
                 <button
                   onClick={submitGuess}
-                  className="flex-1 bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-4 rounded-lg transition-all"
+                  className="flex-1 bg-green-50 dark:bg-slate-7000 hover:bg-green-600 text-white font-bold py-3 px-4 rounded-lg transition-all"
                 >
                   ✓ {t('wordScramble.submit', 'Submit')}
                 </button>
@@ -391,7 +391,7 @@ export default function WordScramblePage() {
 
             {/* Wrong Attempts */}
             {wrongAttempts > 0 && (
-              <div className="bg-red-50 rounded-xl p-4 text-center">
+              <div className="bg-red-50 dark:bg-slate-700 rounded-xl p-4 text-center">
                 <p className="text-red-600 font-bold">{t('wordScramble.wrongAttempts', 'Wrong attempts:')} {wrongAttempts} (-{wrongAttempts * 10} points)</p>
               </div>
             )}
@@ -410,7 +410,7 @@ export default function WordScramblePage() {
             <p className="text-2xl text-gray-700 mb-4">
               <span className="line-through text-gray-400">{scrambledWord}</span> → <span className="text-green-600 font-bold">{currentWord.toUpperCase()}</span>
             </p>
-            <div className="bg-orange-50 rounded-xl p-6 mb-6">
+            <div className="bg-orange-50 dark:bg-slate-700 rounded-xl p-6 mb-6">
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <p className="text-gray-700 text-sm font-medium">{t('wordScramble.levelScore', 'Level Score')}</p>
@@ -443,7 +443,7 @@ export default function WordScramblePage() {
             <p className="text-xl text-gray-700 mb-4">
               {t('wordScramble.answerWas', 'The answer was:')} <span className="text-green-600 font-bold">{currentWord.toUpperCase()}</span>
             </p>
-            <div className="bg-orange-50 rounded-xl p-6 mb-6">
+            <div className="bg-orange-50 dark:bg-slate-700 rounded-xl p-6 mb-6">
               <p className="text-gray-700 text-sm font-medium">{t('wordScramble.finalScore', 'Final Score')}</p>
               <p className="text-xl md:text-2xl lg:text-3xl font-bold text-orange-600">{totalScore}</p>
             </div>
@@ -468,7 +468,7 @@ export default function WordScramblePage() {
             <p className="text-xl text-gray-700 font-medium mb-6">
               {t('wordScramble.victoryMessage', 'You completed all {count} levels!', { count: MAX_LEVELS })}
             </p>
-            <div className="bg-orange-50 rounded-xl p-6 mb-6">
+            <div className="bg-orange-50 dark:bg-slate-700 rounded-xl p-6 mb-6">
               <p className="text-gray-700 text-sm font-medium">{t('wordScramble.finalScore', 'Final Score')}</p>
               <p className="text-5xl font-bold text-orange-600">{totalScore + Math.round(score)}</p>
             </div>

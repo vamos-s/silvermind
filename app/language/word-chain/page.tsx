@@ -305,7 +305,7 @@ export default function WordChainPage() {
   }, [message])
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-orange-50 via-white to-amber-50 p-4 md:p-8">
+    <div className="min-h-screen bg-gradient-to-br from-orange-50 via-white to-amber-50 dark:from-slate-800 dark:via-slate-900 dark:to-slate-800 p-4 md:p-8">
       <div className="max-w-2xl mx-auto">
         {/* Header */}
         <Link
@@ -333,7 +333,7 @@ export default function WordChainPage() {
             <h2 className="text-xl md:text-2xl lg:text-3xl font-bold text-gray-800 mb-2">
               Level {level}
             </h2>
-            <div className="bg-orange-50 rounded-xl p-4 mb-6 text-left">
+            <div className="bg-orange-50 dark:bg-slate-700 rounded-xl p-4 mb-6 text-left">
               <h3 className="font-bold text-gray-800 mb-2">{t('wordChain.levelInfo', 'Level Settings')}:</h3>
               <ul className="text-gray-700 space-y-1 font-medium">
                 <li>• {t('wordChain.minWordLength', 'Min Word Length')}: {settings.minWordLength} letters</li>
@@ -444,7 +444,7 @@ export default function WordChainPage() {
                       key={index}
                       className={`px-3 py-1 rounded-lg font-bold ${
                         index === usedWords.size - 1
-                          ? 'bg-orange-500 text-white'
+                          ? 'bg-orange-50 dark:bg-slate-7000 text-white'
                           : 'bg-gray-100 text-gray-700'
                       }`}
                     >
@@ -466,7 +466,7 @@ export default function WordChainPage() {
           >
             <div className="text-6xl mb-4">✅</div>
             <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-orange-600 mb-4">{t('wordChain.levelComplete', 'Level Complete!')}</h2>
-            <div className="bg-orange-50 rounded-xl p-6 mb-6">
+            <div className="bg-orange-50 dark:bg-slate-700 rounded-xl p-6 mb-6">
               <p className="text-gray-700 mb-4">{t('wordChain.wordsChain', 'Words in chain:')} {settings.wordsNeeded}</p>
               <div className="flex flex-wrap justify-center gap-2 mb-4">
                 {[...usedWords].map((word, index) => (
@@ -510,7 +510,7 @@ export default function WordChainPage() {
           >
             <div className="text-6xl mb-4">❌</div>
             <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-800 mb-4">{t('wordChain.gameOver', 'Time\'s Up!')}</h2>
-            <div className="bg-orange-50 rounded-xl p-6 mb-6">
+            <div className="bg-orange-50 dark:bg-slate-700 rounded-xl p-6 mb-6">
               <p className="text-gray-700 mb-4">{t('wordChain.wordsInChain', 'Words in chain:')} {wordCount}</p>
               <div className="flex flex-wrap justify-center gap-2 mb-4">
                 {[...usedWords].map((word, index) => (
@@ -546,7 +546,7 @@ export default function WordChainPage() {
             <p className="text-xl text-gray-700 font-medium mb-6">
               {t('wordChain.victoryMessage', 'You completed all {count} levels!', { count: MAX_LEVELS })}
             </p>
-            <div className="bg-orange-50 rounded-xl p-6 mb-6">
+            <div className="bg-orange-50 dark:bg-slate-700 rounded-xl p-6 mb-6">
               <p className="text-gray-700 text-sm font-medium">{t('wordChain.finalScore', 'Final Score')}</p>
               <p className="text-5xl font-bold text-orange-600">{totalScore + Math.round(score)}</p>
             </div>

@@ -246,7 +246,7 @@ export default function MazeNavigationPage() {
   }
 
   return (
-    <div className={`min-h-screen p-3 md:p-4 lg:p-8 transition-colors duration-300 ${darkMode ? "bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white" : "bg-gradient-to-br from-slate-50 via-white to-gray-50 p-4 md:p-8"}`}>
+    <div className={`min-h-screen p-3 md:p-4 lg:p-8 transition-colors duration-300 ${darkMode ? "bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white" : "bg-gradient-to-br from-slate-50 via-white to-gray-50 dark:from-slate-800 dark:via-slate-900 dark:to-slate-800 p-4 md:p-8"}`}>
       <SettingsPanel />
       <div className="max-w-2xl mx-auto">
         {/* Header */}
@@ -345,8 +345,8 @@ export default function MazeNavigationPage() {
                         isWall
                           ? 'bg-slate-700'
                           : 'bg-slate-100'
-                      } ${playerPos.x === x && playerPos.y === y ? 'bg-blue-500' : ''} ${
-                        endPos.x === x && endPos.y === y ? 'bg-green-500' : ''
+                      } ${playerPos.x === x && playerPos.y === y ? 'bg-blue-50 dark:bg-slate-7000' : ''} ${
+                        endPos.x === x && endPos.y === y ? 'bg-green-50 dark:bg-slate-7000' : ''
                       }`}
                     >
                       {playerPos.x === x && playerPos.y === y && (

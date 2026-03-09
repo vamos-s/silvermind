@@ -26,10 +26,10 @@ const POSITIONS: ('left' | 'center' | 'right')[] = ['left', 'center', 'right']
 const PATTERN_TYPES: PatternType[] = ['color', 'shape', 'size', 'position']
 
 const COLOR_MAP: Record<ColorType, string> = {
-  red: 'bg-red-500',
-  blue: 'bg-blue-500',
-  green: 'bg-green-500',
-  yellow: 'bg-yellow-500',
+  red: 'bg-red-50 dark:bg-slate-7000',
+  blue: 'bg-blue-50 dark:bg-slate-7000',
+  green: 'bg-green-50 dark:bg-slate-7000',
+  yellow: 'bg-yellow-50 dark:bg-slate-7000',
   orange: 'bg-orange-50 dark:bg-slate-8000',
   purple: 'bg-purple-50 dark:bg-slate-8000',
 }
@@ -352,7 +352,7 @@ export default function PatternRecognitionPage() {
   }
 
   return (
-    <div className={`min-h-screen p-3 md:p-4 lg:p-8 transition-colors duration-300 ${darkMode ? "bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white" : "bg-gradient-to-br from-cyan-50 via-white to-amber-50 p-4 md:p-8"}`}>
+    <div className={`min-h-screen p-3 md:p-4 lg:p-8 transition-colors duration-300 ${darkMode ? "bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white" : "bg-gradient-to-br from-cyan-50 via-white to-amber-50 dark:from-slate-800 dark:via-slate-900 dark:to-slate-800 p-4 md:p-8"}`}>
       <SettingsPanel />
       <div className="max-w-4xl mx-auto">
         {/* Header */}
@@ -385,7 +385,7 @@ export default function PatternRecognitionPage() {
                 Total Score: <span className="text-cyan-600 font-bold">{totalScore}</span>
               </p>
             )}
-            <div className="bg-cyan-50 rounded-xl p-4 mb-6 text-left">
+            <div className="bg-cyan-50 dark:bg-slate-700 rounded-xl p-4 mb-6 text-left">
               <h3 className="font-bold text-gray-800 dark:text-white mb-2">Level Settings:</h3>
               <ul className="text-gray-700 dark:text-gray-300 space-y-1 font-medium">
                 <li>• Pattern Length: {settings.patternLength}</li>
@@ -481,10 +481,10 @@ export default function PatternRecognitionPage() {
                     className={`p-6 rounded-xl border-4 transition-all ${
                       selectedIndex === index
                         ? index === correctIndex
-                          ? 'border-green-500 bg-green-50'
-                          : 'border-red-500 bg-red-50'
+                          ? 'border-green-500 bg-green-50 dark:bg-slate-700'
+                          : 'border-red-500 bg-red-50 dark:bg-slate-700'
                         : selectedIndex !== null && index === correctIndex
-                        ? 'border-green-500 bg-green-50'
+                        ? 'border-green-500 bg-green-50 dark:bg-slate-700'
                         : 'border-gray-200 dark:border-gray-600 hover:border-cyan-300 bg-gray-50'
                     }`}
                   >
@@ -549,7 +549,7 @@ export default function PatternRecognitionPage() {
             <p className="text-xl text-gray-700 dark:text-gray-300 font-medium mb-6">
               You completed all {MAX_LEVELS} levels!
             </p>
-            <div className="bg-cyan-50 rounded-xl p-6 mb-6">
+            <div className="bg-cyan-50 dark:bg-slate-700 rounded-xl p-6 mb-6">
               <p className="text-gray-700 dark:text-gray-300 text-sm font-medium">Final Score</p>
               <p className="text-5xl font-bold text-cyan-600">{totalScore}</p>
             </div>

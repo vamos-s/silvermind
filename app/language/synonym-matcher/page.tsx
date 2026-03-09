@@ -218,7 +218,7 @@ export default function SynonymMatcherPage() {
   }, [gameState, timeLeft, totalScore, addSession, settings.timeLimit])
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-orange-50 via-white to-amber-50 p-4 md:p-8">
+    <div className="min-h-screen bg-gradient-to-br from-orange-50 via-white to-amber-50 dark:from-slate-800 dark:via-slate-900 dark:to-slate-800 p-4 md:p-8">
       <div className="max-w-4xl mx-auto">
         {/* Header */}
         <Link
@@ -246,7 +246,7 @@ export default function SynonymMatcherPage() {
             <h2 className="text-xl md:text-2xl lg:text-3xl font-bold text-gray-800 mb-2">
               Level {level}
             </h2>
-            <div className="bg-orange-50 rounded-xl p-4 mb-6 text-left">
+            <div className="bg-orange-50 dark:bg-slate-700 rounded-xl p-4 mb-6 text-left">
               <h3 className="font-bold text-gray-800 mb-2">{t('synonymMatcher.levelInfo', 'Level Settings')}:</h3>
               <ul className="text-gray-700 space-y-1 font-medium">
                 <li>• {t('synonymMatcher.pairsToMatch', 'Pairs to Match')}: {settings.pairs}</li>
@@ -308,9 +308,9 @@ export default function SynonymMatcherPage() {
                     disabled={card.matched}
                     className={`p-4 rounded-xl font-bold text-sm md:text-base lg:text-lg transition-all ${
                       card.matched
-                        ? 'bg-green-500 text-white opacity-50 cursor-not-allowed'
+                        ? 'bg-green-50 dark:bg-slate-7000 text-white opacity-50 cursor-not-allowed'
                         : selectedCard?.id === card.id
-                        ? 'bg-orange-500 text-white ring-4 ring-orange-300'
+                        ? 'bg-orange-50 dark:bg-slate-7000 text-white ring-4 ring-orange-300'
                         : card.isDistraction
                         ? 'bg-red-100 hover:bg-red-200 text-red-700'
                         : 'bg-orange-100 hover:bg-orange-200 text-orange-700'
@@ -324,7 +324,7 @@ export default function SynonymMatcherPage() {
 
             {/* Wrong Attempts */}
             {wrongAttempts > 0 && (
-              <div className="bg-red-50 rounded-xl p-4 text-center">
+              <div className="bg-red-50 dark:bg-slate-700 rounded-xl p-4 text-center">
                 <p className="text-red-600 font-bold">{t('synonymMatcher.wrongAttempts', 'Wrong attempts:')} {wrongAttempts} (-{wrongAttempts * 10} points)</p>
               </div>
             )}
@@ -340,7 +340,7 @@ export default function SynonymMatcherPage() {
           >
             <div className="text-6xl mb-4">✅</div>
             <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-orange-600 mb-4">{t('synonymMatcher.levelComplete', 'Level Complete!')}</h2>
-            <div className="bg-orange-50 rounded-xl p-6 mb-6">
+            <div className="bg-orange-50 dark:bg-slate-700 rounded-xl p-6 mb-6">
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <p className="text-gray-700 text-sm font-medium">{t('synonymMatcher.levelScore', 'Level Score')}</p>
@@ -370,7 +370,7 @@ export default function SynonymMatcherPage() {
           >
             <div className="text-6xl mb-4">❌</div>
             <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-800 mb-4">{t('synonymMatcher.gameOver', 'Time\'s Up!')}</h2>
-            <div className="bg-orange-50 rounded-xl p-6 mb-6">
+            <div className="bg-orange-50 dark:bg-slate-700 rounded-xl p-6 mb-6">
               <p className="text-gray-700 text-sm font-medium">{t('synonymMatcher.finalScore', 'Final Score')}</p>
               <p className="text-xl md:text-2xl lg:text-3xl font-bold text-orange-600">{totalScore}</p>
             </div>
@@ -395,7 +395,7 @@ export default function SynonymMatcherPage() {
             <p className="text-xl text-gray-700 font-medium mb-6">
               {t('synonymMatcher.victoryMessage', 'You completed all {count} levels!', { count: MAX_LEVELS })}
             </p>
-            <div className="bg-orange-50 rounded-xl p-6 mb-6">
+            <div className="bg-orange-50 dark:bg-slate-700 rounded-xl p-6 mb-6">
               <p className="text-gray-700 text-sm font-medium">{t('synonymMatcher.finalScore', 'Final Score')}</p>
               <p className="text-5xl font-bold text-orange-600">{totalScore + Math.round(score)}</p>
             </div>

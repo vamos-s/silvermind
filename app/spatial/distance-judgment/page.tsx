@@ -217,7 +217,7 @@ export default function DistanceJudgmentPage() {
   const currentComparison = comparisons[currentComparisonIndex]
 
   return (
-    <div className={`min-h-screen p-3 md:p-4 lg:p-8 transition-colors duration-300 ${darkMode ? "bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white" : "bg-gradient-to-br from-sky-50 via-white to-blue-50 p-4 md:p-8"}`}>
+    <div className={`min-h-screen p-3 md:p-4 lg:p-8 transition-colors duration-300 ${darkMode ? "bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white" : "bg-gradient-to-br from-sky-50 via-white to-blue-50 dark:from-slate-800 dark:via-slate-900 dark:to-slate-800 p-4 md:p-8"}`}>
       <SettingsPanel />
       <div className="max-w-2xl mx-auto">
         {/* Header */}
@@ -272,10 +272,10 @@ export default function DistanceJudgmentPage() {
             <p className="text-xl text-gray-600 dark:text-gray-400 mb-4 font-medium">
               {t('distanceJudgment.memorize', 'Memorize the positions!')}
             </p>
-            <div className="relative w-full aspect-square bg-gradient-to-br from-sky-100 to-blue-100 rounded-xl overflow-hidden">
+            <div className="relative w-full aspect-square bg-gradient-to-br from-sky-100 to-blue-100 dark:from-slate-800 dark:to-slate-800 rounded-xl overflow-hidden">
               {/* Reference point */}
               <div
-                className="absolute w-8 h-8 bg-red-500 rounded-full border-4 border-white shadow-lg dark:border-gray-600"
+                className="absolute w-8 h-8 bg-red-50 dark:bg-slate-7000 rounded-full border-4 border-white shadow-lg dark:border-gray-600"
                 style={{ left: `${REFERENCE_POINT.x}%`, top: `${REFERENCE_POINT.y}%`, transform: 'translate(-50%, -50%)' }}
               >
                 <span className="absolute inset-0 flex items-center justify-center text-white font-bold text-sm">★</span>
@@ -301,7 +301,7 @@ export default function DistanceJudgmentPage() {
                       initial={{ opacity: 0, scale: 0 }}
                       animate={{ opacity: 1, scale: 1 }}
                       transition={{ delay: 0.2 }}
-                      className="absolute w-12 h-12 bg-blue-500 rounded-full border-4 border-white shadow-lg flex items-center justify-center text-white font-bold dark:border-gray-600"
+                      className="absolute w-12 h-12 bg-blue-50 dark:bg-slate-7000 rounded-full border-4 border-white shadow-lg flex items-center justify-center text-white font-bold dark:border-gray-600"
                       style={{
                         left: `${currentComparison.item2X}%`,
                         top: `${currentComparison.item2Y}%`,
@@ -358,10 +358,10 @@ export default function DistanceJudgmentPage() {
                     {t('distanceJudgment.whichIsCloser', 'Which is closer to the center?')}
                   </p>
 
-                  <div className="relative w-full aspect-square bg-gradient-to-br from-sky-100 to-blue-100 rounded-xl overflow-hidden mb-6">
+                  <div className="relative w-full aspect-square bg-gradient-to-br from-sky-100 to-blue-100 dark:from-slate-800 dark:to-slate-800 rounded-xl overflow-hidden mb-6">
                     {/* Reference point */}
                     <div
-                      className="absolute w-8 h-8 bg-red-500 rounded-full border-4 border-white shadow-lg dark:border-gray-600"
+                      className="absolute w-8 h-8 bg-red-50 dark:bg-slate-7000 rounded-full border-4 border-white shadow-lg dark:border-gray-600"
                       style={{ left: `${REFERENCE_POINT.x}%`, top: `${REFERENCE_POINT.y}%`, transform: 'translate(-50%, -50%)' }}
                     >
                       <span className="absolute inset-0 flex items-center justify-center text-white font-bold text-sm">★</span>
@@ -379,7 +379,7 @@ export default function DistanceJudgmentPage() {
                       A
                     </div>
                     <div
-                      className="absolute w-12 h-12 bg-blue-500 rounded-full border-4 border-white shadow-lg flex items-center justify-center text-white font-bold dark:border-gray-600"
+                      className="absolute w-12 h-12 bg-blue-50 dark:bg-slate-7000 rounded-full border-4 border-white shadow-lg flex items-center justify-center text-white font-bold dark:border-gray-600"
                       style={{
                         left: `${currentComparison.item2X}%`,
                         top: `${currentComparison.item2Y}%`,
@@ -394,8 +394,8 @@ export default function DistanceJudgmentPage() {
                     <div className="mb-6">
                       <div className={`p-4 rounded-xl ${
                         selectedAnswers[currentComparisonIndex] === currentComparison.correctAnswer
-                          ? 'bg-green-50 border-2 border-green-500'
-                          : 'bg-red-50 border-2 border-red-500'
+                          ? 'bg-green-50 dark:bg-slate-700 border-2 border-green-500'
+                          : 'bg-red-50 dark:bg-slate-700 border-2 border-red-500'
                       }`}>
                         <p className="text-lg font-bold mb-2">
                           {selectedAnswers[currentComparisonIndex] === currentComparison.correctAnswer
@@ -429,7 +429,7 @@ export default function DistanceJudgmentPage() {
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
                         onClick={() => handleAnswerSelect('farther')}
-                        className="p-6 bg-blue-500 hover:bg-blue-600 text-white rounded-xl font-bold text-xl shadow-lg transition-all"
+                        className="p-6 bg-blue-50 dark:bg-slate-7000 hover:bg-blue-600 text-white rounded-xl font-bold text-xl shadow-lg transition-all"
                       >
                         B
                       </motion.button>
@@ -476,7 +476,7 @@ export default function DistanceJudgmentPage() {
                 </div>
               </div>
             ) : (
-              <div className="bg-red-50 rounded-xl p-6 mb-6">
+              <div className="bg-red-50 dark:bg-slate-700 rounded-xl p-6 mb-6">
                 <p className="text-gray-700 dark:text-gray-300 text-sm font-medium">{t('distanceJudgment.levelScore', 'Level Score')}</p>
                 <p className="text-xl md:text-2xl lg:text-3xl font-bold text-red-600">{score}</p>
               </div>

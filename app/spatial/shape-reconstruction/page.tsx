@@ -387,7 +387,7 @@ export default function ShapeReconstructionPage() {
   const remainingParts = currentPuzzle ? currentPuzzle.parts.filter(p => !placedParts.some(pl => pl.id === p.id)) : []
 
   return (
-    <div className={`min-h-screen ${darkMode ? 'bg-gradient-to-br from-slate-900 to-slate-800' : 'bg-gradient-to-br from-purple-50 via-white to-pink-50'} p-4 md:p-8`}>
+    <div className={`min-h-screen ${darkMode ? 'bg-gradient-to-br from-slate-900 to-slate-800' : 'bg-gradient-to-br from-purple-50 via-white to-pink-50 dark:from-slate-800 dark:via-slate-900 dark:to-slate-800'} p-4 md:p-8`}>
       <div className="max-w-2xl mx-auto">
         {/* Header */}
         <Link
@@ -419,7 +419,7 @@ export default function ShapeReconstructionPage() {
                 Total Score: <span className="text-purple-600 font-bold">{totalScore}</span>
               </p>
             )}
-            <div className={`rounded-xl p-4 mb-6 text-left ${darkMode ? 'bg-slate-700' : 'bg-purple-50'}`}>
+            <div className={`rounded-xl p-4 mb-6 text-left ${darkMode ? 'bg-slate-700' : 'bg-purple-50 dark:bg-slate-700'}`}>
               <h3 className={`font-bold ${darkMode ? 'text-slate-50' : 'text-gray-800'} mb-2`}>{t('shapeReconstruction.levelInfo', 'Level Settings')}:</h3>
               <ul className={`space-y-1 font-medium ${darkMode ? 'text-slate-300' : 'text-gray-700'}`}>
                 <li>• {t('shapeReconstruction.partCount', 'Parts per Shape')}: {settings.partCount}</li>
@@ -555,7 +555,7 @@ export default function ShapeReconstructionPage() {
               {showResult && (
                 <div className="mt-6 text-center">
                   <div className={`p-4 rounded-xl mb-4 ${
-                    isCorrect ? 'bg-green-50 border-2 border-green-500 dark:bg-green-900/30' : 'bg-red-50 border-2 border-red-500 dark:bg-red-900/30'
+                    isCorrect ? 'bg-green-50 dark:bg-slate-700 border-2 border-green-500 dark:bg-green-900/30' : 'bg-red-50 dark:bg-slate-700 border-2 border-red-500 dark:bg-red-900/30'
                   }`}>
                     <p className="text-lg font-bold mb-2">
                       {isCorrect ? '✅ Correct!' : '❌ Try Again!'}
@@ -606,7 +606,7 @@ export default function ShapeReconstructionPage() {
               {score > 0 ? `Level ${level} Complete!` : 'Level Failed!'}
             </h2>
             {score > 0 ? (
-              <div className={`rounded-xl p-6 mb-6 ${darkMode ? 'bg-slate-700' : 'bg-purple-50'}`}>
+              <div className={`rounded-xl p-6 mb-6 ${darkMode ? 'bg-slate-700' : 'bg-purple-50 dark:bg-slate-700'}`}>
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <p className={`text-sm font-medium ${darkMode ? 'text-slate-300' : 'text-gray-700'}`}>{t('shapeReconstruction.levelScore', 'Level Score')}</p>
@@ -619,7 +619,7 @@ export default function ShapeReconstructionPage() {
                 </div>
               </div>
             ) : (
-              <div className={`rounded-xl p-6 mb-6 ${darkMode ? 'bg-red-900/30' : 'bg-red-50'}`}>
+              <div className={`rounded-xl p-6 mb-6 ${darkMode ? 'bg-red-900/30' : 'bg-red-50 dark:bg-slate-700'}`}>
                 <p className={`text-sm font-medium ${darkMode ? 'text-slate-300' : 'text-gray-700'}`}>{t('shapeReconstruction.levelScore', 'Level Score')}</p>
                 <p className="text-xl md:text-2xl lg:text-3xl font-bold text-red-500">{score}</p>
               </div>
@@ -651,7 +651,7 @@ export default function ShapeReconstructionPage() {
             <p className={`text-xl ${darkMode ? 'text-slate-300' : 'text-gray-700'} font-medium mb-6`}>
               {t('shapeReconstruction.victoryMessage', 'You completed all {count} levels!', { count: MAX_LEVELS })}
             </p>
-            <div className={`rounded-xl p-6 mb-6 ${darkMode ? 'bg-slate-700' : 'bg-purple-50'}`}>
+            <div className={`rounded-xl p-6 mb-6 ${darkMode ? 'bg-slate-700' : 'bg-purple-50 dark:bg-slate-700'}`}>
               <p className={`text-sm font-medium ${darkMode ? 'text-slate-300' : 'text-gray-700'}`}>{t('shapeReconstruction.finalScore', 'Final Score')}</p>
               <p className="text-5xl font-bold text-purple-600">{totalScore + score}</p>
             </div>

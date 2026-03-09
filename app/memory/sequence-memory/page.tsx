@@ -184,7 +184,7 @@ export default function SequenceMemoryPage() {
   }, [gridSize])
 
   return (
-    <div className={`min-h-screen p-3 md:p-4 lg:p-8 transition-colors duration-300 ${darkMode ? "bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white" : "bg-gradient-to-br from-indigo-50 via-white to-purple-50 p-4 md:p-8"}`}>
+    <div className={`min-h-screen p-3 md:p-4 lg:p-8 transition-colors duration-300 ${darkMode ? "bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white" : "bg-gradient-to-br from-indigo-50 via-white to-purple-50 dark:from-slate-800 dark:via-slate-900 dark:to-slate-800 p-4 md:p-8"}`}>
       <SettingsPanel />
       <div className="max-w-2xl mx-auto">
         {/* Header */}
@@ -300,9 +300,9 @@ export default function SequenceMemoryPage() {
                       showingIndex === index
                         ? 'bg-indigo-50 dark:bg-slate-8000 scale-110 shadow-lg ring-4 ring-indigo-300'
                         : clickedIndex === index && isWrong
-                        ? 'bg-red-500 scale-110 shadow-lg ring-4 ring-red-300'
+                        ? 'bg-red-50 dark:bg-slate-7000 scale-110 shadow-lg ring-4 ring-red-300'
                         : clickedIndex === index
-                        ? 'bg-green-500 scale-110 shadow-lg ring-4 ring-green-300'
+                        ? 'bg-green-50 dark:bg-slate-7000 scale-110 shadow-lg ring-4 ring-green-300'
                         : gameState === 'playing'
                         ? 'bg-gray-200 dark:bg-slate-700 hover:bg-gray-300'
                         : 'bg-gray-200 dark:bg-slate-700'

@@ -207,7 +207,7 @@ export default function JigsawPuzzlePage() {
   }
 
   return (
-    <div className={`min-h-screen p-3 md:p-4 lg:p-8 transition-colors duration-300 ${darkMode ? "bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white" : "bg-gradient-to-br from-rose-50 via-white to-pink-50 p-4 md:p-8"}`}>
+    <div className={`min-h-screen p-3 md:p-4 lg:p-8 transition-colors duration-300 ${darkMode ? "bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white" : "bg-gradient-to-br from-rose-50 via-white to-pink-50 dark:from-slate-800 dark:via-slate-900 dark:to-slate-800 p-4 md:p-8"}`}>
       <SettingsPanel />
       <div className="max-w-2xl mx-auto">
         {/* Header */}
@@ -240,7 +240,7 @@ export default function JigsawPuzzlePage() {
                 Total Score: <span className="text-rose-600 font-bold">{totalScore}</span>
               </p>
             )}
-            <div className="bg-rose-50 rounded-xl p-4 mb-6 text-left">
+            <div className="bg-rose-50 dark:bg-slate-700 rounded-xl p-4 mb-6 text-left">
               <h3 className="font-bold text-gray-800 dark:text-white mb-2">{t('jigsawPuzzle.levelInfo', 'Level Settings')}:</h3>
               <ul className="text-gray-700 dark:text-gray-300 space-y-1 font-medium">
                 <li>• {t('jigsawPuzzle.gridSize', 'Grid Size')}: {rows}x{cols}</li>
@@ -335,7 +335,7 @@ export default function JigsawPuzzlePage() {
           >
             <div className="text-6xl mb-4">✅</div>
             <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-rose-600 mb-4">Level {level} Complete!</h2>
-            <div className="bg-rose-50 rounded-xl p-6 mb-6">
+            <div className="bg-rose-50 dark:bg-slate-700 rounded-xl p-6 mb-6">
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <p className="text-gray-700 dark:text-gray-300 text-sm font-medium">{t('jigsawPuzzle.moves', 'Moves')}</p>
@@ -406,7 +406,7 @@ export default function JigsawPuzzlePage() {
             <p className="text-xl text-gray-700 dark:text-gray-300 font-medium mb-6">
               {t('jigsawPuzzle.victoryMessage', 'You completed all {count} levels!', { count: MAX_LEVELS })}
             </p>
-            <div className="bg-rose-50 rounded-xl p-6 mb-6">
+            <div className="bg-rose-50 dark:bg-slate-700 rounded-xl p-6 mb-6">
               <p className="text-gray-700 dark:text-gray-300 text-sm font-medium">{t('jigsawPuzzle.finalScore', 'Final Score')}</p>
               <p className="text-5xl font-bold text-rose-600">{totalScore + score}</p>
             </div>

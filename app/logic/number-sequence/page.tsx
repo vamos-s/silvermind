@@ -196,7 +196,7 @@ export default function NumberSequencePage() {
   }, [gameState, timeLeft])
 
   return (
-    <div className={`min-h-screen p-3 md:p-4 lg:p-8 transition-colors duration-300 ${darkMode ? "bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white" : "bg-gradient-to-br from-teal-50 via-white to-cyan-50"}`}>
+    <div className={`min-h-screen p-3 md:p-4 lg:p-8 transition-colors duration-300 ${darkMode ? "bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white" : "bg-gradient-to-br from-teal-50 via-white to-cyan-50 dark:from-slate-800 dark:via-slate-900 dark:to-slate-800"}`}>
       <SettingsPanel />
       <div className="max-w-2xl mx-auto">
         {/* Header */}
@@ -229,7 +229,7 @@ export default function NumberSequencePage() {
                 Total Score: <span className="text-teal-600 font-bold">{totalScore}</span>
               </p>
             )}
-            <div className="bg-teal-50 rounded-xl p-4 mb-6 text-left">
+            <div className="bg-teal-50 dark:bg-slate-700 rounded-xl p-4 mb-6 text-left">
               <h3 className="font-bold text-gray-800 dark:text-white mb-2">{t('numberSequence.levelInfo', 'Level Settings')}:</h3>
               <ul className="text-gray-700 dark:text-gray-300 space-y-1 font-medium">
                 <li>• {t('numberSequence.type', 'Type')}: {settings.type}</li>
@@ -260,7 +260,7 @@ export default function NumberSequencePage() {
                     initial={{ opacity: 0, scale: 0.5 }}
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ delay: index * 0.15 }}
-                    className="px-4 py-3 bg-gradient-to-br from-teal-100 to-cyan-100 text-teal-800 rounded-xl font-bold text-xl"
+                    className="px-4 py-3 bg-gradient-to-br from-teal-100 to-cyan-100 dark:from-slate-800 dark:to-slate-800 text-teal-800 rounded-xl font-bold text-xl"
                   >
                     {num}
                   </motion.span>
@@ -358,7 +358,7 @@ export default function NumberSequencePage() {
               {score > 0 ? `Level ${level} Complete!` : 'Level Failed!'}
             </h2>
             {score > 0 ? (
-              <div className="bg-teal-50 rounded-xl p-6 mb-6">
+              <div className="bg-teal-50 dark:bg-slate-700 rounded-xl p-6 mb-6">
                 <p className="text-gray-700 dark:text-gray-300 mb-2">{t('numberSequence.correctAnswer', 'Correct Answer')}:</p>
                 <p className="text-xl md:text-2xl lg:text-3xl font-bold text-teal-600">{correctAnswer}</p>
                 <div className="grid grid-cols-2 gap-4 mt-4">
@@ -373,7 +373,7 @@ export default function NumberSequencePage() {
                 </div>
               </div>
             ) : (
-              <div className="bg-red-50 rounded-xl p-6 mb-6">
+              <div className="bg-red-50 dark:bg-slate-700 rounded-xl p-6 mb-6">
                 <p className="text-gray-700 dark:text-gray-300 mb-2">{t('numberSequence.yourAnswer', 'Your Answer')}:</p>
                 <p className="text-lg md:text-xl lg:text-2xl font-bold text-red-600">{userInput || '---'}</p>
                 <p className="text-gray-700 dark:text-gray-300 mt-4">{t('numberSequence.correctAnswer', 'Correct Answer')}:</p>
@@ -407,7 +407,7 @@ export default function NumberSequencePage() {
             <p className="text-xl text-gray-700 dark:text-gray-300 font-medium mb-6">
               {t('numberSequence.victoryMessage', 'You completed all {count} levels!', { count: MAX_LEVELS })}
             </p>
-            <div className="bg-teal-50 rounded-xl p-6 mb-6">
+            <div className="bg-teal-50 dark:bg-slate-700 rounded-xl p-6 mb-6">
               <p className="text-gray-700 dark:text-gray-300 text-sm font-medium">{t('numberSequence.finalScore', 'Final Score')}</p>
               <p className="text-5xl font-bold text-teal-600">{totalScore + score}</p>
             </div>

@@ -192,7 +192,7 @@ export default function TargetDetectionPage() {
   }
 
   return (
-    <div className={`min-h-screen p-3 md:p-4 lg:p-8 transition-colors duration-300 ${darkMode ? "bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white" : "bg-gradient-to-br from-red-50 via-white to-orange-50 p-4 md:p-8"}`}>
+    <div className={`min-h-screen p-3 md:p-4 lg:p-8 transition-colors duration-300 ${darkMode ? "bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white" : "bg-gradient-to-br from-red-50 via-white to-orange-50 dark:from-slate-800 dark:via-slate-900 dark:to-slate-800 p-4 md:p-8"}`}>
       <SettingsPanel />
       <div className="max-w-2xl mx-auto">
         {/* Header */}
@@ -225,7 +225,7 @@ export default function TargetDetectionPage() {
                 Total Score: <span className="text-red-600 font-bold">{totalScore}</span>
               </p>
             )}
-            <div className="bg-red-50 rounded-xl p-4 mb-6 text-left">
+            <div className="bg-red-50 dark:bg-slate-700 rounded-xl p-4 mb-6 text-left">
               <h3 className="font-bold text-gray-800 dark:text-white mb-2">{t('targetDetection.levelInfo', 'Level Settings')}:</h3>
               <ul className="text-gray-700 dark:text-gray-300 space-y-1 font-medium">
                 <li>• {t('targetDetection.targetCount', 'Target Count')}: {settings.targetCount}</li>
@@ -248,7 +248,7 @@ export default function TargetDetectionPage() {
             <p className="text-xl text-gray-600 dark:text-gray-400 mb-4 font-medium">
               {t('targetDetection.memorize', 'Watch carefully!')}
             </p>
-            <div className="relative w-full aspect-square bg-gradient-to-br from-red-100 to-orange-100 rounded-xl overflow-hidden">
+            <div className="relative w-full aspect-square bg-gradient-to-br from-red-100 to-orange-100 dark:from-slate-800 dark:to-slate-800 rounded-xl overflow-hidden">
               <AnimatePresence>
                 {targets.map((target, index) => (
                   <motion.button
@@ -305,7 +305,7 @@ export default function TargetDetectionPage() {
               <p className="text-xl text-gray-600 dark:text-gray-400 mb-4 font-medium">
                 {t('targetDetection.clickTarget', 'Click the red target!')}
               </p>
-              <div className="relative w-full aspect-square bg-gradient-to-br from-red-100 to-orange-100 rounded-xl overflow-hidden">
+              <div className="relative w-full aspect-square bg-gradient-to-br from-red-100 to-orange-100 dark:from-slate-800 dark:to-slate-800 rounded-xl overflow-hidden">
                 {targets.map((target) => {
                   const isClicked = clickedTargets.includes(target.id)
                   return (
@@ -317,7 +317,7 @@ export default function TargetDetectionPage() {
                       className={`absolute w-10 h-10 md:w-12 md:h-12 rounded-full transition-all ${
                         isClicked
                           ? target.isTarget
-                            ? 'bg-green-500 opacity-50'
+                            ? 'bg-green-50 dark:bg-slate-7000 opacity-50'
                             : 'bg-gray-400 opacity-30'
                           : target.isTarget
                             ? TARGET_COLOR + ' hover:scale-110'
@@ -353,7 +353,7 @@ export default function TargetDetectionPage() {
               {score > 0 ? `Level ${level} Complete!` : 'Level Failed!'}
             </h2>
             {score > 0 ? (
-              <div className="bg-red-50 rounded-xl p-6 mb-6">
+              <div className="bg-red-50 dark:bg-slate-700 rounded-xl p-6 mb-6">
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <p className="text-gray-700 dark:text-gray-300 text-sm font-medium">{t('targetDetection.correctClicks', 'Correct')}</p>
@@ -376,7 +376,7 @@ export default function TargetDetectionPage() {
                 </div>
               </div>
             ) : (
-              <div className="bg-red-50 rounded-xl p-6 mb-6">
+              <div className="bg-red-50 dark:bg-slate-700 rounded-xl p-6 mb-6">
                 <p className="text-gray-700 dark:text-gray-300 text-sm font-medium">{t('targetDetection.levelScore', 'Level Score')}</p>
                 <p className="text-xl md:text-2xl lg:text-3xl font-bold text-red-600">{score}</p>
               </div>
@@ -408,7 +408,7 @@ export default function TargetDetectionPage() {
             <p className="text-xl text-gray-700 dark:text-gray-300 font-medium mb-6">
               {t('targetDetection.victoryMessage', 'You completed all {count} levels!', { count: MAX_LEVELS })}
             </p>
-            <div className="bg-red-50 rounded-xl p-6 mb-6">
+            <div className="bg-red-50 dark:bg-slate-700 rounded-xl p-6 mb-6">
               <p className="text-gray-700 dark:text-gray-300 text-sm font-medium">{t('targetDetection.finalScore', 'Final Score')}</p>
               <p className="text-5xl font-bold text-red-600">{totalScore + score}</p>
             </div>

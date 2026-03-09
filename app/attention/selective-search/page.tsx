@@ -213,7 +213,7 @@ export default function SelectiveSearchPage() {
   }, [gameState, timeLeft, totalScore, addSession, settings.timeLimit])
 
   return (
-    <div className={`min-h-screen p-3 md:p-4 lg:p-8 transition-colors duration-300 ${darkMode ? "bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white" : "bg-gradient-to-br from-violet-50 via-white to-purple-50"}`}>
+    <div className={`min-h-screen p-3 md:p-4 lg:p-8 transition-colors duration-300 ${darkMode ? "bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white" : "bg-gradient-to-br from-violet-50 via-white to-purple-50 dark:from-slate-800 dark:via-slate-900 dark:to-slate-800"}`}>
       <SettingsPanel />
       <div className="max-w-2xl mx-auto">
         {/* Header */}
@@ -324,7 +324,7 @@ export default function SelectiveSearchPage() {
 
             {/* Wrong Click Indicator */}
             {wrongClicks > 0 && (
-              <div className="bg-red-50 rounded-xl p-4 text-center">
+              <div className="bg-red-50 dark:bg-slate-700 rounded-xl p-4 text-center">
                 <p className="text-red-600 font-bold">Wrong clicks: {wrongClicks} (-{wrongClicks * 10} points)</p>
               </div>
             )}

@@ -51,7 +51,7 @@ export default function LeaderboardPage() {
     .sort((a, b) => b.score - a.score)
 
   return (
-    <div className={`min-h-screen ${darkMode ? 'bg-gradient-to-br from-slate-900 to-slate-800' : 'bg-gradient-to-br from-blue-50 to-purple-50'}`}>
+    <div className={`min-h-screen ${darkMode ? 'bg-gradient-to-br from-slate-900 to-slate-800' : 'bg-gradient-to-br from-blue-50 to-purple-50 dark:from-slate-800 dark:to-slate-800'}`}>
       <header className={`p-6 shadow-sm ${darkMode ? 'bg-slate-900' : 'bg-white'}`}>
         <div className="flex justify-between items-center max-w-4xl mx-auto">
           <Link href="/">
@@ -145,9 +145,9 @@ export default function LeaderboardPage() {
                 >
                   <div className="flex items-center gap-4">
                     <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold ${
-                      index === 0 ? 'bg-yellow-500 text-white' :
+                      index === 0 ? 'bg-yellow-50 dark:bg-slate-7000 text-white' :
                       index === 1 ? 'bg-gray-400 text-white' :
-                      index === 2 ? 'bg-orange-500 text-white' :
+                      index === 2 ? 'bg-orange-50 dark:bg-slate-7000 text-white' :
                       'bg-gray-300 dark:bg-gray-600 text-gray-700 dark:text-gray-300'
                     }`}>
                       {index + 1}
@@ -203,9 +203,9 @@ export default function LeaderboardPage() {
                 >
                   <div className="flex items-center gap-4">
                     <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold ${
-                      index === 0 ? 'bg-yellow-500 text-white' :
+                      index === 0 ? 'bg-yellow-50 dark:bg-slate-7000 text-white' :
                       index === 1 ? 'bg-gray-400 text-white' :
-                      index === 2 ? 'bg-orange-500 text-white' :
+                      index === 2 ? 'bg-orange-50 dark:bg-slate-7000 text-white' :
                       'bg-gray-300 dark:bg-gray-600 text-gray-700 dark:text-gray-300'
                     }`}>
                       {index + 1}

@@ -55,10 +55,10 @@ export default function SequenceCompletionPage() {
       setCorrectAnswer(letters[(start + step * settings.sequenceLength) % letters.length])
     } else {
       const colors = [
-        { name: 'Red', class: 'bg-red-500 text-white' },
-        { name: 'Blue', class: 'bg-blue-500 text-white' },
-        { name: 'Green', class: 'bg-green-500 text-white' },
-        { name: 'Yellow', class: 'bg-yellow-500 text-black' },
+        { name: 'Red', class: 'bg-red-50 dark:bg-slate-7000 text-white' },
+        { name: 'Blue', class: 'bg-blue-50 dark:bg-slate-7000 text-white' },
+        { name: 'Green', class: 'bg-green-50 dark:bg-slate-7000 text-white' },
+        { name: 'Yellow', class: 'bg-yellow-50 dark:bg-slate-7000 text-black' },
         { name: 'Purple', class: 'bg-purple-50 dark:bg-slate-8000 text-white' },
         { name: 'Orange', class: 'bg-orange-50 dark:bg-slate-8000 text-white' },
       ]
@@ -141,7 +141,7 @@ export default function SequenceCompletionPage() {
   }, [gameState, timeLeft])
 
   return (
-    <div className={`min-h-screen p-3 md:p-4 lg:p-8 transition-colors duration-300 ${darkMode ? "bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white" : "bg-gradient-to-br from-amber-50 via-white to-orange-50 p-4 md:p-8"}`}>
+    <div className={`min-h-screen p-3 md:p-4 lg:p-8 transition-colors duration-300 ${darkMode ? "bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white" : "bg-gradient-to-br from-amber-50 via-white to-orange-50 dark:from-slate-800 dark:via-slate-900 dark:to-slate-800 p-4 md:p-8"}`}>
       <SettingsPanel />
       <div className="max-w-2xl mx-auto">
         {/* Header */}
@@ -174,7 +174,7 @@ export default function SequenceCompletionPage() {
                 Total Score: <span className="text-amber-600 font-bold">{totalScore}</span>
               </p>
             )}
-            <div className="bg-amber-50 rounded-xl p-4 mb-6 text-left">
+            <div className="bg-amber-50 dark:bg-slate-700 rounded-xl p-4 mb-6 text-left">
               <h3 className="font-bold text-gray-800 dark:text-white mb-2">{t('sequenceCompletion.levelInfo', 'Level Settings')}:</h3>
               <ul className="text-gray-700 dark:text-gray-300 space-y-1 font-medium">
                 <li>• {t('sequenceCompletion.type', 'Type')}: {settings.type.toUpperCase()}</li>
@@ -208,7 +208,7 @@ export default function SequenceCompletionPage() {
                   className={`px-6 py-4 rounded-xl font-bold text-2xl ${
                     settings.type === 'color'
                       ? ''
-                      : 'bg-gradient-to-br from-amber-100 to-orange-100 text-amber-800'
+                      : 'bg-gradient-to-br from-amber-100 to-orange-100 dark:from-slate-800 dark:to-slate-800 text-amber-800'
                   }`}
                 >
                   {item}
@@ -311,7 +311,7 @@ export default function SequenceCompletionPage() {
               {score > 0 ? `Level ${level} Complete!` : 'Level Failed!'}
             </h2>
             {score > 0 ? (
-              <div className="bg-amber-50 rounded-xl p-6 mb-6">
+              <div className="bg-amber-50 dark:bg-slate-700 rounded-xl p-6 mb-6">
                 <p className="text-gray-700 dark:text-gray-300 mb-2">{t('sequenceCompletion.correctAnswer', 'Correct Answer')}:</p>
                 <p className="text-xl md:text-2xl lg:text-3xl font-bold text-amber-600">{correctAnswer}</p>
                 <div className="grid grid-cols-2 gap-4 mt-4">
@@ -326,7 +326,7 @@ export default function SequenceCompletionPage() {
                 </div>
               </div>
             ) : (
-              <div className="bg-red-50 rounded-xl p-6 mb-6">
+              <div className="bg-red-50 dark:bg-slate-700 rounded-xl p-6 mb-6">
                 <p className="text-gray-700 dark:text-gray-300 mb-2">{t('sequenceCompletion.yourAnswer', 'Your Answer')}:</p>
                 <p className="text-lg md:text-xl lg:text-2xl font-bold text-red-600">{userInput || '---'}</p>
                 <p className="text-gray-700 dark:text-gray-300 mt-4">{t('sequenceCompletion.correctAnswer', 'Correct Answer')}:</p>
@@ -360,7 +360,7 @@ export default function SequenceCompletionPage() {
             <p className="text-xl text-gray-700 dark:text-gray-300 font-medium mb-6">
               {t('sequenceCompletion.victoryMessage', 'You completed all {count} levels!', { count: MAX_LEVELS })}
             </p>
-            <div className="bg-amber-50 rounded-xl p-6 mb-6">
+            <div className="bg-amber-50 dark:bg-slate-700 rounded-xl p-6 mb-6">
               <p className="text-gray-700 dark:text-gray-300 text-sm font-medium">{t('sequenceCompletion.finalScore', 'Final Score')}</p>
               <p className="text-5xl font-bold text-amber-600">{totalScore + score}</p>
             </div>

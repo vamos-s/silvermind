@@ -213,7 +213,7 @@ export default function LogicPuzzlePage() {
   }, [])
 
   return (
-    <div className={`min-h-screen p-3 md:p-4 lg:p-8 transition-colors duration-300 ${darkMode ? "bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white" : "bg-gradient-to-br from-green-50 via-white to-blue-50"}`}>
+    <div className={`min-h-screen p-3 md:p-4 lg:p-8 transition-colors duration-300 ${darkMode ? "bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white" : "bg-gradient-to-br from-green-50 via-white to-blue-50 dark:from-slate-800 dark:via-slate-900 dark:to-slate-800"}`}>
       <SettingsPanel />
       <div className="max-w-2xl mx-auto">
         {/* Header */}
@@ -249,7 +249,7 @@ export default function LogicPuzzlePage() {
             <p className="text-lg text-gray-600 dark:text-gray-400 mb-6">
               {t('logicPuzzle.instructions', 'Read the clues, then drag boxes to arrange them from smallest to largest.')}
             </p>
-            <div className="bg-green-50 rounded-xl p-4 mb-6 text-left">
+            <div className="bg-green-50 dark:bg-slate-700 rounded-xl p-4 mb-6 text-left">
               <h3 className="font-bold text-gray-800 dark:text-white mb-2">{t('logicPuzzle.levelInfo', 'Level Settings')}:</h3>
               <ul className="text-gray-700 dark:text-gray-300 space-y-1 font-medium">
                 <li>• {t('logicPuzzle.boxes', 'Boxes')}: {settings.boxCount}</li>
@@ -377,7 +377,7 @@ export default function LogicPuzzlePage() {
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                className={`${isCorrect ? 'bg-green-50 border-green-300' : 'bg-red-50 border-red-300'} border-4 rounded-2xl p-6 mb-6`}
+                className={`${isCorrect ? 'bg-green-50 dark:bg-slate-700 border-green-300' : 'bg-red-50 dark:bg-slate-700 border-red-300'} border-4 rounded-2xl p-6 mb-6`}
               >
                 <div className="text-center mb-4">
                   <div className={`text-6xl font-bold ${isCorrect ? 'text-green-600' : 'text-red-600'} mb-2`}>
@@ -449,7 +449,7 @@ export default function LogicPuzzlePage() {
             <p className="text-xl text-gray-700 dark:text-gray-300 font-medium mb-6">
               {t('logicPuzzle.victoryMessage', 'You completed all {count} levels!', { count: MAX_LEVELS })}
             </p>
-            <div className="bg-green-50 rounded-xl p-6 mb-6">
+            <div className="bg-green-50 dark:bg-slate-700 rounded-xl p-6 mb-6">
               <p className="text-gray-700 dark:text-gray-300 text-sm font-medium">{t('logicPuzzle.finalScore', 'Final Score')}</p>
               <p className="text-5xl font-bold text-green-600">{totalScore}</p>
             </div>

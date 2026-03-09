@@ -176,7 +176,7 @@ export default function TimingGamePage() {
 
   if (gameState === 'menu') {
     return (
-      <div className={`min-h-screen p-3 md:p-4 lg:p-8 transition-colors duration-300 ${darkMode ? "bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white" : "bg-gradient-to-br from-yellow-50 to-orange-50 p-4 md:p-8"}`}>
+      <div className={`min-h-screen p-3 md:p-4 lg:p-8 transition-colors duration-300 ${darkMode ? "bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white" : "bg-gradient-to-br from-yellow-50 to-orange-50 dark:from-slate-800 dark:to-slate-800 p-4 md:p-8"}`}>
       <SettingsPanel />
         <div className="max-w-lg mx-auto">
           <Link href="/reaction" className="text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white font-medium mb-6 block">
@@ -200,7 +200,7 @@ export default function TimingGamePage() {
             <p className="text-lg text-gray-600 dark:text-gray-400 mb-6">
               Wait for the screen to turn GREEN, then click as fast as you can!
             </p>
-            <div className="bg-yellow-50 rounded-xl p-4 mb-6 text-left">
+            <div className="bg-yellow-50 dark:bg-slate-700 rounded-xl p-4 mb-6 text-left">
               <h3 className="font-bold text-gray-800 dark:text-white mb-2">Level Settings:</h3>
               <ul className="text-gray-700 dark:text-gray-300 space-y-1 font-medium">
                 <li>• Rounds: {settings.rounds}</li>
@@ -221,7 +221,7 @@ export default function TimingGamePage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-yellow-50 to-orange-50">
+    <div className="min-h-screen bg-gradient-to-br from-yellow-50 to-orange-50 dark:from-slate-800 dark:to-slate-800">
       <header className="p-6 bg-white dark:bg-slate-800 shadow-sm">
         <Link href="/reaction" className="text-yellow-500 hover:underline mb-4 block">
           ← Back
@@ -309,7 +309,7 @@ export default function TimingGamePage() {
             <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl p-8 max-w-md w-full">
               <div className="text-6xl mb-4 text-center">✅</div>
               <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-yellow-600 mb-4 text-center">Level {level} Complete!</h2>
-              <div className="bg-yellow-50 rounded-xl p-6 mb-6">
+              <div className="bg-yellow-50 dark:bg-slate-700 rounded-xl p-6 mb-6">
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <p className="text-gray-700 dark:text-gray-300 text-sm font-medium">Level Score</p>
@@ -354,7 +354,7 @@ export default function TimingGamePage() {
               <p className="text-xl text-gray-700 dark:text-gray-300 text-center mb-6">
                 You completed all {MAX_LEVELS} levels!
               </p>
-              <div className="bg-yellow-50 rounded-xl p-6 mb-6">
+              <div className="bg-yellow-50 dark:bg-slate-700 rounded-xl p-6 mb-6">
                 <p className="text-gray-700 dark:text-gray-300 text-sm font-medium text-center">Final Score</p>
                 <p className="text-5xl font-bold text-yellow-600 text-center">{totalScore + score}</p>
               </div>

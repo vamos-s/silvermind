@@ -315,7 +315,7 @@ export default function PatternIn3DPage() {
   const currentQuestion = questions[currentQuestionIndex]
 
   return (
-    <div className={`min-h-screen ${darkMode ? 'bg-gradient-to-br from-slate-900 to-slate-800' : 'bg-gradient-to-br from-emerald-50 via-white to-teal-50'} p-4 md:p-8`}>
+    <div className={`min-h-screen ${darkMode ? 'bg-gradient-to-br from-slate-900 to-slate-800' : 'bg-gradient-to-br from-emerald-50 via-white to-teal-50 dark:from-slate-800 dark:via-slate-900 dark:to-slate-800'} p-4 md:p-8`}>
       <div className="max-w-2xl mx-auto">
         {/* Header */}
         <Link
@@ -423,8 +423,8 @@ export default function PatternIn3DPage() {
                     <div className="mb-6">
                       <div className={`p-4 rounded-xl ${
                         selectedAnswers[currentQuestionIndex] === currentQuestion.correctAnswer
-                          ? 'bg-green-50 border-2 border-green-500 dark:bg-green-900/30'
-                          : 'bg-red-50 border-2 border-red-500 dark:bg-red-900/30'
+                          ? 'bg-green-50 dark:bg-slate-700 border-2 border-green-500 dark:bg-green-900/30'
+                          : 'bg-red-50 dark:bg-slate-700 border-2 border-red-500 dark:bg-red-900/30'
                       }`}>
                         <p className="text-lg font-bold mb-2">
                           {selectedAnswers[currentQuestionIndex] === currentQuestion.correctAnswer
@@ -501,7 +501,7 @@ export default function PatternIn3DPage() {
                 </div>
               </div>
             ) : (
-              <div className={`rounded-xl p-6 mb-6 ${darkMode ? 'bg-red-900/30' : 'bg-red-50'}`}>
+              <div className={`rounded-xl p-6 mb-6 ${darkMode ? 'bg-red-900/30' : 'bg-red-50 dark:bg-slate-700'}`}>
                 <p className={`text-sm font-medium ${darkMode ? 'text-slate-300' : 'text-gray-700'}`}>{t('patternIn3D.levelScore', 'Level Score')}</p>
                 <p className="text-xl md:text-2xl lg:text-3xl font-bold text-red-500">{score}</p>
               </div>

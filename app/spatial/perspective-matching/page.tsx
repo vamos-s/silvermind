@@ -325,7 +325,7 @@ export default function PerspectiveMatchingPage() {
   const currentQuestion = questions[currentQuestionIndex]
 
   return (
-    <div className={`min-h-screen ${darkMode ? 'bg-gradient-to-br from-slate-900 to-slate-800' : 'bg-gradient-to-br from-indigo-50 via-white to-purple-50'} p-4 md:p-8`}>
+    <div className={`min-h-screen ${darkMode ? 'bg-gradient-to-br from-slate-900 to-slate-800' : 'bg-gradient-to-br from-indigo-50 via-white to-purple-50 dark:from-slate-800 dark:via-slate-900 dark:to-slate-800'} p-4 md:p-8`}>
       <div className="max-w-2xl mx-auto">
         {/* Header */}
         <Link
@@ -357,7 +357,7 @@ export default function PerspectiveMatchingPage() {
                 Total Score: <span className="text-indigo-600 font-bold">{totalScore}</span>
               </p>
             )}
-            <div className={`rounded-xl p-4 mb-6 text-left ${darkMode ? 'bg-slate-700' : 'bg-indigo-50'}`}>
+            <div className={`rounded-xl p-4 mb-6 text-left ${darkMode ? 'bg-slate-700' : 'bg-indigo-50 dark:bg-slate-700'}`}>
               <h3 className={`font-bold ${darkMode ? 'text-slate-50' : 'text-gray-800'} mb-2`}>{t('perspectiveMatching.levelInfo', 'Level Settings')}:</h3>
               <ul className={`space-y-1 font-medium ${darkMode ? 'text-slate-300' : 'text-gray-700'}`}>
                 <li>• {t('perspectiveMatching.optionCount', 'Options per Question')}: {settings.optionCount}</li>
@@ -432,7 +432,7 @@ export default function PerspectiveMatchingPage() {
               </p>
 
               {/* Reference object */}
-              <div className={`mb-6 p-4 rounded-xl ${darkMode ? 'bg-slate-700' : 'bg-indigo-50'}`}>
+              <div className={`mb-6 p-4 rounded-xl ${darkMode ? 'bg-slate-700' : 'bg-indigo-50 dark:bg-slate-700'}`}>
                 <p className={`text-sm font-medium ${darkMode ? 'text-slate-300' : 'text-gray-700'} mb-3`}>
                   {t('perspectiveMatching.reference', 'Reference Object')}
                 </p>
@@ -443,8 +443,8 @@ export default function PerspectiveMatchingPage() {
                 <div className="mb-6">
                   <div className={`p-4 rounded-xl ${
                     selectedAnswers[currentQuestionIndex] === currentQuestion.correctAnswer
-                      ? 'bg-green-50 border-2 border-green-500 dark:bg-green-900/30'
-                      : 'bg-red-50 border-2 border-red-500 dark:bg-red-900/30'
+                      ? 'bg-green-50 dark:bg-slate-700 border-2 border-green-500 dark:bg-green-900/30'
+                      : 'bg-red-50 dark:bg-slate-700 border-2 border-red-500 dark:bg-red-900/30'
                   }`}>
                     <p className="text-lg font-bold mb-2">
                       {selectedAnswers[currentQuestionIndex] === currentQuestion.correctAnswer
@@ -498,7 +498,7 @@ export default function PerspectiveMatchingPage() {
               {score > 0 ? `Level ${level} Complete!` : 'Level Failed!'}
             </h2>
             {score > 0 ? (
-              <div className={`rounded-xl p-6 mb-6 ${darkMode ? 'bg-slate-700' : 'bg-indigo-50'}`}>
+              <div className={`rounded-xl p-6 mb-6 ${darkMode ? 'bg-slate-700' : 'bg-indigo-50 dark:bg-slate-700'}`}>
                 <div className="text-center mb-4">
                   <p className="text-6xl font-bold text-indigo-600 mb-2">
                     {selectedAnswers.filter((answer, index) => answer === questions[index]?.correctAnswer).length}/{questions.length}
@@ -519,7 +519,7 @@ export default function PerspectiveMatchingPage() {
                 </div>
               </div>
             ) : (
-              <div className={`rounded-xl p-6 mb-6 ${darkMode ? 'bg-red-900/30' : 'bg-red-50'}`}>
+              <div className={`rounded-xl p-6 mb-6 ${darkMode ? 'bg-red-900/30' : 'bg-red-50 dark:bg-slate-700'}`}>
                 <p className={`text-sm font-medium ${darkMode ? 'text-slate-300' : 'text-gray-700'}`}>{t('perspectiveMatching.levelScore', 'Level Score')}</p>
                 <p className="text-xl md:text-2xl lg:text-3xl font-bold text-red-500">{score}</p>
               </div>
@@ -551,7 +551,7 @@ export default function PerspectiveMatchingPage() {
             <p className={`text-xl ${darkMode ? 'text-slate-300' : 'text-gray-700'} font-medium mb-6`}>
               {t('perspectiveMatching.victoryMessage', 'You completed all {count} levels!', { count: MAX_LEVELS })}
             </p>
-            <div className={`rounded-xl p-6 mb-6 ${darkMode ? 'bg-slate-700' : 'bg-indigo-50'}`}>
+            <div className={`rounded-xl p-6 mb-6 ${darkMode ? 'bg-slate-700' : 'bg-indigo-50 dark:bg-slate-700'}`}>
               <p className={`text-sm font-medium ${darkMode ? 'text-slate-300' : 'text-gray-700'}`}>{t('perspectiveMatching.finalScore', 'Final Score')}</p>
               <p className="text-5xl font-bold text-indigo-600">{totalScore + score}</p>
             </div>

@@ -229,7 +229,7 @@ export default function FindDifferencePage() {
   }, [differences])
 
   return (
-    <div className={`min-h-screen p-3 md:p-4 lg:p-8 transition-colors duration-300 ${darkMode ? "bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white" : "bg-gradient-to-br from-violet-50 via-white to-purple-50"}`}>
+    <div className={`min-h-screen p-3 md:p-4 lg:p-8 transition-colors duration-300 ${darkMode ? "bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white" : "bg-gradient-to-br from-violet-50 via-white to-purple-50 dark:from-slate-800 dark:via-slate-900 dark:to-slate-800"}`}>
       <SettingsPanel />
       <div className="max-w-4xl mx-auto">
         {/* Header */}
@@ -362,9 +362,9 @@ export default function FindDifferencePage() {
                         onClick={() => handleCellClick(index, true)}
                         className={`aspect-square rounded-lg flex items-center justify-center text-xl md:text-2xl transition-all ${
                           isFound
-                            ? 'bg-green-500 text-white'
+                            ? 'bg-green-50 dark:bg-slate-7000 text-white'
                             : isWrong
-                            ? 'bg-red-500 text-white animate-pulse'
+                            ? 'bg-red-50 dark:bg-slate-7000 text-white animate-pulse'
                             : isHinted
                             ? 'bg-yellow-400 animate-pulse ring-4 ring-yellow-300'
                             : 'bg-gray-100 dark:bg-slate-700'

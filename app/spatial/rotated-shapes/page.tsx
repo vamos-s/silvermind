@@ -227,7 +227,7 @@ export default function RotatedShapesPage() {
   const currentQuestion = questions[currentQuestionIndex]
 
   return (
-    <div className={`min-h-screen p-3 md:p-4 lg:p-8 transition-colors duration-300 ${darkMode ? "bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white" : "bg-gradient-to-br from-purple-50 via-white to-violet-50 p-4 md:p-8"}`}>
+    <div className={`min-h-screen p-3 md:p-4 lg:p-8 transition-colors duration-300 ${darkMode ? "bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white" : "bg-gradient-to-br from-purple-50 via-white to-violet-50 dark:from-slate-800 dark:via-slate-900 dark:to-slate-800 p-4 md:p-8"}`}>
       <SettingsPanel />
       <div className="max-w-2xl mx-auto">
         {/* Header */}
@@ -336,8 +336,8 @@ export default function RotatedShapesPage() {
                     <div className="mb-6">
                       <div className={`p-4 rounded-xl ${
                         selectedAnswers[currentQuestionIndex] === currentQuestion.correctAnswer
-                          ? 'bg-green-50 border-2 border-green-500'
-                          : 'bg-red-50 border-2 border-red-500'
+                          ? 'bg-green-50 dark:bg-slate-700 border-2 border-green-500'
+                          : 'bg-red-50 dark:bg-slate-700 border-2 border-red-500'
                       }`}>
                         <p className="text-lg font-bold mb-2">
                           {selectedAnswers[currentQuestionIndex] === currentQuestion.correctAnswer
@@ -421,7 +421,7 @@ export default function RotatedShapesPage() {
                 </div>
               </div>
             ) : (
-              <div className="bg-red-50 rounded-xl p-6 mb-6">
+              <div className="bg-red-50 dark:bg-slate-700 rounded-xl p-6 mb-6">
                 <p className="text-gray-700 dark:text-gray-300 text-sm font-medium">{t('rotatedShapes.levelScore', 'Level Score')}</p>
                 <p className="text-xl md:text-2xl lg:text-3xl font-bold text-red-600">{score}</p>
               </div>

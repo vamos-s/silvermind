@@ -225,7 +225,7 @@ export default function SudokuPage() {
 
   if (gameOver && victory) {
     return (
-      <div className={`min-h-screen p-3 md:p-4 lg:p-8 transition-colors duration-300 ${darkMode ? "bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white" : "bg-gradient-to-br from-green-50 to-blue-50 flex items-center justify-center"}`}>
+      <div className={`min-h-screen p-3 md:p-4 lg:p-8 transition-colors duration-300 ${darkMode ? "bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white" : "bg-gradient-to-br from-green-50 to-blue-50 dark:from-slate-800 dark:to-slate-800 flex items-center justify-center"}`}>
       <SettingsPanel />
         <motion.div
           initial={{ scale: 0.8, opacity: 0 }}
@@ -243,7 +243,7 @@ export default function SudokuPage() {
                 setLevel(level + 1)
                 generateSudoku()
               }}
-              className="bg-green-500 text-white px-8 py-3 rounded-xl text-xl font-bold hover:bg-green-600 transition mb-4"
+              className="bg-green-50 dark:bg-slate-7000 text-white px-8 py-3 rounded-xl text-xl font-bold hover:bg-green-600 transition mb-4"
             >
               Next Level
             </button>
@@ -255,7 +255,7 @@ export default function SudokuPage() {
               setLevel(1)
               generateSudoku()
             }}
-            className="bg-blue-500 text-white px-8 py-3 rounded-xl text-xl font-bold hover:bg-blue-600 transition"
+            className="bg-blue-50 dark:bg-slate-7000 text-white px-8 py-3 rounded-xl text-xl font-bold hover:bg-blue-600 transition"
           >
             Restart
           </button>
@@ -269,7 +269,7 @@ export default function SudokuPage() {
 
   if (gameOver) {
     return (
-      <div className={`min-h-screen p-3 md:p-4 lg:p-8 transition-colors duration-300 ${darkMode ? "bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white" : "bg-gradient-to-br from-green-50 to-blue-50 flex items-center justify-center"}`}>
+      <div className={`min-h-screen p-3 md:p-4 lg:p-8 transition-colors duration-300 ${darkMode ? "bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white" : "bg-gradient-to-br from-green-50 to-blue-50 dark:from-slate-800 dark:to-slate-800 flex items-center justify-center"}`}>
         <motion.div
           initial={{ scale: 0.8, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
@@ -284,7 +284,7 @@ export default function SudokuPage() {
               setLevel(1)
               generateSudoku()
             }}
-            className="bg-green-500 text-white px-8 py-3 rounded-xl text-xl font-bold hover:bg-green-600 transition"
+            className="bg-green-50 dark:bg-slate-7000 text-white px-8 py-3 rounded-xl text-xl font-bold hover:bg-green-600 transition"
           >
             Try Again
           </button>
@@ -297,7 +297,7 @@ export default function SudokuPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50">
+    <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50 dark:from-slate-800 dark:to-slate-800">
       <header className="p-6 bg-white dark:bg-slate-800 shadow-sm">
         <Link href="/logic" className="text-green-500 hover:underline mb-4 block">
           ← Back
@@ -368,7 +368,7 @@ export default function SudokuPage() {
                 whileTap={{ scale: 0.95 }}
                 onClick={() => handleNumberInput(num)}
                 disabled={!selectedCell || gameOver}
-                className="bg-green-500 text-white text-lg md:text-xl lg:text-2xl font-bold py-3 rounded-lg hover:bg-green-600 transition disabled:opacity-50 disabled:cursor-not-allowed"
+                className="bg-green-50 dark:bg-slate-7000 text-white text-lg md:text-xl lg:text-2xl font-bold py-3 rounded-lg hover:bg-green-600 transition disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {num}
               </motion.button>

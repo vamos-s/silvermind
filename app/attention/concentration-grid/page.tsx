@@ -163,7 +163,7 @@ export default function ConcentrationGridPage() {
   }, [gameState, timeLeft, totalScore, addSession, settings.timeLimit])
 
   return (
-    <div className={`min-h-screen p-3 md:p-4 lg:p-8 transition-colors duration-300 ${darkMode ? "bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white" : "bg-gradient-to-br from-violet-50 via-white to-purple-50"}`}>
+    <div className={`min-h-screen p-3 md:p-4 lg:p-8 transition-colors duration-300 ${darkMode ? "bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white" : "bg-gradient-to-br from-violet-50 via-white to-purple-50 dark:from-slate-800 dark:via-slate-900 dark:to-slate-800"}`}>
       <SettingsPanel />
       <div className="max-w-2xl mx-auto">
         {/* Header */}
@@ -257,7 +257,7 @@ export default function ConcentrationGridPage() {
                     disabled={num.found || num.value !== currentNumber}
                     className={`aspect-square rounded-lg font-bold text-lg md:text-xl transition-all ${
                       num.found
-                        ? 'bg-green-500 text-white'
+                        ? 'bg-green-50 dark:bg-slate-7000 text-white'
                         : num.value === currentNumber
                         ? 'bg-violet-50 dark:bg-slate-8000 text-white'
                         : 'bg-gray-100 dark:bg-slate-700 hover:bg-gray-200 dark:bg-slate-700 dark:hover:bg-slate-600'

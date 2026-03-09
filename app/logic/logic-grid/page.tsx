@@ -144,7 +144,7 @@ export default function LogicGridPage() {
 
   if (gameOver && victory) {
     return (
-      <div className={`min-h-screen p-3 md:p-4 lg:p-8 transition-colors duration-300 ${darkMode ? "bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white" : "bg-gradient-to-br from-green-50 to-blue-50 flex items-center justify-center"}`}>
+      <div className={`min-h-screen p-3 md:p-4 lg:p-8 transition-colors duration-300 ${darkMode ? "bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white" : "bg-gradient-to-br from-green-50 to-blue-50 dark:from-slate-800 dark:to-slate-800 flex items-center justify-center"}`}>
       <SettingsPanel />
         <motion.div
           initial={{ scale: 0.8, opacity: 0 }}
@@ -159,7 +159,7 @@ export default function LogicGridPage() {
               setLevel(level + 1)
               generatePuzzle()
             }}
-            className="bg-green-500 text-white px-8 py-3 rounded-xl text-xl font-bold hover:bg-green-600 transition mb-4"
+            className="bg-green-50 dark:bg-slate-7000 text-white px-8 py-3 rounded-xl text-xl font-bold hover:bg-green-600 transition mb-4"
           >
             Next Level
           </button>
@@ -170,7 +170,7 @@ export default function LogicGridPage() {
               setLevel(1)
               generatePuzzle()
             }}
-            className="bg-blue-500 text-white px-8 py-3 rounded-xl text-xl font-bold hover:bg-blue-600 transition"
+            className="bg-blue-50 dark:bg-slate-7000 text-white px-8 py-3 rounded-xl text-xl font-bold hover:bg-blue-600 transition"
           >
             Restart
           </button>
@@ -183,7 +183,7 @@ export default function LogicGridPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50">
+    <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50 dark:from-slate-800 dark:to-slate-800">
       <header className="p-6 bg-white dark:bg-slate-800 shadow-sm">
         <Link href="/logic" className="text-green-500 hover:underline mb-4 block">
           ← Back
@@ -229,7 +229,7 @@ export default function LogicGridPage() {
                       ? 'bg-yellow-400 text-white border-4 border-yellow-500'
                       : userOrder.includes(item.name)
                       ? 'bg-gray-200 dark:bg-slate-700 text-gray-500 cursor-not-allowed opacity-50'
-                      : 'bg-blue-500 text-white hover:bg-blue-600'
+                      : 'bg-blue-50 dark:bg-slate-7000 text-white hover:bg-blue-600'
                   }`}
                   disabled={userOrder.includes(item.name)}
                 >
@@ -254,7 +254,7 @@ export default function LogicGridPage() {
                   transition={{ delay: i * 0.1 }}
                   whileHover={{ scale: 1.05 }}
                   onClick={() => handleRemoveFromOrder(item)}
-                  className="bg-green-500 text-white px-4 py-2 rounded-lg font-bold hover:bg-red-500 transition"
+                  className="bg-green-50 dark:bg-slate-7000 text-white px-4 py-2 rounded-lg font-bold hover:bg-red-50 dark:bg-slate-7000 transition"
                 >
                   {i + 1}. {item} ❌
                 </motion.button>
@@ -266,14 +266,14 @@ export default function LogicGridPage() {
             <button
               onClick={handleAddToOrder}
               disabled={!selectedItem}
-              className="bg-blue-500 text-white px-6 py-3 rounded-xl font-bold hover:bg-blue-600 transition disabled:opacity-50 disabled:cursor-not-allowed"
+              className="bg-blue-50 dark:bg-slate-7000 text-white px-6 py-3 rounded-xl font-bold hover:bg-blue-600 transition disabled:opacity-50 disabled:cursor-not-allowed"
             >
               Add Selected
             </button>
             <button
               onClick={checkSolution}
               disabled={userOrder.length !== items.length}
-              className="bg-green-500 text-white px-6 py-3 rounded-xl font-bold hover:bg-green-600 transition disabled:opacity-50 disabled:cursor-not-allowed"
+              className="bg-green-50 dark:bg-slate-7000 text-white px-6 py-3 rounded-xl font-bold hover:bg-green-600 transition disabled:opacity-50 disabled:cursor-not-allowed"
             >
               Check Solution
             </button>
