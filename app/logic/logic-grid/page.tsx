@@ -144,7 +144,7 @@ export default function LogicGridPage() {
 
   if (gameOver && victory) {
     return (
-      <div className={`min-h-screen p-3 md:p-4 lg:p-8 transition-colors duration-300 ${darkMode ? "bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white" : "bg-gradient-to-br from-green-50 to-blue-50 flex items-center justify-center"}`}
+      <div className={`min-h-screen p-3 md:p-4 lg:p-8 transition-colors duration-300 ${darkMode ? "bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white" : "bg-gradient-to-br from-green-50 to-blue-50 flex items-center justify-center"}`}>
       <SettingsPanel />
         <motion.div
           initial={{ scale: 0.8, opacity: 0 }}
