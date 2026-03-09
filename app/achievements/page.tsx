@@ -145,6 +145,11 @@ export default function AchievementsPage() {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {achievements.map((achievementId, index) => {
                 const achievement = achievementData[achievementId]
+                const titleKey = `achievement.${achievementId}.title`
+                const descKey = `achievement.${achievementId}.description`
+                const title = t(titleKey, achievement.title.en)
+                const description = t(descKey, achievement.description.en)
+
                 return (
                   <motion.div
                     key={achievementId}
@@ -157,10 +162,10 @@ export default function AchievementsPage() {
                       <span className="text-4xl">{achievement.icon}</span>
                       <div className="flex-1">
                         <h4 className="font-bold text-gray-800 dark:text-white">
-                          {achievement.title.en}
+                          {title}
                         </h4>
                         <p className="text-sm text-gray-600 dark:text-gray-400">
-                          {achievement.description.en}
+                          {description}
                         </p>
                       </div>
                     </div>
@@ -186,6 +191,11 @@ export default function AchievementsPage() {
               .map(([achievementId, achievement], index) => {
                 const progress = getProgress(achievementId as AchievementType)
                 const progressText = getProgressText(achievementId as AchievementType)
+                const titleKey = `achievement.${achievementId}.title`
+                const descKey = `achievement.${achievementId}.description`
+                const title = t(titleKey, achievement.title.en)
+                const description = t(descKey, achievement.description.en)
+
                 return (
                   <motion.div
                     key={achievementId}
@@ -206,10 +216,10 @@ export default function AchievementsPage() {
                       <span className="text-4xl grayscale opacity-50">{achievement.icon}</span>
                       <div className="flex-1">
                         <h4 className={`font-bold ${darkMode ? 'text-white' : 'text-gray-800'}`}>
-                          {achievement.title.en}
+                          {title}
                         </h4>
                         <p className={`text-sm mb-2 ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                          {achievement.description.en}
+                          {description}
                         </p>
 
                         {/* Progress Bar */}
@@ -248,7 +258,7 @@ export default function AchievementsPage() {
               <span className="text-3xl">{achievementData[notification].icon}</span>
               <div>
                 <p className="font-bold">{t('achievementUnlocked')}</p>
-                <p className="text-sm">{achievementData[notification].title.en}</p>
+                <p className="text-sm">{t(`achievement.${notification}.title`, achievementData[notification].title.en)}</p>
               </div>
             </div>
           </motion.div>

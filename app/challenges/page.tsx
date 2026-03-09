@@ -179,7 +179,7 @@ export default function ChallengesPage() {
                           challenge.type === 'complete' ? 'bg-green-600 text-white' :
                           'bg-purple-600 text-white'
                         }`}>
-                          {challenge.type.toUpperCase()}
+                          {t(`challengeType.${challenge.type}`)}
                         </span>
                         {isCompleted && (
                           <span className="px-2 py-1 text-xs font-semibold rounded bg-green-600 text-white">
@@ -260,7 +260,7 @@ export default function ChallengesPage() {
                         {challenge.description.en}
                       </p>
                       <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                        {challenge.completed ? '✓ Completed' : '✗ Not completed'}
+                        {challenge.completed ? `✓ ${t('completed')}` : `✗ ${t('notStarted')}`}
                       </p>
                     </div>
                     {challenge.completed && (
