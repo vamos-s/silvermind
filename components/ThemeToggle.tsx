@@ -10,27 +10,21 @@ export function ThemeToggle() {
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setMounted(true);
 
+    // Only run on client
+    if (typeof window === 'undefined') return;
+
     // First check localStorage for saved preference
-    if (typeof window !== 'undefined') {
-      const storedDarkMode = localStorage.getItem('darkMode') === 'true';
-      setIsDark(storedDarkMode);
+    const storedDarkMode = localStorage.getItem('darkMode') === 'true';
+    setIsDark(storedDarkMode);
 
-      // Apply the saved theme to DOM
-      if (storedDarkMode) {
-        document.documentElement.classList.add('dark');
-        document.documentElement.classList.remove('light');
-      } else {
-        document.documentElement.classList.remove('dark');
-        document.documentElement.classList.add('light');
-      }
-      return; // Skip system detection if localStorage has a value
+    // Apply the saved theme to DOM
+    if (storedDarkMode) {
+      document.documentElement.classList.add('dark');
+      document.documentElement.classList.remove('light');
+    } else {
+      document.documentElement.classList.remove('dark');
+      document.documentElement.classList.add('light');
     }
-
-    // Only use system preference if no saved value exists
-    const isDarkMode = document.documentElement.classList.contains('dark') ||
-      (!document.documentElement.classList.contains('light') &&
-        window.matchMedia('(prefers-color-scheme: dark)').matches);
-    setIsDark(isDarkMode);
   }, []);
 
   useEffect(() => {
