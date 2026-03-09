@@ -13,12 +13,12 @@ export function LayoutClient({ children }: { children: React.ReactNode }) {
       try {
         const i18n = (await import('@/lib/i18n')).default
 
-        // Check localStorage for saved language first, then use default (ko)
+        // Check localStorage for saved language first, then use default (en)
         const savedLang = localStorage.getItem('language')
         const supportedLanguages = ['en', 'ko', 'ja', 'zh', 'es', 'fr', 'de', 'pt', 'ru', 'ar']
 
-        // Default to Korean (service default) unless saved language exists
-        let targetLang = 'ko'
+        // Default to English unless saved language exists
+        let targetLang = 'en'
         if (savedLang && supportedLanguages.includes(savedLang)) {
           targetLang = savedLang
         }

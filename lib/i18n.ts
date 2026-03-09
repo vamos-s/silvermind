@@ -1539,7 +1539,7 @@ i18n
   .use(initReactI18next)
   .init({
     resources,
-    lng: 'ko', // Default to Korean for this Korean service
+    lng: 'en', // Default to English
     fallbackLng: 'en',
     interpolation: { escapeValue: false },
     react: {

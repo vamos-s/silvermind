@@ -29,13 +29,13 @@ export function LanguageSelector() {
   const currentLang = languages.find(l => l.code === i18n.language) || languages[0]
 
   // Prevent hydration mismatch by not rendering until mounted
-  // Show default Korean (service default) during SSR
+  // Show default English during SSR
   if (!mounted) {
     return (
       <div className="relative z-50">
         <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-white/80 backdrop-blur-sm shadow-md">
-          <span className="text-xl">🇰🇷</span>
-          <span className="text-sm font-medium text-gray-700">KO</span>
+          <span className="text-xl">🇺🇸</span>
+          <span className="text-sm font-medium text-gray-700">EN</span>
         </div>
       </div>
     )

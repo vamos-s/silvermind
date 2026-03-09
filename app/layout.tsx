@@ -21,8 +21,8 @@ export default function RootLayout({
   // Detect language from headers for SSR (simplified version)
   // In production, you might want to use cookies or more sophisticated detection
   const getLanguage = () => {
-    // Default to Korean since this is a Korean-language service
-    return 'ko'
+    // Default to English
+    return 'en'
   }
 
   return (
