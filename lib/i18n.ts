@@ -98,7 +98,7 @@ const resources = {
       language: 'Language & Verbal',
 
       // Games - Memory
-      games: {
+      gameInfo: {
         'pattern-matching': {
           title: 'Pattern Matching',
           description: 'Remember and reproduce patterns'
@@ -411,7 +411,7 @@ const resources = {
       language: '언어/언어적 능력',
 
       // Games - Memory
-      games: {
+      gameInfo: {
         'pattern-matching': {
           title: '패턴 매칭',
           description: '패턴을 기억하고 재현하세요'
@@ -1539,7 +1539,7 @@ i18n
   .use(initReactI18next)
   .init({
     resources,
-    lng: 'en',
+    lng: undefined, // Will be set by browser detection in layout-client.tsx
     fallbackLng: 'en',
     interpolation: { escapeValue: false }
   })
