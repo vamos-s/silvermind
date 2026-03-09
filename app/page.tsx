@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
 import { useGameStore } from '@/lib/store'
-import { ThemeToggle } from '@/components/ThemeToggle'
+import { SettingsPanel } from '@/components/SettingsPanel'
 
 const categories = [
   { id: 'memory', icon: '🧠', color: 'bg-indigo-600', hoverColor: 'hover:bg-indigo-700', games: 7 },
@@ -69,8 +69,8 @@ export default function Home() {
         </div>
       </header>
 
-      {/* Theme Toggle - Fixed Position */}
-      <ThemeToggle />
+      {/* Settings Panel - Fixed Position */}
+      <SettingsPanel />
 
       <main className="container mx-auto px-4 py-8">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">

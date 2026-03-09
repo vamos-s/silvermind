@@ -7,7 +7,7 @@ import Link from 'next/link'
 import { useGameStore } from '@/lib/store'
 import { achievements as achievementData } from '@/lib/achievements'
 import { AchievementType } from '@/lib/types'
-import { ThemeToggle } from '@/components/ThemeToggle'
+import { SettingsPanel } from '@/components/SettingsPanel'
 
 export default function AchievementsPage() {
   const { t } = useTranslation()
@@ -98,8 +98,8 @@ export default function AchievementsPage() {
         </div>
       </header>
 
-      {/* Theme Toggle - Fixed Position */}
-      <ThemeToggle />
+      {/* Settings Panel - Fixed Position */}
+      <SettingsPanel />
 
       <main className="container mx-auto px-4 py-8 max-w-4xl">
         {/* Progress Overview */}

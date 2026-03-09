@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
 import { useGameStore } from '@/lib/store'
-import { ThemeToggle } from '@/components/ThemeToggle'
+import { ThemeToggle } from '@/components/SettingsPanel'
 
 const games = [
   {
@@ -74,7 +74,7 @@ export default function SpatialPage() {
       </header>
 
       {/* Theme Toggle - Fixed Position */}
-      <ThemeToggle />
+      <SettingsPanel />
 
       <main className="p-6 max-w-6xl mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

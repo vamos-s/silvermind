@@ -6,7 +6,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import Link from 'next/link'
 import { useGameStore } from '@/lib/store'
 import { DailyChallenge } from '@/lib/types'
-import { ThemeToggle } from '@/components/ThemeToggle'
+import { SettingsPanel } from '@/components/SettingsPanel'
 
 export default function ChallengesPage() {
   const { t } = useTranslation()
@@ -124,8 +124,8 @@ export default function ChallengesPage() {
         </div>
       </header>
 
-      {/* Theme Toggle - Fixed Position */}
-      <ThemeToggle />
+      {/* Settings Panel - Fixed Position */}
+      <SettingsPanel />
 
       <main className="container mx-auto px-4 py-8 max-w-4xl">
         {/* Today's Challenges */}

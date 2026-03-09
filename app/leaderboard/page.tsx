@@ -6,7 +6,7 @@ import { motion } from 'framer-motion'
 import Link from 'next/link'
 import { useGameStore } from '@/lib/store'
 import { Difficulty } from '@/lib/types'
-import { ThemeToggle } from '@/components/ThemeToggle'
+import { SettingsPanel } from '@/components/SettingsPanel'
 
 export default function LeaderboardPage() {
   const { t } = useTranslation()
@@ -71,8 +71,8 @@ export default function LeaderboardPage() {
         </div>
       </header>
 
-      {/* Theme Toggle - Fixed Position */}
-      <ThemeToggle />
+      {/* Settings Panel - Fixed Position */}
+      <SettingsPanel />
 
       <main className="container mx-auto px-4 py-8 max-w-4xl">
         {/* Filters */}
