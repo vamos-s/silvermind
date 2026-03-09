@@ -1539,7 +1539,7 @@ i18n
   .use(initReactI18next)
   .init({
     resources,
-    lng: 'en', // Default to English initially, will be changed by browser detection
+    lng: 'ko', // Default to Korean for this Korean service
     fallbackLng: 'en',
     interpolation: { escapeValue: false }
   })

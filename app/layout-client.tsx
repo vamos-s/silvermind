@@ -15,16 +15,14 @@ export function LayoutClient({ children }: { children: React.ReactNode }) {
       try {
         const i18n = (await import('@/lib/i18n')).default
 
-        // Check localStorage for saved language first, then browser detection
+        // Check localStorage for saved language first, then use default (ko)
         const savedLang = localStorage.getItem('language')
-        const browserLang = navigator.language.split('-')[0]
         const supportedLanguages = ['en', 'ko', 'ja', 'zh', 'es', 'fr', 'de', 'pt', 'ru', 'ar']
 
-        let targetLang = 'en'
+        // Default to Korean (service default) unless saved language exists
+        let targetLang = 'ko'
         if (savedLang && supportedLanguages.includes(savedLang)) {
           targetLang = savedLang
-        } else if (supportedLanguages.includes(browserLang)) {
-          targetLang = browserLang
         }
 
         // Set html lang attribute

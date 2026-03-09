@@ -55,7 +55,7 @@ export function ThemeToggle() {
   if (!mounted) {
     return (
       <button
-        className="cursor-pointer p-2 rounded-full bg-white/80 backdrop-blur-sm shadow-lg dark:bg-gray-800/80 transition-all duration-300 hover:scale-110"
+        className="cursor-pointer p-2 rounded-full bg-white/80 backdrop-blur-sm shadow-lg transition-all duration-300 hover:scale-110"
         aria-label="Toggle theme"
       >
         <span className="w-6 h-6 block"></span>

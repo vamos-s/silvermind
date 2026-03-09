@@ -18,8 +18,15 @@ export default function RootLayout({
 }) {
   const GA_ID = process.env.NEXT_PUBLIC_GA_ID
 
+  // Detect language from headers for SSR (simplified version)
+  // In production, you might want to use cookies or more sophisticated detection
+  const getLanguage = () => {
+    // Default to Korean since this is a Korean-language service
+    return 'ko'
+  }
+
   return (
-    <html suppressHydrationWarning>
+    <html lang={getLanguage()} suppressHydrationWarning>
       <body className={inter.className}>
         {GA_ID && (
           <>
