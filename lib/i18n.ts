@@ -314,6 +314,49 @@ const resources = {
           description: 'Guess meanings of idioms and proverbs'
         },
       },
+
+      // Maze Navigation Game
+      mazeNavigation: {
+        title: 'Maze Navigation',
+        description: 'Find your way through the maze!',
+        level: 'Level',
+        levelInfo: 'Level Settings',
+        gridSize: 'Grid Size',
+        inputTime: 'Time Limit',
+        moves: 'Moves',
+        timeLeft: 'Time Left',
+        controls: 'Use Arrow Keys or WASD to move',
+        levelComplete: 'Level Complete!',
+        levelScore: 'Level Score',
+        totalScore: 'Total Score',
+        nextLevel: 'Next Level',
+        finalScore: 'Final Score',
+        victory: 'Congratulations!',
+        victoryMessage: 'You completed all {count} levels!',
+        timeUp: 'Time is up!',
+        restart: 'Restart from Level 1',
+        playAgain: 'Play Again'
+      },
+
+      // Common Game UI
+      game: {
+        level: 'Level',
+        score: 'Score',
+        time: 'Time',
+        moves: 'Moves',
+        accuracy: 'Accuracy',
+        bestScore: 'Best Score',
+        gameOver: 'Game Over',
+        victory: 'Victory!',
+        completed: 'Completed',
+        restart: 'Restart',
+        tryAgain: 'Try Again',
+        nextLevel: 'Next Level',
+        playAgain: 'Play Again',
+        ready: 'Ready?',
+        go: 'Go!',
+        continue: 'Continue'
+      },
     }
   },
   ko: {
@@ -634,6 +677,49 @@ const resources = {
           title: '속담 수수께끼',
           description: '속담과 관용사의 뜻을 맞추세요'
         },
+      },
+
+      // Maze Navigation Game
+      mazeNavigation: {
+        title: '미로 내비게이션',
+        description: '미로를 통해 길을 찾으세요',
+        level: '레벨',
+        levelInfo: '레벨 설정',
+        gridSize: '그리드 크기',
+        inputTime: '시간 제한',
+        moves: '이동 횟수',
+        timeLeft: '남은 시간',
+        controls: '방향키 또는 WASD로 이동',
+        levelComplete: '레벨 완료!',
+        levelScore: '레벨 점수',
+        totalScore: '총 점수',
+        nextLevel: '다음 레벨',
+        finalScore: '최종 점수',
+        victory: '축하합니다!',
+        victoryMessage: '모든 {count} 레벨을 완료했습니다!',
+        timeUp: '시간이 종료되었습니다!',
+        restart: '레벨 1부터 다시 시작',
+        playAgain: '다시 플레이'
+      },
+
+      // Common Game UI
+      game: {
+        level: '레벨',
+        score: '점수',
+        time: '시간',
+        moves: '이동 횟수',
+        accuracy: '정확도',
+        bestScore: '최고 점수',
+        gameOver: '게임 오버',
+        victory: '승리!',
+        completed: '완료',
+        restart: '다시 시작',
+        tryAgain: '다시 시도',
+        nextLevel: '다음 레벨',
+        playAgain: '다시 플레이',
+        ready: '준비?',
+        go: '시작!',
+        continue: '계속'
       },
     }
   },

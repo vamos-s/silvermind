@@ -272,11 +272,11 @@ export default function MazeNavigationPage() {
             className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-8 text-center"
           >
             <h2 className="text-xl md:text-2xl lg:text-3xl font-bold text-gray-800 dark:text-white mb-2">
-              Level {level}
+              {t('mazeNavigation.level', 'Level')} {level}
             </h2>
             {level > 1 && (
               <p className="text-lg text-gray-700 dark:text-gray-300 mb-4 font-medium">
-                Total Score: <span className="text-slate-600 font-bold">{totalScore}</span>
+                {t('mazeNavigation.totalScore', 'Total Score')}: <span className="text-slate-600 dark:text-gray-300 font-bold">{totalScore}</span>
               </p>
             )}
             <div className="bg-slate-50 rounded-xl p-4 mb-6 text-left">
@@ -303,15 +303,15 @@ export default function MazeNavigationPage() {
               <div className="flex justify-between items-center">
                 <div>
                   <p className="text-gray-700 dark:text-gray-300 text-sm font-medium">{t('mazeNavigation.level', 'Level')}</p>
-                  <p className="text-xl md:text-2xl lg:text-3xl font-bold text-slate-600">{level}/{MAX_LEVELS}</p>
+                  <p className="text-xl md:text-2xl lg:text-3xl font-bold text-slate-600 dark:text-slate-200">{level}/{MAX_LEVELS}</p>
                 </div>
                 <div>
                   <p className="text-gray-700 dark:text-gray-300 text-sm font-medium">{t('mazeNavigation.moves', 'Moves')}</p>
-                  <p className="text-xl md:text-2xl lg:text-3xl font-bold text-gray-600 dark:text-gray-400">{moves}</p>
+                  <p className="text-xl md:text-2xl lg:text-3xl font-bold text-slate-600 dark:text-slate-200">{moves}</p>
                 </div>
                 <div>
                   <p className="text-gray-700 dark:text-gray-300 text-sm font-medium">{t('mazeNavigation.timeLeft', 'Time Left')}</p>
-                  <p className={`text-2xl md:text-3xl lg:text-4xl font-bold ${timeLeft <= 10 ? 'text-red-500' : 'text-slate-600'}`}>
+                  <p className={`text-2xl md:text-3xl lg:text-4xl font-bold ${timeLeft <= 10 ? 'text-red-500' : 'text-slate-600 dark:text-slate-200'}`}>
                     {timeLeft}s
                   </p>
                 </div>
@@ -328,7 +328,7 @@ export default function MazeNavigationPage() {
 
             {/* Maze */}
             <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-8 mb-6 text-center">
-              <p className="text-sm text-gray-500 mb-4">
+              <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
                 {t('mazeNavigation.controls', 'Use Arrow Keys or WASD to move')}
               </p>
               <div className="grid gap-1 max-w-md mx-auto" style={{
@@ -343,10 +343,10 @@ export default function MazeNavigationPage() {
                       transition={{ delay: (x + y) * 0.02 }}
                       className={`aspect-square rounded-lg ${
                         isWall
-                          ? 'bg-slate-700'
-                          : 'bg-slate-100'
-                      } ${playerPos.x === x && playerPos.y === y ? 'bg-blue-50 dark:bg-slate-7000' : ''} ${
-                        endPos.x === x && endPos.y === y ? 'bg-green-50 dark:bg-slate-7000' : ''
+                          ? 'bg-slate-700 dark:bg-slate-600'
+                          : 'bg-slate-100 dark:bg-slate-700'
+                      } ${playerPos.x === x && playerPos.y === y ? 'bg-blue-500' : ''} ${
+                        endPos.x === x && endPos.y === y ? 'bg-green-500' : ''
                       }`}
                     >
                       {playerPos.x === x && playerPos.y === y && (
@@ -411,32 +411,34 @@ export default function MazeNavigationPage() {
             className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-8 text-center"
           >
             <div className="text-6xl mb-4">✅</div>
-            <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-slate-600 mb-4">Level {level} Complete!</h2>
-            <div className="bg-slate-50 rounded-xl p-6 mb-6">
+            <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-slate-600 dark:text-white mb-4">
+              {t('mazeNavigation.level', 'Level')} {level} {t('mazeNavigation.levelComplete', 'Complete!')}
+            </h2>
+            <div className="bg-slate-50 dark:bg-slate-700 rounded-xl p-6 mb-6">
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <p className="text-gray-700 dark:text-gray-300 text-sm font-medium">{t('mazeNavigation.moves', 'Moves')}</p>
-                  <p className="text-xl md:text-2xl lg:text-3xl font-bold text-slate-600">{moves}</p>
+                  <p className="text-xl md:text-2xl lg:text-3xl font-bold text-slate-600 dark:text-white">{moves}</p>
                 </div>
                 <div>
                   <p className="text-gray-700 dark:text-gray-300 text-sm font-medium">{t('mazeNavigation.levelScore', 'Level Score')}</p>
-                  <p className="text-xl md:text-2xl lg:text-3xl font-bold text-slate-600">{score}</p>
+                  <p className="text-xl md:text-2xl lg:text-3xl font-bold text-slate-600 dark:text-white">{score}</p>
                 </div>
               </div>
               <div className="mt-4">
                 <p className="text-gray-700 dark:text-gray-300 text-sm font-medium">{t('mazeNavigation.totalScore', 'Total Score')}</p>
-                <p className="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-600 dark:text-gray-400">{totalScore + score}</p>
+                <p className="text-2xl md:text-3xl lg:text-4xl font-bold text-slate-600 dark:text-white">{totalScore + score}</p>
               </div>
             </div>
             <button
               onClick={nextLevel}
               className="bg-gradient-to-r from-slate-500 to-gray-500 text-white text-lg md:text-xl lg:text-2xl font-bold py-4 px-12 rounded-xl hover:from-slate-600 hover:to-gray-600 shadow-lg transition-all w-full mb-3"
             >
-              {level < MAX_LEVELS ? `Next Level ${level + 1}` : 'View Final Score'}
+              {level < MAX_LEVELS ? `${t('mazeNavigation.nextLevel', 'Next Level')} ${level + 1}` : t('mazeNavigation.finalScore', 'View Final Score')}
             </button>
             <button
               onClick={startGame}
-              className="text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:text-white font-medium"
+              className="text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-white font-medium"
             >
               {t('mazeNavigation.restart', 'Restart from Level 1')}
             </button>
@@ -452,9 +454,9 @@ export default function MazeNavigationPage() {
           >
             <div className="text-6xl mb-4">⏰</div>
             <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-800 dark:text-white mb-4">{t('mazeNavigation.timeUp', 'Time is up!')}</h2>
-            <div className="bg-orange-50 dark:bg-slate-800 rounded-xl p-6 mb-6">
+            <div className="bg-orange-50 dark:bg-slate-700 rounded-xl p-6 mb-6">
               <p className="text-gray-700 dark:text-gray-300 text-sm font-medium">{t('mazeNavigation.totalScore', 'Total Score')}</p>
-              <p className="text-xl md:text-2xl lg:text-3xl font-bold text-orange-600">{totalScore}</p>
+              <p className="text-xl md:text-2xl lg:text-3xl font-bold text-orange-600 dark:text-orange-400">{totalScore}</p>
             </div>
             <button
               onClick={startLevel}
@@ -464,7 +466,7 @@ export default function MazeNavigationPage() {
             </button>
             <button
               onClick={startGame}
-              className="text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:text-white font-medium"
+              className="text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-white font-medium"
             >
               {t('mazeNavigation.restart', 'Restart from Level 1')}
             </button>
@@ -479,13 +481,13 @@ export default function MazeNavigationPage() {
             className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-8 text-center"
           >
             <div className="text-6xl mb-4">🎉</div>
-            <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-slate-600 mb-4">{t('mazeNavigation.victory', 'Congratulations!')}</h2>
+            <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-slate-600 dark:text-white mb-4">{t('mazeNavigation.victory', 'Congratulations!')}</h2>
             <p className="text-xl text-gray-700 dark:text-gray-300 font-medium mb-6">
               {t('mazeNavigation.victoryMessage', 'You completed all {count} levels!', { count: MAX_LEVELS })}
             </p>
-            <div className="bg-slate-50 rounded-xl p-6 mb-6">
+            <div className="bg-slate-50 dark:bg-slate-700 rounded-xl p-6 mb-6">
               <p className="text-gray-700 dark:text-gray-300 text-sm font-medium">{t('mazeNavigation.finalScore', 'Final Score')}</p>
-              <p className="text-5xl font-bold text-slate-600">{totalScore + score}</p>
+              <p className="text-5xl font-bold text-slate-600 dark:text-white">{totalScore + score}</p>
             </div>
             <button
               onClick={startGame}
