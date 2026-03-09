@@ -44,7 +44,7 @@ export function LayoutClient({ children }: { children: React.ReactNode }) {
 
   // Don't render anything until i18n is initialized to prevent hydration error
   if (!mounted) {
-    return <ThemeProvider><div className="min-h-screen bg-white dark:bg-gray-900"></div></ThemeProvider>
+    return null
   }
 
   return <ThemeProvider>{children}</ThemeProvider>
