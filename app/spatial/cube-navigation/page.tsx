@@ -314,7 +314,7 @@ export default function CubeNavigationPage() {
                 ${cell.isStart ? 'bg-green-500 border-green-600 text-white' : ''}
                 ${cell.isGoal ? 'bg-yellow-500 border-yellow-600 text-white' : ''}
                 ${cell.isObstacle ? 'bg-gray-700 border-gray-800 text-white' : ''}
-                ${!cell.isStart && !cell.isGoal && !cell.isObstacle ? (darkMode ? 'bg-slate-600 border-slate-700' : 'bg-gray-100 border-gray-300') : ''}
+                ${!cell.isStart && !cell.isGoal && !cell.isObstacle ? (darkMode ? 'bg-slate-600 border-slate-700' : 'bg-gray-100 border-gray-300 dark:border-gray-500') : ''}
                 ${cell.isVisited && !cell.isStart && !cell.isGoal ? 'bg-blue-200 border-blue-300 dark:bg-blue-800 dark:border-blue-900' : ''}
                 ${playerPosition.x === cell.x && playerPosition.y === cell.y && playerPosition.z === cell.z ? 'ring-4 ring-blue-500' : ''}
               `}

@@ -457,7 +457,7 @@ export default function PatternRecognitionPage() {
                     animate={{ opacity: 1, scale: 1 }}
                     className="flex flex-col items-center"
                   >
-                    <div className="w-20 h-20 border-4 border-dashed border-gray-400 rounded-lg flex items-center justify-center">
+                    <div className="w-20 h-20 border-4 border-dashed border-gray-400 rounded-lg flex items-center justify-center dark:border-gray-600">
                       <span className="text-3xl text-gray-400">?</span>
                     </div>
                   </motion.div>
@@ -485,7 +485,7 @@ export default function PatternRecognitionPage() {
                           : 'border-red-500 bg-red-50'
                         : selectedIndex !== null && index === correctIndex
                         ? 'border-green-500 bg-green-50'
-                        : 'border-gray-200 hover:border-cyan-300 bg-gray-50'
+                        : 'border-gray-200 dark:border-gray-600 hover:border-cyan-300 bg-gray-50'
                     }`}
                   >
                     <div className="flex justify-center items-center h-32">

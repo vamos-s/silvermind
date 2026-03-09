@@ -308,7 +308,7 @@ export default function SpotlightPage() {
                 {/* Spotlight overlay */}
                 <div className="absolute inset-0 bg-black/90 pointer-events-none">
                   <motion.div
-                    className="bg-transparent border-4 border-yellow-400 rounded-lg"
+                    className="bg-transparent border-4 border-yellow-400 rounded-lg dark:border-gray-600"
                     style={{
                       position: 'absolute',
                       left: `${(spotlightPos.x / gridCount) * 100}%`,

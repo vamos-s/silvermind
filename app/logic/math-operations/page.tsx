@@ -191,7 +191,7 @@ export default function MathOperationsPage() {
             value={userAnswer}
             onChange={(e) => setUserAnswer(e.target.value)}
             onKeyPress={(e) => e.key === 'Enter' && handleSubmit()}
-            className="w-full text-center text-2xl md:text-3xl lg:text-4xl font-bold p-4 border-4 border-green-500 rounded-xl focus:outline-none focus:border-green-600 text-gray-800 dark:text-white"
+            className="w-full text-center text-2xl md:text-3xl lg:text-4xl font-bold p-4 border-4 border-green-500 rounded-xl focus:outline-none focus:border-green-600 text-gray-800 dark:text-white dark:border-gray-600"
             placeholder="?"
             autoFocus
             style={{ WebkitTextFillColor: 'gray' }}

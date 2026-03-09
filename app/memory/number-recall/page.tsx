@@ -176,7 +176,7 @@ export default function NumberRecallPage() {
 
             <div className="bg-white dark:bg-slate-800 rounded-xl p-6 shadow-lg mb-6">
               <p className="text-center text-xl text-gray-700 dark:text-gray-300 font-medium mb-4">{t('numberRecall.yourAnswer', 'Your answer:')}</p>
-              <input type="text" value={playerInput} readOnly className={`w-full bg-gray-100 dark:bg-slate-700 rounded-lg p-4 text-center font-bold tracking-widest text-gray-800 dark:text-white border-2 border-transparent ${sequence.length <= 6 ? 'text-4xl h-16' : sequence.length <= 10 ? 'text-2xl h-14' : 'text-xl h-12'}`} placeholder={'_'.repeat(sequence.length)} />
+              <input type="text" value={playerInput} readOnly className={`w-full bg-gray-100 dark:bg-slate-700 rounded-lg p-4 text-center font-bold tracking-widest text-gray-800 dark:text-white border-2 border-gray-300 dark:border-gray-500 dark:border-slate-600 ${sequence.length <= 6 ? 'text-4xl h-16' : sequence.length <= 10 ? 'text-2xl h-14' : 'text-xl h-12'}`} placeholder={'_'.repeat(sequence.length)} />
             </div>
 
             <div className="grid grid-cols-3 gap-4">

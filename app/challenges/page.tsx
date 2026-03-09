@@ -168,7 +168,7 @@ export default function ChallengesPage() {
                       ? 'border-green-400 dark:border-green-600'
                       : progress > 0
                         ? 'border-purple-400 dark:border-purple-600'
-                        : 'border-gray-200 dark:border-gray-700'
+                        : 'border-gray-200 dark:border-gray-600 dark:border-gray-700'
                   } ${darkMode ? 'bg-gray-800' : 'bg-white'}`}
                 >
                   <div className="flex items-start justify-between mb-4">
@@ -252,7 +252,7 @@ export default function ChallengesPage() {
               {yesterdayChallenges.map((challenge, index) => (
                 <div
                   key={challenge.id}
-                  className={`rounded-xl p-4 border-2 ${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'}`}
+                  className={`rounded-xl p-4 border-2 ${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200 dark:border-gray-600'}`}
                 >
                   <div className="flex items-center justify-between">
                     <div>

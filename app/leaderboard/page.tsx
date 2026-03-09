@@ -89,7 +89,7 @@ export default function LeaderboardPage() {
               <select
                 value={selectedGame}
                 onChange={(e) => setSelectedGame(e.target.value)}
-                className={`w-full p-3 rounded-lg border ${darkMode ? 'bg-gray-800 border-gray-700 text-white' : 'bg-white border-gray-300 text-gray-800'}`}
+                className={`w-full p-3 rounded-lg border ${darkMode ? 'bg-gray-800 border-gray-700 text-white' : 'bg-white border-gray-300 dark:border-gray-500 text-gray-800'}`}
               >
                 <option value="all">{t('allGames')}</option>
                 {gameIds.map(gameId => (
@@ -107,7 +107,7 @@ export default function LeaderboardPage() {
               <select
                 value={selectedDifficulty}
                 onChange={(e) => setSelectedDifficulty(e.target.value as Difficulty | 'all')}
-                className={`w-full p-3 rounded-lg border ${darkMode ? 'bg-gray-800 border-gray-700 text-white' : 'bg-white border-gray-300 text-gray-800'}`}
+                className={`w-full p-3 rounded-lg border ${darkMode ? 'bg-gray-800 border-gray-700 text-white' : 'bg-white border-gray-300 dark:border-gray-500 text-gray-800'}`}
               >
                 <option value="all">{t('allDifficulties')}</option>
                 <option value="easy">{t('easy')}</option>
@@ -231,7 +231,7 @@ export default function LeaderboardPage() {
                             setEditingSessionId(null)
                           }}
                           autoFocus
-                          className={`w-32 p-1 rounded text-sm ${darkMode ? 'bg-gray-700 text-white' : 'bg-white text-gray-800'} border ${darkMode ? 'border-gray-600' : 'border-gray-300'}`}
+                          className={`w-32 p-1 rounded text-sm ${darkMode ? 'bg-gray-700 text-white' : 'bg-white text-gray-800'} border ${darkMode ? 'border-gray-600' : 'border-gray-300 dark:border-gray-500'}`}
                         />
                       ) : (
                         <p

@@ -268,7 +268,7 @@ export default function PerspectiveMatchingPage() {
         case 'cube':
           return (
             <div style={baseStyle} className="transform-gpu">
-              <div className="absolute inset-0 border-4 border-black/20" />
+              <div className="absolute inset-0 border-4 border-black/20 dark:border-gray-600" />
               <div className="absolute inset-0 transform translate-z-[10px] bg-gradient-to-br from-white/30 to-transparent" />
               <div className="absolute right-0 top-0 w-[30px] h-full bg-gradient-to-r from-black/20 to-transparent transform rotate-y-90 origin-left" />
               <div className="absolute bottom-0 left-0 w-full h-[30px] bg-gradient-to-b from-black/20 to-transparent transform rotate-x-90 origin-top" />
@@ -303,7 +303,7 @@ export default function PerspectiveMatchingPage() {
         case 'prism':
           return (
             <div style={baseStyle}>
-              <div className="absolute inset-0 border-4 border-black/20" />
+              <div className="absolute inset-0 border-4 border-black/20 dark:border-gray-600" />
               <div className="absolute top-1/2 left-0 right-0 h-0.5 bg-black/10" />
             </div>
           )

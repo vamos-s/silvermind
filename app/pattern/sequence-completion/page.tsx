@@ -267,7 +267,7 @@ export default function SequenceCompletionPage() {
                     {item}
                   </span>
                 ))}
-                <span className="px-3 py-2 rounded-lg border-2 border-dashed border-gray-300 text-gray-400">
+                <span className="px-3 py-2 rounded-lg border-2 border-dashed border-gray-300 dark:border-gray-500 text-gray-400">
                   ?
                 </span>
               </div>
@@ -276,7 +276,7 @@ export default function SequenceCompletionPage() {
                 value={userInput}
                 onChange={(e) => setUserInput(e.target.value)}
                 placeholder={t('sequenceCompletion.placeholder', 'Enter the next item')}
-                className="w-full p-6 text-2xl border-4 border-gray-300 rounded-xl focus:border-amber-300 focus:outline-none mb-6 text-center text-gray-800 dark:text-white placeholder-gray-500"
+                className="w-full p-6 text-2xl border-4 border-gray-300 dark:border-gray-500 rounded-xl focus:border-amber-300 focus:outline-none mb-6 text-center text-gray-800 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 dark:border-gray-600"
                 autoFocus
                 whileFocus={{ scale: 1.01 }}
                 onKeyPress={(e) => {

@@ -275,7 +275,7 @@ export default function DistanceJudgmentPage() {
             <div className="relative w-full aspect-square bg-gradient-to-br from-sky-100 to-blue-100 rounded-xl overflow-hidden">
               {/* Reference point */}
               <div
-                className="absolute w-8 h-8 bg-red-500 rounded-full border-4 border-white shadow-lg"
+                className="absolute w-8 h-8 bg-red-500 rounded-full border-4 border-white shadow-lg dark:border-gray-600"
                 style={{ left: `${REFERENCE_POINT.x}%`, top: `${REFERENCE_POINT.y}%`, transform: 'translate(-50%, -50%)' }}
               >
                 <span className="absolute inset-0 flex items-center justify-center text-white font-bold text-sm">★</span>
@@ -288,7 +288,7 @@ export default function DistanceJudgmentPage() {
                     <motion.div
                       initial={{ opacity: 0, scale: 0 }}
                       animate={{ opacity: 1, scale: 1 }}
-                      className="absolute w-12 h-12 bg-sky-500 rounded-full border-4 border-white shadow-lg flex items-center justify-center text-white font-bold"
+                      className="absolute w-12 h-12 bg-sky-500 rounded-full border-4 border-white shadow-lg flex items-center justify-center text-white font-bold dark:border-gray-600"
                       style={{
                         left: `${currentComparison.item1X}%`,
                         top: `${currentComparison.item1Y}%`,
@@ -301,7 +301,7 @@ export default function DistanceJudgmentPage() {
                       initial={{ opacity: 0, scale: 0 }}
                       animate={{ opacity: 1, scale: 1 }}
                       transition={{ delay: 0.2 }}
-                      className="absolute w-12 h-12 bg-blue-500 rounded-full border-4 border-white shadow-lg flex items-center justify-center text-white font-bold"
+                      className="absolute w-12 h-12 bg-blue-500 rounded-full border-4 border-white shadow-lg flex items-center justify-center text-white font-bold dark:border-gray-600"
                       style={{
                         left: `${currentComparison.item2X}%`,
                         top: `${currentComparison.item2Y}%`,
@@ -361,7 +361,7 @@ export default function DistanceJudgmentPage() {
                   <div className="relative w-full aspect-square bg-gradient-to-br from-sky-100 to-blue-100 rounded-xl overflow-hidden mb-6">
                     {/* Reference point */}
                     <div
-                      className="absolute w-8 h-8 bg-red-500 rounded-full border-4 border-white shadow-lg"
+                      className="absolute w-8 h-8 bg-red-500 rounded-full border-4 border-white shadow-lg dark:border-gray-600"
                       style={{ left: `${REFERENCE_POINT.x}%`, top: `${REFERENCE_POINT.y}%`, transform: 'translate(-50%, -50%)' }}
                     >
                       <span className="absolute inset-0 flex items-center justify-center text-white font-bold text-sm">★</span>
@@ -369,7 +369,7 @@ export default function DistanceJudgmentPage() {
 
                     {/* Items */}
                     <div
-                      className="absolute w-12 h-12 bg-sky-500 rounded-full border-4 border-white shadow-lg flex items-center justify-center text-white font-bold"
+                      className="absolute w-12 h-12 bg-sky-500 rounded-full border-4 border-white shadow-lg flex items-center justify-center text-white font-bold dark:border-gray-600"
                       style={{
                         left: `${currentComparison.item1X}%`,
                         top: `${currentComparison.item1Y}%`,
@@ -379,7 +379,7 @@ export default function DistanceJudgmentPage() {
                       A
                     </div>
                     <div
-                      className="absolute w-12 h-12 bg-blue-500 rounded-full border-4 border-white shadow-lg flex items-center justify-center text-white font-bold"
+                      className="absolute w-12 h-12 bg-blue-500 rounded-full border-4 border-white shadow-lg flex items-center justify-center text-white font-bold dark:border-gray-600"
                       style={{
                         left: `${currentComparison.item2X}%`,
                         top: `${currentComparison.item2Y}%`,

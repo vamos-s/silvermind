@@ -496,7 +496,7 @@ export default function ShapeReconstructionPage() {
               {/* Canvas */}
               <div
                 onClick={handleCanvasClick}
-                className={`relative w-full aspect-square max-w-md mx-auto rounded-xl cursor-crosshair border-4 border-dashed ${darkMode ? 'bg-slate-700 border-slate-600' : 'bg-gray-50 border-gray-300'}`}
+                className={`relative w-full aspect-square max-w-md mx-auto rounded-xl cursor-crosshair border-4 border-dashed ${darkMode ? 'bg-slate-700 border-slate-600' : 'bg-gray-50 border-gray-300 dark:border-gray-500'}`}
               >
                 {renderOutlineShape(currentPuzzle.outlineShape)}
                 

@@ -339,10 +339,10 @@ export default function SudokuPage() {
                     disabled={cell !== null || gameOver}
                     className={`aspect-square rounded-lg text-lg md:text-xl lg:text-2xl font-bold transition-all border-2 ${
                       cell !== null
-                        ? 'bg-gray-100 dark:bg-slate-700 border-gray-300 text-gray-800 dark:text-white'
+                        ? 'bg-gray-100 dark:bg-slate-700 border-gray-300 dark:border-gray-500 text-gray-800 dark:text-white'
                         : selectedCell && selectedCell[0] === r && selectedCell[1] === c
                         ? 'bg-green-200 border-green-500'
-                        : 'bg-white border-gray-200 hover:border-green-400'
+                        : 'bg-white border-gray-200 dark:border-gray-600 hover:border-green-400'
                     } ${isSubGridBorder ? 'mr-1' : ''} ${isRowBorder ? 'mb-1' : ''} ${
                       cell === null && !gameOver ? 'cursor-pointer' : 'cursor-default'
                     }`}

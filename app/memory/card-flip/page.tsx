@@ -396,7 +396,7 @@ export default function CardFlipPage() {
                   animate={{ opacity: 1, scale: 1 }}
                   transition={{ delay: card.id * 0.05 }}
                 >
-                  <div className="w-full h-full bg-white dark:bg-slate-800 rounded-xl shadow-lg flex items-center justify-center border-4 border-purple-300">
+                  <div className="w-full h-full bg-white dark:bg-slate-800 rounded-xl shadow-lg flex items-center justify-center border-4 border-purple-300 dark:border-gray-600">
                     <span className="text-4xl md:text-5xl">{card.emoji}</span>
                   </div>
                 </motion.div>
@@ -499,7 +499,7 @@ export default function CardFlipPage() {
 
                     {/* Back of card (shown when flipped) */}
                     <div
-                      className="absolute inset-0 backface-hidden bg-white dark:bg-slate-800 rounded-xl shadow-lg flex items-center justify-center border-4 border-purple-200"
+                      className="absolute inset-0 backface-hidden bg-white dark:bg-slate-800 rounded-xl shadow-lg flex items-center justify-center border-4 border-purple-200 dark:border-gray-600"
                       style={{
                         backfaceVisibility: 'hidden',
                         transform: 'rotateY(180deg)',

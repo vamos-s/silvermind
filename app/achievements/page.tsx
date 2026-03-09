@@ -208,7 +208,7 @@ export default function AchievementsPage() {
                         : 'bg-white'
                     } ${
                       progress === 0
-                        ? 'border-gray-300 opacity-60'
+                        ? 'border-gray-300 dark:border-gray-500 opacity-60'
                         : 'border-purple-400'
                     }`}
                   >

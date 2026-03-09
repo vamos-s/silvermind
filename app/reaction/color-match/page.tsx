@@ -308,7 +308,7 @@ export default function ColorMatchPage() {
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   onClick={() => handleAnswer(color)}
-                  className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-4 md:p-6 flex flex-col items-center justify-center h-32 md:h-40 border-4 border-gray-200 hover:border-rose-300 transition-all"
+                  className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-4 md:p-6 flex flex-col items-center justify-center h-32 md:h-40 border-4 border-gray-200 dark:border-gray-600 hover:border-rose-300 transition-all dark:border-gray-600"
                 >
                   <div className="w-16 h-16 md:w-20 md:h-20 rounded-full mb-3" style={{ backgroundColor: color.hex }}></div>
                   <span className={`text-xl md:text-lg md:text-xl lg:text-2xl font-bold ${color.color}`}>

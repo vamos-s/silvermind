@@ -317,7 +317,7 @@ export default function WordRecallPage() {
                 value={userInput}
                 onChange={(e) => setUserInput(e.target.value)}
                 placeholder={t('wordRecall.placeholder', 'apple, banana, orange')}
-                className="w-full p-6 text-2xl border-4 border-gray-300 rounded-xl focus:border-violet-300 focus:outline-none resize-none min-h-[200px] text-gray-800 dark:text-white placeholder-gray-500"
+                className="w-full p-6 text-2xl border-4 border-gray-300 dark:border-gray-500 rounded-xl focus:border-violet-300 focus:outline-none resize-none min-h-[200px] text-gray-800 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 dark:border-gray-600"
                 autoFocus
               />
               <button
