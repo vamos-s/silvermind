@@ -353,6 +353,36 @@ const resources = {
       locked: '잠김',
       totalAchievements: '총 업적',
       achievementUnlocked: '업적 달성!',
+      achievement: {
+        first_play: {
+          title: '첫 걸음',
+          description: '첫 게임 플레이'
+        },
+        score_100: {
+          title: '세기',
+          description: '어떤 게임에서 100점 획득'
+        },
+        score_500: {
+          title: '반 천 년',
+          description: '어떤 게임에서 500점 획득'
+        },
+        play_all_games: {
+          title: '탐험가',
+          description: '모든 게임 플레이'
+        },
+        streak_3: {
+          title: '3일 연속',
+          description: '3일 연속 게임 플레이'
+        },
+        streak_7: {
+          title: '주간 워리어',
+          description: '7일 연속 게임 플레이'
+        },
+        perfect_score: {
+          title: '완벽주의자',
+          description: '어떤 게임에서 완벽한 점수 획득'
+        }
+      },
 
       // Challenges
       challengesTitle: '일일 챌린지',
@@ -365,6 +395,11 @@ const resources = {
       score: '점수',
       complete: '완료',
       master: '마스터',
+      challengeType: {
+        score: '점수',
+        complete: '완료',
+        master: '마스터'
+      },
 
       // Game Categories
       memory: '기억력',
@@ -374,6 +409,232 @@ const resources = {
       spatial: '공간',
       attention: '주의력/집중력',
       language: '언어/언어적 능력',
+
+      // Games - Memory
+      games: {
+        'pattern-matching': {
+          title: '패턴 매칭',
+          description: '패턴을 기억하고 재현하세요'
+        },
+        'word-association': {
+          title: '단어 연상',
+          description: '같은 카테고리의 단어를 찾으세요'
+        },
+        'number-recall': {
+          title: '숫자 기억',
+          description: '숫자 순서를 기억하세요'
+        },
+        'sequence-memory': {
+          title: '시퀀스 기억',
+          description: '순서를 보고 반복하세요'
+        },
+        'word-recall': {
+          title: '단어 기억',
+          description: '단어를 기억하고 입력하세요'
+        },
+        'card-flip': {
+          title: '카드 뒤집기',
+          description: '카드 쌍을 맞추세요'
+        },
+        'location-memory': {
+          title: '위치 기억',
+          description: '아이템 위치를 기억하세요'
+        },
+        // Pattern
+        'sequence-completion': {
+          title: '시퀀스 완성',
+          description: '패턴 시퀀스를 완성하세요'
+        },
+        'pattern-recognition': {
+          title: '패턴 인식',
+          description: '올바른 패턴을 식별하세요'
+        },
+        'symbol-matching': {
+          title: '심볼 매칭',
+          description: '동일한 심볼을 맞추세요'
+        },
+        'pattern-memory': {
+          title: '패턴 기억',
+          description: '패턴을 기억하고 재현하세요'
+        },
+        'maze-navigation': {
+          title: '미로 내비게이션',
+          description: '미로를 통해 길을 찾으세요'
+        },
+        'jigsaw-puzzle': {
+          title: '지그소 퍼즐',
+          description: '조각을 배열하세요'
+        },
+        // Logic
+        'number-sequence': {
+          title: '숫자 시퀀스',
+          description: '다음 숫자를 찾으세요'
+        },
+        'word-puzzle': {
+          title: '단어 퍼즐',
+          description: '단어 퍼즐을 풀으세요'
+        },
+        'logic-grid': {
+          title: '논리 그리드',
+          description: '논리 퍼즐을 풀으세요'
+        },
+        'math-quiz': {
+          title: '수학 퀴즈',
+          description: '수학 문제를 풀으세요'
+        },
+        'math-operations': {
+          title: '수학 연산',
+          description: '수학 문제를 풀으세요'
+        },
+        'sudoku': {
+          title: '스도쿠',
+          description: '그리드를 올바르게 채우세요'
+        },
+        'logic-problem': {
+          title: '논리 문제',
+          description: '논리적 추론 문제를 풀으세요'
+        },
+        'logic-puzzle': {
+          title: '논리 퍼즐',
+          description: '단서를 사용하여 상자를 정렬하세요'
+        },
+        // Reaction
+        'quick-tap': {
+          title: '빠른 탭',
+          description: '최대한 빠르게 탭하세요'
+        },
+        'reaction-time': {
+          title: '반응 시간',
+          description: '반응 속도를 테스트하세요'
+        },
+        'color-match': {
+          title: '색상 매칭',
+          description: '색상 또는 단어를 맞추세요'
+        },
+        'symbol-reaction': {
+          title: '심볼 반응',
+          description: '심볼에 빠르게 반응하세요'
+        },
+        'timing-game': {
+          title: '타이밍 게임',
+          description: '색상이 변할 때 클릭하세요'
+        },
+        'target-detection': {
+          title: '타겟 탐지',
+          description: '타겟을 빠르게 찾으세요'
+        },
+        'quick-reaction': {
+          title: '빠른 반응',
+          description: '반응 속도를 테스트하세요'
+        },
+        // Spatial
+        'rotation-puzzle': {
+          title: '회전 퍼즐',
+          description: '회전된 도형을 맞추세요'
+        },
+        'spatial-memory': {
+          title: '공간 기억',
+          description: '공간 배열을 기억하세요'
+        },
+        'mental-rotation': {
+          title: '정신적 회전',
+          description: '도형을 머릿속으로 회전시키세요'
+        },
+        'block-puzzle': {
+          title: '블록 퍼즐',
+          description: '블록을 올바르게 배열하세요'
+        },
+        'rotated-shapes': {
+          title: '회전된 도형',
+          description: '회전된 도형을 맞추세요'
+        },
+        'distance-judgment': {
+          title: '거리 판단',
+          description: '거리를 추정하세요'
+        },
+        'pattern-in-3d': {
+          title: '3D 패턴',
+          description: '3D 패턴을 맞추세요'
+        },
+        'mental-rotation-advanced': {
+          title: '고급 정신적 회전',
+          description: '복잡한 도형 회전'
+        },
+        'shape-reconstruction': {
+          title: '도형 재구성',
+          description: '부분에서 도형을 재구성하세요'
+        },
+        'perspective-matching': {
+          title: '원근 매칭',
+          description: '객체 원근을 맞추세요'
+        },
+        'cube-navigation': {
+          title: '큐브 내비게이션',
+          description: '3D 큐브를 탐색하세요'
+        },
+        // Attention
+        'find-difference': {
+          title: '틀린그림찾기',
+          description: '차이점을 찾으세요'
+        },
+        'attention-test': {
+          title: '주의력 테스트',
+          description: '주의력 지속 시간 테스트'
+        },
+        'focused-search': {
+          title: '집중 탐색',
+          description: '타겟 아이템을 찾으세요'
+        },
+        'spotlight': {
+          title: '스포트라이트',
+          description: '제한된 시야로 숨겨진 물체를 찾으세요'
+        },
+        'selective-search': {
+          title: '선택적 탐색',
+          description: '방해 요소 속에서 타겟을 찾으세요'
+        },
+        'concentration-grid': {
+          title: '집중력 그리드',
+          description: '숫자를 순서대로 빠르게 찾으세요'
+        },
+        'focus-tracker': {
+          title: '포커스 트래커',
+          description: '여러 움직이는 물체 중 하나를 추적하세요'
+        },
+        // Language
+        'word-chain': {
+          title: '워드 체인',
+          description: '단어를 연결하세요'
+        },
+        'spelling': {
+          title: '스펠링',
+          description: '단어를 올바르게 철자하세요'
+        },
+        'antonyms': {
+          title: '반의어',
+          description: '반대 의미의 단어를 찾으세요'
+        },
+        'synonyms': {
+          title: '유의어',
+          description: '비슷한 의미의 단어를 찾으세요'
+        },
+        'word-scramble': {
+          title: '워드 스크램블',
+          description: '섞인 글자로 올바른 단어를 만드세요'
+        },
+        'anagrams': {
+          title: '아나그램',
+          description: '같은 글자로 다른 단어 만들기'
+        },
+        'synonym-matcher': {
+          title: '유의어 매칭',
+          description: '같은 의미의 단어를 매칭하세요'
+        },
+        'idiom-riddle': {
+          title: '속담 수수께끼',
+          description: '속담과 관용사의 뜻을 맞추세요'
+        },
+      },
     }
   },
   ja: {
