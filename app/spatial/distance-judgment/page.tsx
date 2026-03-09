@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import Link from 'next/link'
 import { useGameStore } from '@/lib/store'
 
+import { SettingsPanel } from "@/components/SettingsPanel"
 const MAX_LEVELS = 30
 
 type Comparison = {
@@ -217,6 +218,7 @@ export default function DistanceJudgmentPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-sky-50 via-white to-blue-50 p-4 md:p-8">
+      <SettingsPanel />
       <div className="max-w-2xl mx-auto">
         {/* Header */}
         <Link

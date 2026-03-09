@@ -6,6 +6,7 @@ import { motion } from 'framer-motion'
 import Link from 'next/link'
 import { useGameStore } from '@/lib/store'
 
+import { SettingsPanel } from "@/components/SettingsPanel"
 const MAX_LEVELS = 30
 
 const LEVEL_SETTINGS = [
@@ -176,6 +177,7 @@ export default function TimingGamePage() {
   if (gameState === 'menu') {
     return (
       <div className="min-h-screen bg-gradient-to-br from-yellow-50 to-orange-50 p-4 md:p-8">
+      <SettingsPanel />
         <div className="max-w-lg mx-auto">
           <Link href="/reaction" className="text-gray-700 hover:text-gray-900 font-medium mb-6 block">
             ← {t('back', 'Back')}

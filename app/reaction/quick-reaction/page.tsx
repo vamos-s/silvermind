@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import Link from 'next/link'
 import { useGameStore } from '@/lib/store'
 
+import { SettingsPanel } from "@/components/SettingsPanel"
 const MAX_LEVELS = 30
 
 const LEVEL_SETTINGS = [
@@ -197,6 +198,7 @@ export default function QuickReactionPage() {
 
   return (
     <div className="min-h-screen flex flex-col">
+      <SettingsPanel />
       {/* Header */}
       <header className="bg-white shadow-sm p-6">
         <Link

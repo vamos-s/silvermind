@@ -6,6 +6,7 @@ import { motion } from 'framer-motion'
 import Link from 'next/link'
 import { useGameStore } from '@/lib/store'
 
+import { SettingsPanel } from "@/components/SettingsPanel"
 type CellValue = number | null
 
 export default function SudokuPage() {
@@ -225,6 +226,7 @@ export default function SudokuPage() {
   if (gameOver && victory) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50 flex items-center justify-center">
+      <SettingsPanel />
         <motion.div
           initial={{ scale: 0.8, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}

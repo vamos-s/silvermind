@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import Link from 'next/link'
 import { useGameStore } from '@/lib/store'
 
+import { SettingsPanel } from "@/components/SettingsPanel"
 const MAX_LEVELS = 30
 
 const WORDS = {
@@ -202,6 +203,7 @@ export default function WordRecallPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-violet-50 via-white to-pink-50 p-4 md:p-8">
+      <SettingsPanel />
       <div className="max-w-2xl mx-auto">
         {/* Header */}
         <Link

@@ -6,6 +6,7 @@ import { motion } from 'framer-motion'
 import Link from 'next/link'
 import { useGameStore } from '@/lib/store'
 
+import { SettingsPanel } from "@/components/SettingsPanel"
 interface Box {
   id: string
   color: string
@@ -213,6 +214,7 @@ export default function LogicPuzzlePage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-blue-50 p-4 md:p-8">
+      <SettingsPanel />
       <div className="max-w-2xl mx-auto">
         {/* Header */}
         <Link

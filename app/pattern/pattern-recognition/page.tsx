@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import Link from 'next/link'
 import { useGameStore } from '@/lib/store'
 
+import { SettingsPanel } from "@/components/SettingsPanel"
 type ShapeType = 'circle' | 'square' | 'triangle' | 'diamond'
 type ColorType = 'red' | 'blue' | 'green' | 'yellow' | 'orange' | 'purple'
 type PatternType = 'color' | 'shape' | 'size' | 'position'
@@ -352,6 +353,7 @@ export default function PatternRecognitionPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-cyan-50 via-white to-amber-50 p-4 md:p-8">
+      <SettingsPanel />
       <div className="max-w-4xl mx-auto">
         {/* Header */}
         <Link

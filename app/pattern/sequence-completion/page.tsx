@@ -7,6 +7,7 @@ import Link from 'next/link'
 import { useGameStore } from '@/lib/store'
 import { SEQUENCE_COMPLETION_LEVELS } from '@/lib/game-data/levels'
 
+import { SettingsPanel } from "@/components/SettingsPanel"
 const MAX_LEVELS = 30
 
 export default function SequenceCompletionPage() {
@@ -141,6 +142,7 @@ export default function SequenceCompletionPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-amber-50 via-white to-orange-50 p-4 md:p-8">
+      <SettingsPanel />
       <div className="max-w-2xl mx-auto">
         {/* Header */}
         <Link

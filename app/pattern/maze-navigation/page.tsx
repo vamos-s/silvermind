@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import Link from 'next/link'
 import { useGameStore } from '@/lib/store'
 
+import { SettingsPanel } from "@/components/SettingsPanel"
 const MAX_LEVELS = 30
 
 type Position = { x: number; y: number }
@@ -246,6 +247,7 @@ export default function MazeNavigationPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-gray-50 p-4 md:p-8">
+      <SettingsPanel />
       <div className="max-w-2xl mx-auto">
         {/* Header */}
         <Link

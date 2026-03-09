@@ -7,6 +7,7 @@ import Link from 'next/link'
 import { useGameStore } from '@/lib/store'
 import { WORD_ASSOCIATION_LEVELS } from '@/lib/game-data/levels'
 
+import { SettingsPanel } from "@/components/SettingsPanel"
 const MAX_LEVELS = 30
 
 type WordPair = {
@@ -205,6 +206,7 @@ export default function WordAssociationPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-fuchsia-50 via-white to-pink-50 p-4 md:p-8">
+      <SettingsPanel />
       <div className="max-w-2xl mx-auto">
         {/* Header */}
         <Link

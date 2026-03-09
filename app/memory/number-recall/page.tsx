@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import Link from 'next/link'
 import { useGameStore } from '@/lib/store'
 
+import { SettingsPanel } from "@/components/SettingsPanel"
 const MAX_LEVELS = 30
 
 export default function NumberRecallPage() {
@@ -113,6 +114,7 @@ export default function NumberRecallPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 p-4 md:p-8">
+      <SettingsPanel />
       <div className="max-w-lg mx-auto">
         <header className="mb-6">
           <Link href="/memory" className="text-gray-700 hover:text-gray-900 font-medium mb-4 block">

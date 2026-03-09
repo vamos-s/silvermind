@@ -6,6 +6,7 @@ import { motion } from 'framer-motion'
 import Link from 'next/link'
 import { useGameStore } from '@/lib/store'
 
+import { SettingsPanel } from "@/components/SettingsPanel"
 type Color = { name: string, color: string, hex: string }
 
 const COLORS = [
@@ -200,6 +201,7 @@ export default function ColorMatchPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-rose-50 via-white to-indigo-50 p-4 md:p-8">
+      <SettingsPanel />
       <div className="max-w-2xl mx-auto">
         {/* Header */}
         <Link

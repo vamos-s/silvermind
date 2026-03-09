@@ -8,6 +8,7 @@ import { useGameStore } from '@/lib/store'
 import { LOCATION_MEMORY_LEVELS } from '@/lib/game-data/levels'
 import { ICONS } from '@/lib/game-data/icons'
 
+import { SettingsPanel } from "@/components/SettingsPanel"
 const MAX_LEVELS = 30
 
 type LocationItem = {
@@ -155,6 +156,7 @@ export default function LocationMemoryPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-white to-teal-50 p-4 md:p-8">
+      <SettingsPanel />
       <div className="max-w-2xl mx-auto">
         {/* Header */}
         <Link
