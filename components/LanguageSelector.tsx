@@ -57,7 +57,7 @@ export function LanguageSelector() {
         className="flex items-center gap-2 px-3 py-2 rounded-lg bg-white/80 backdrop-blur-sm shadow-md hover:bg-white/90 transition-colors"
       >
         <span className="text-xl">{currentLang.flag}</span>
-        <span className="text-sm font-medium text-gray-700">{currentLang.code.toUpperCase()}</span>
+        <span className="text-sm font-medium text-gray-700">{currentLang.name}</span>
         <motion.span
           animate={{ rotate: isOpen ? 180 : 0 }}
           transition={{ duration: 0.2 }}
