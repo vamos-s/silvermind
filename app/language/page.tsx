@@ -104,23 +104,6 @@ export default function LanguagePage() {
                   <p className={`text-sm ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
                     {game.description.ko || game.description.en}
                   </p>
-                  <div className="mt-4 flex gap-2">
-                    <span className={`px-3 py-1 rounded-full text-xs font-medium ${game.color} text-white`}>
-                      Easy
-                    </span>
-                    <span className={`px-3 py-1 rounded-full text-xs font-medium ${game.color} text-white`}>
-                      Medium
-                    </span>
-                    <span className={`px-3 py-1 rounded-full text-xs font-medium ${game.color} text-white`}>
-                      Hard
-                    </span>
-                    <span className={`px-3 py-1 rounded-full text-xs font-medium ${game.color} text-white`}>
-                      Expert
-                    </span>
-                    <span className={`px-3 py-1 rounded-full text-xs font-medium ${game.color} text-white`}>
-                      Master
-                    </span>
-                  </div>
                 </div>
               </Link>
             </motion.div>

@@ -55,6 +55,14 @@ export default function FindDifferencePage() {
   const [differences, setDifferences] = useState<Set<number>>(new Set())
   const [foundDifferences, setFoundDifferences] = useState<Set<number>>(new Set())
   const [hintUsed, setHintUsed] = useState(false)
+  const [wrongAttempts, setWrongAttempts] = useState(0)
+  const [wrongSelection, setWrongSelection] = useState<number | null>(null)
+  const [gameOverReason, setGameOverReason] = useState<'time' | 'lives'>('time')
+  const [hintedCell, setHintedCell] = useState<number | null>(null)
+  const [hintsUsedCount, setHintsUsedCount] = useState(0)
+  const MAX_HINTS_PER_GAME = 3
+  const HINT_TIME_PENALTY = 10
+  const MAX_WRONG_ATTEMPTS = 3
 
   const settings = useMemo(
     () => LEVEL_SETTINGS[Math.min(level - 1, LEVEL_SETTINGS.length - 1)],
@@ -66,9 +74,8 @@ export default function FindDifferencePage() {
   const getLevelScore = useCallback(() => {
     const baseScore = level * 50
     const timeBonus = timeLeft * 3
-    const hintPenalty = hintUsed ? 30 : 0
-    return Math.max(0, baseScore + timeBonus - hintPenalty)
-  }, [level, timeLeft, hintUsed])
+    return Math.max(0, baseScore + timeBonus)
+  }, [level, timeLeft])
 
   const generateDifferences = useCallback(() => {
     const diffCount = settings.differences
@@ -85,6 +92,9 @@ export default function FindDifferencePage() {
     setDifferences(generateDifferences())
     setFoundDifferences(new Set())
     setHintUsed(false)
+    setHintedCell(null)
+    setWrongAttempts(0)
+    setWrongSelection(null)
   }, [level, generateDifferences])
 
   const handleCellClick = useCallback((cellIndex: number, isRightSide: boolean) => {
@@ -97,33 +107,63 @@ export default function FindDifferencePage() {
       const newFound = new Set(foundDifferences)
       newFound.add(cellIndex)
       setFoundDifferences(newFound)
+      setWrongSelection(null)
 
       if (newFound.size >= differences.size) {
         const levelScore = Math.round(getLevelScore())
         setScore(levelScore)
         setGameState('levelComplete')
       }
+    } else if (!differences.has(cellIndex) && !foundDifferences.has(cellIndex)) {
+      // Wrong selection
+      setWrongSelection(cellIndex)
+      setWrongAttempts(prev => {
+        const newAttempts = prev + 1
+        if (newAttempts >= MAX_WRONG_ATTEMPTS) {
+          // Game over after 3 wrong attempts
+          setGameOverReason('lives')
+          setTimeout(() => {
+            setGameState('gameOver')
+          }, 500)
+        }
+        // Clear the wrong selection after 500ms
+        setTimeout(() => {
+          setWrongSelection(null)
+        }, 500)
+        return newAttempts
+      })
     }
   }, [gameState, differences, foundDifferences, getLevelScore])
 
   const useHint = useCallback(() => {
-    if (gameState !== 'playing' || hintUsed) return
+    if (gameState !== 'playing' || hintsUsedCount >= MAX_HINTS_PER_GAME) return
 
     // Find first unfound difference
     for (const diff of differences) {
       if (!foundDifferences.has(diff)) {
-        // Highlight it briefly
+        // Highlight only this cell
+        setHintedCell(diff)
         setHintUsed(true)
-        setTimeout(() => setHintUsed(false), 1000)
+        setHintsUsedCount(prev => prev + 1)
+
+        // Apply time penalty
+        setTimeLeft(prev => Math.max(0, prev - HINT_TIME_PENALTY))
+
+        // Clear hint after showing
+        setTimeout(() => {
+          setHintedCell(null)
+          setHintUsed(false)
+        }, 1000)
         break
       }
     }
-  }, [gameState, hintUsed, differences, foundDifferences])
+  }, [gameState, hintsUsedCount, differences, foundDifferences])
 
   const startGame = useCallback(() => {
     setScore(0)
     setTotalScore(0)
     setLevel(1)
+    setHintsUsedCount(0)
     generateLevel()
     setGameState('playing')
   }, [generateLevel])
@@ -156,6 +196,7 @@ export default function FindDifferencePage() {
     const timer = setInterval(() => {
       setTimeLeft(prev => {
         if (prev <= 1) {
+          setGameOverReason('time')
           addSession({
             id: Date.now().toString(),
             gameId: 'find-difference',
@@ -174,9 +215,17 @@ export default function FindDifferencePage() {
     return () => clearInterval(timer)
   }, [gameState, timeLeft, totalScore, addSession, settings.timeLimit])
 
-  const getCellShape = useCallback((index: number) => {
-    return SHAPES[index % SHAPES.length]
-  }, [])
+  const getCellShape = useCallback((index: number, isRightSide: boolean) => {
+    const baseShape = SHAPES[index % SHAPES.length]
+
+    // If this is a different cell on the right side, use a different shape
+    if (isRightSide && differences.has(index)) {
+      // Use a shape that's 2-3 positions ahead to make it subtly different
+      return SHAPES[(index + 3) % SHAPES.length]
+    }
+
+    return baseShape
+  }, [differences])
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-violet-50 via-white to-purple-50 p-4 md:p-8">
@@ -213,6 +262,7 @@ export default function FindDifferencePage() {
                 <li>• {t('findDifference.gridSize', 'Grid')}: {gridSize} × {gridSize}</li>
                 <li>• {t('findDifference.differences', 'Differences')}: {settings.differences}</li>
                 <li>• {t('findDifference.timeLimit', 'Time Limit')}: {settings.timeLimit}s</li>
+                <li>• {t('findDifference.hintLimit', 'Hint Limit')}: {MAX_HINTS_PER_GAME} per game (-{HINT_TIME_PENALTY}s each)</li>
               </ul>
             </div>
             <button
@@ -246,6 +296,18 @@ export default function FindDifferencePage() {
                   <p className="text-gray-700 text-sm font-medium">{t('findDifference.progress', 'Progress')}</p>
                   <p className="text-3xl font-bold text-violet-600">{foundDifferences.size}/{differences.size}</p>
                 </div>
+                <div>
+                  <p className="text-gray-700 text-sm font-medium">{t('findDifference.lives', 'Lives')}</p>
+                  <p className={`text-3xl font-bold ${wrongAttempts >= MAX_WRONG_ATTEMPTS - 1 ? 'text-red-500' : 'text-violet-600'}`}>
+                    {MAX_WRONG_ATTEMPTS - wrongAttempts}/{MAX_WRONG_ATTEMPTS}
+                  </p>
+                </div>
+                <div>
+                  <p className="text-gray-700 text-sm font-medium">{t('findDifference.hints', 'Hints')}</p>
+                  <p className={`text-3xl font-bold ${hintsUsedCount >= MAX_HINTS_PER_GAME - 1 ? 'text-red-500' : 'text-violet-600'}`}>
+                    {MAX_HINTS_PER_GAME - hintsUsedCount}/{MAX_HINTS_PER_GAME}
+                  </p>
+                </div>
               </div>
               {/* Progress Bar */}
               <div className="mt-4 bg-gray-200 rounded-full h-3 overflow-hidden">
@@ -271,7 +333,7 @@ export default function FindDifferencePage() {
                       key={index}
                       className="aspect-square bg-gray-100 rounded-lg flex items-center justify-center text-xl md:text-2xl"
                     >
-                      {getCellShape(index)}
+                      {getCellShape(index, false)}
                     </div>
                   ))}
                 </div>
@@ -287,6 +349,8 @@ export default function FindDifferencePage() {
                   {Array.from({ length: totalCells }).map((_, index) => {
                     const isDifferent = differences.has(index)
                     const isFound = foundDifferences.has(index)
+                    const isWrong = wrongSelection === index
+                    const isHinted = hintedCell === index
 
                     return (
                       <motion.button
@@ -297,14 +361,14 @@ export default function FindDifferencePage() {
                         className={`aspect-square rounded-lg flex items-center justify-center text-xl md:text-2xl transition-all ${
                           isFound
                             ? 'bg-green-500 text-white'
-                            : isDifferent && hintUsed && !isFound
-                            ? 'bg-yellow-400 animate-pulse'
-                            : isDifferent
-                            ? 'bg-violet-100'
+                            : isWrong
+                            ? 'bg-red-500 text-white animate-pulse'
+                            : isHinted
+                            ? 'bg-yellow-400 animate-pulse ring-4 ring-yellow-300'
                             : 'bg-gray-100'
                         }`}
                       >
-                        {isFound ? '✓' : isDifferent ? '❓' : getCellShape(index)}
+                        {isFound ? '✓' : isWrong ? '✗' : getCellShape(index, true)}
                       </motion.button>
                     )
                   })}
@@ -315,14 +379,16 @@ export default function FindDifferencePage() {
             {/* Hint Button */}
             <button
               onClick={useHint}
-              disabled={hintUsed}
+              disabled={hintsUsedCount >= MAX_HINTS_PER_GAME}
               className={`w-full text-xl font-bold py-4 rounded-xl shadow-lg transition-all ${
-                hintUsed
+                hintsUsedCount >= MAX_HINTS_PER_GAME
                   ? 'bg-gray-400 text-white cursor-not-allowed'
                   : 'bg-gradient-to-r from-yellow-400 to-orange-400 text-white hover:from-yellow-500 hover:to-orange-500'
               }`}
             >
-              {hintUsed ? 'Hint Used (-30 points)' : 'Use Hint (-30 points)'}
+              {hintsUsedCount >= MAX_HINTS_PER_GAME
+                ? `No Hints Left (${MAX_HINTS_PER_GAME}/${MAX_HINTS_PER_GAME})`
+                : `Use Hint (-${HINT_TIME_PENALTY}s) • ${hintsUsedCount}/${MAX_HINTS_PER_GAME}`}
             </button>
           </>
         )}
@@ -364,8 +430,17 @@ export default function FindDifferencePage() {
             animate={{ opacity: 1, y: 0 }}
             className="bg-white rounded-2xl shadow-lg p-8 text-center"
           >
-            <div className="text-6xl mb-4">❌</div>
-            <h2 className="text-4xl font-bold text-gray-800 mb-4">{t('findDifference.gameOver', 'Time\'s Up!')}</h2>
+            <div className="text-6xl mb-4">{gameOverReason === 'lives' ? '💔' : '❌'}</div>
+            <h2 className="text-4xl font-bold text-gray-800 mb-4">
+              {gameOverReason === 'lives'
+                ? t('findDifference.noLives', 'No Lives Left!')
+                : t('findDifference.gameOver', 'Time\'s Up!')}
+            </h2>
+            <p className="text-lg text-gray-700 font-medium mb-4">
+              {gameOverReason === 'lives'
+                ? t('findDifference.usedAllLives', 'You used all {count} lives.', { count: MAX_WRONG_ATTEMPTS })
+                : t('findDifference.timeRanOut', 'Time ran out!')}
+            </p>
             <div className="bg-orange-50 rounded-xl p-6 mb-6">
               <p className="text-gray-700 text-sm font-medium">{t('findDifference.finalScore', 'Final Score')}</p>
               <p className="text-3xl font-bold text-orange-600">{totalScore}</p>

@@ -7,37 +7,77 @@ import { useGameStore } from '@/lib/store'
 import { ThemeToggle } from '@/components/ThemeToggle'
 
 const games = [
-  { id: 'pattern-matching', icon: '🎨', title: 'Pattern Matching', description: 'Remember and reproduce patterns', difficulty: 'Easy' },
-  { id: 'word-association', icon: '🔗', title: 'Word Association', description: 'Find words in the same category', difficulty: 'Medium' },
-  { id: 'number-recall', icon: '🔢', title: 'Number Recall', description: 'Remember number sequences', difficulty: 'Medium' },
-  { id: 'sequence-memory', icon: '🔔', title: 'Sequence Memory', description: 'Watch and repeat the sequence', difficulty: 'Easy' },
-  { id: 'word-recall', icon: '📝', title: 'Word Recall', description: 'Remember and type the words', difficulty: 'Hard' },
-  { id: 'card-flip', icon: '🃏', title: 'Card Flip', description: 'Match the pairs of cards', difficulty: 'Easy' },
-  { id: 'location-memory', icon: '📍', title: 'Location Memory', description: 'Remember item positions', difficulty: 'Medium' },
+  {
+    id: 'pattern-matching',
+    title: { ko: '패턴 매칭', en: 'Pattern Matching' },
+    description: { ko: '패턴을 기억하고 재현하세요', en: 'Remember and reproduce patterns' },
+    icon: '🎨',
+  },
+  {
+    id: 'word-association',
+    title: { ko: '단어 연상', en: 'Word Association' },
+    description: { ko: '같은 카테고리의 단어를 찾으세요', en: 'Find words in the same category' },
+    icon: '🔗',
+  },
+  {
+    id: 'number-recall',
+    title: { ko: '숫자 기억', en: 'Number Recall' },
+    description: { ko: '숫자 순서를 기억하세요', en: 'Remember number sequences' },
+    icon: '🔢',
+  },
+  {
+    id: 'sequence-memory',
+    title: { ko: '시퀀스 기억', en: 'Sequence Memory' },
+    description: { ko: '순서를 보고 반복하세요', en: 'Watch and repeat the sequence' },
+    icon: '🔔',
+  },
+  {
+    id: 'word-recall',
+    title: { ko: '단어 기억', en: 'Word Recall' },
+    description: { ko: '단어를 기억하고 입력하세요', en: 'Remember and type the words' },
+    icon: '📝',
+  },
+  {
+    id: 'card-flip',
+    title: { ko: '카드 뒤집기', en: 'Card Flip' },
+    description: { ko: '카드 쌍을 맞추세요', en: 'Match the pairs of cards' },
+    icon: '🃏',
+  },
+  {
+    id: 'location-memory',
+    title: { ko: '위치 기억', en: 'Location Memory' },
+    description: { ko: '아이템 위치를 기억하세요', en: 'Remember item positions' },
+    icon: '📍',
+  },
 ]
 
 export default function MemoryPage() {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
   const { darkMode } = useGameStore()
+  const lang = i18n.language
 
   return (
     <div className={`min-h-screen ${darkMode ? 'bg-gradient-to-br from-slate-900 to-slate-800' : 'bg-gradient-to-br from-blue-50 to-purple-50'}`}>
       <header className={`p-6 shadow-sm ${darkMode ? 'bg-slate-900' : 'bg-white'}`}>
-        <div className="flex justify-between items-center">
-          <div>
-            <Link href="/" className={`hover:underline mb-4 block ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-              ← Back
-            </Link>
-            <h1 className={`text-3xl font-bold ${darkMode ? 'text-white' : 'text-gray-800'}`}>🧠 {t('memory')}</h1>
-          </div>
+        <div className="max-w-6xl mx-auto">
+          <Link href="/">
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className={`px-4 py-2 rounded-lg ${darkMode ? 'text-indigo-400 hover:text-indigo-300' : 'text-indigo-600 hover:text-indigo-700'}`}
+            >
+              ← {t('back')}
+            </motion.button>
+          </Link>
+          <h1 className={`text-4xl font-bold mt-4 ${darkMode ? 'text-white' : 'text-gray-800'}`}>🧠 {t('memory')}</h1>
         </div>
       </header>
 
       {/* Theme Toggle - Fixed Position */}
       <ThemeToggle />
 
-      <main className="container mx-auto px-4 py-8">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+      <main className="p-6 max-w-6xl mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {games.map((game, i) => (
             <Link key={game.id} href={`/memory/${game.id}`}>
               <motion.div
@@ -51,16 +91,13 @@ export default function MemoryPage() {
                     : 'bg-white hover:bg-gray-50'
                 }`}
               >
-                <span className={`absolute top-4 right-4 px-2 py-1 text-xs font-semibold rounded-full ${
-                  darkMode
-                    ? 'bg-indigo-600 text-white'
-                    : 'bg-indigo-100 text-indigo-700'
-                }`}>
-                  {game.difficulty}
-                </span>
                 <span className="text-5xl block mb-4">{game.icon}</span>
-                <h2 className={`text-2xl font-bold mb-2 ${darkMode ? 'text-white' : 'text-gray-800'}`}>{game.title}</h2>
-                <p className={darkMode ? 'text-gray-300' : 'text-gray-600'}>{game.description}</p>
+                <h2 className={`text-2xl font-bold mb-2 ${darkMode ? 'text-white' : 'text-gray-800'}`}>
+                  {game.title[lang as keyof typeof game.title] || game.title.en}
+                </h2>
+                <p className={darkMode ? 'text-gray-300' : 'text-gray-600'}>
+                  {game.description[lang as keyof typeof game.description] || game.description.en}
+                </p>
               </motion.div>
             </Link>
           ))}

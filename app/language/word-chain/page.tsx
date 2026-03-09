@@ -406,7 +406,7 @@ export default function WordChainPage() {
                 value={userInput}
                 onChange={(e) => setUserInput(e.target.value)}
                 placeholder={`${t('wordChain.enterWord', 'Enter word starting with')} "${currentWord[currentWord.length - 1].toUpperCase()}"`}
-                className="w-full p-4 text-xl border-2 border-gray-200 rounded-xl focus:border-orange-400 focus:outline-none text-center"
+                className="w-full p-4 text-xl border-2 border-gray-300 rounded-xl focus:border-orange-400 focus:outline-none text-center text-gray-800 placeholder-gray-500"
                 autoFocus
                 autoComplete="off"
               />

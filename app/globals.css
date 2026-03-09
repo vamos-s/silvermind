@@ -46,6 +46,63 @@ a:hover {
   color: var(--link-hover);
 }
 
+/* Cursor pointer for all clickable elements */
+button,
+button *,
+a,
+a *,
+input[type="submit"],
+input[type="submit"] *,
+input[type="button"],
+input[type="button"] *,
+input[type="checkbox"],
+input[type="checkbox"] *,
+input[type="radio"],
+input[type="radio"] *,
+select,
+select *,
+[role="button"],
+[role="button"] *,
+[role="link"],
+[role="link"] *,
+.cursor-pointer,
+.cursor-pointer *,
+.clickable,
+.clickable * {
+  cursor: pointer !important;
+}
+
+/* Cursor pointer for framer-motion elements */
+button[class*="framer-"],
+button[class*="framer-"] * {
+  cursor: pointer !important;
+}
+
+/* Special case: elements with onclick handlers */
+[onclick],
+[onclick] * {
+  cursor: pointer !important;
+}
+
+/* Motion components from framer-motion */
+[class^="motion-"],
+[class*=" motion-"] button,
+[class*="motion-"] button * {
+  cursor: pointer !important;
+}
+
+/* SVG buttons */
+svg,
+svg * {
+  pointer-events: auto;
+}
+
+button svg,
+button svg * {
+  pointer-events: none;
+  cursor: pointer !important;
+}
+
 /* Game card styling for dark mode */
 .game-card {
   background: var(--card-bg);

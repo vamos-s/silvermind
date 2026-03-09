@@ -322,7 +322,7 @@ export default function NumberSequencePage() {
                 value={userInput}
                 onChange={(e) => setUserInput(e.target.value)}
                 placeholder={t('numberSequence.placeholder', 'Enter the next number')}
-                className="w-full p-6 text-2xl border-4 border-gray-200 rounded-xl focus:border-teal-300 focus:outline-none mb-6 text-center"
+                className="w-full p-6 text-2xl border-4 border-gray-300 rounded-xl focus:border-teal-300 focus:outline-none mb-6 text-center text-gray-800 placeholder-gray-500"
                 autoFocus
                 onKeyPress={(e) => {
                   if (e.key === 'Enter') {

@@ -78,7 +78,7 @@ export default function AttentionPage() {
               ← {t('back')}
             </motion.button>
           </Link>
-          <h1 className={`text-4xl font-bold mt-4 ${darkMode ? 'text-white' : 'text-gray-800'}`}>👁️ Attention & Focus</h1>
+          <h1 className={`text-4xl font-bold mt-4 ${darkMode ? 'text-white' : 'text-gray-800'}`}>👁️ {t('attention')}</h1>
         </div>
       </header>
 
@@ -105,23 +105,6 @@ export default function AttentionPage() {
                   <p className={`text-sm ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
                     {game.description[lang as keyof typeof game.description] || game.description.en}
                   </p>
-                  <div className="mt-4 flex gap-2">
-                    <span className={`px-3 py-1 rounded-full text-xs font-medium ${game.color} text-white`}>
-                      Easy
-                    </span>
-                    <span className={`px-3 py-1 rounded-full text-xs font-medium ${game.color} text-white`}>
-                      Medium
-                    </span>
-                    <span className={`px-3 py-1 rounded-full text-xs font-medium ${game.color} text-white`}>
-                      Hard
-                    </span>
-                    <span className={`px-3 py-1 rounded-full text-xs font-medium ${game.color} text-white`}>
-                      Expert
-                    </span>
-                    <span className={`px-3 py-1 rounded-full text-xs font-medium ${game.color} text-white`}>
-                      Master
-                    </span>
-                  </div>
                 </div>
               </Link>
             </motion.div>

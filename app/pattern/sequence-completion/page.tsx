@@ -274,7 +274,7 @@ export default function SequenceCompletionPage() {
                 value={userInput}
                 onChange={(e) => setUserInput(e.target.value)}
                 placeholder={t('sequenceCompletion.placeholder', 'Enter the next item')}
-                className="w-full p-6 text-2xl border-4 border-gray-200 rounded-xl focus:border-amber-300 focus:outline-none mb-6 text-center"
+                className="w-full p-6 text-2xl border-4 border-gray-300 rounded-xl focus:border-amber-300 focus:outline-none mb-6 text-center text-gray-800 placeholder-gray-500"
                 autoFocus
                 whileFocus={{ scale: 1.01 }}
                 onKeyPress={(e) => {

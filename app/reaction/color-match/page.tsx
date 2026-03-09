@@ -292,8 +292,8 @@ export default function ColorMatchPage() {
               </motion.div>
               <p className="text-xl text-gray-700 font-medium mb-2">
                 {mode === 'text'
-                  ? t('colorMatch.matchText', 'Match TEXT color')
-                  : t('colorMatch.matchWord', 'Match WORD meaning')
+                  ? t('colorMatch.matchWord', 'Match the WORD meaning')
+                  : t('colorMatch.matchText', 'Match the TEXT color')
                 }
               </p>
             </div>

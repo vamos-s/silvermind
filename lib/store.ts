@@ -170,12 +170,25 @@ export const useGameStore = create<GameStore>((set, get) => ({
       localStorage.setItem('darkMode', String(newMode))
       if (newMode) {
         document.documentElement.classList.add('dark')
+        document.documentElement.classList.remove('light')
       } else {
         document.documentElement.classList.remove('dark')
+        document.documentElement.classList.add('light')
       }
     }
     return { darkMode: newMode }
   }),
+
+  // Sync darkMode from localStorage (useful when ThemeToggle changes it externally)
+  syncDarkMode: () => {
+    const fromStorage = typeof window !== 'undefined'
+      ? localStorage.getItem('darkMode') === 'true'
+      : false
+    if (get().darkMode !== fromStorage) {
+      return set({ darkMode: fromStorage })
+    }
+    return {}
+  },
   
   updateBestScore: (gameId, difficulty, score) => set((state) => {
     const currentBest = state.bestScores[gameId]?.[difficulty] || 0

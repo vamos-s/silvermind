@@ -7,26 +7,51 @@ import { useGameStore } from '@/lib/store'
 import { ThemeToggle } from '@/components/ThemeToggle'
 
 const games = [
-  { id: 'timing-game', icon: '⏱️', title: 'Timing Game', description: 'Click when the color changes', difficulty: 'Easy' },
-  { id: 'target-detection', icon: '🎯', title: 'Target Detection', description: 'Find the targets quickly', difficulty: 'Medium' },
-  { id: 'color-match', icon: '🌈', title: 'Color Match', description: 'Match the color or word', difficulty: 'Medium' },
-  { id: 'quick-reaction', icon: '⚡', title: 'Quick Reaction', description: 'Test your reaction speed', difficulty: 'Easy' },
+  {
+    id: 'timing-game',
+    title: { ko: '타이밍 게임', en: 'Timing Game' },
+    description: { ko: '색이 변할 때 클릭하세요', en: 'Click when the color changes' },
+    icon: '⏱️',
+  },
+  {
+    id: 'target-detection',
+    title: { ko: '타겟 탐지', en: 'Target Detection' },
+    description: { ko: '타겟을 빠르게 찾으세요', en: 'Find the targets quickly' },
+    icon: '🎯',
+  },
+  {
+    id: 'color-match',
+    title: { ko: '컬러 매치', en: 'Color Match' },
+    description: { ko: '색이나 단어를 일치시키세요', en: 'Match the color or word' },
+    icon: '🌈',
+  },
+  {
+    id: 'quick-reaction',
+    title: { ko: '퀵 리액션', en: 'Quick Reaction' },
+    description: { ko: '반응 속도를 테스트하세요', en: 'Test your reaction speed' },
+    icon: '⚡',
+  },
 ]
 
 export default function ReactionPage() {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
   const { darkMode } = useGameStore()
+  const lang = i18n.language
 
   return (
     <div className={`min-h-screen ${darkMode ? 'bg-gradient-to-br from-slate-900 to-slate-800' : 'bg-gradient-to-br from-blue-50 to-purple-50'}`}>
       <header className={`p-6 shadow-sm ${darkMode ? 'bg-slate-900' : 'bg-white'}`}>
-        <div className="flex justify-between items-center">
-          <div>
-            <Link href="/" className={`hover:underline mb-4 block ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-              ← Back
-            </Link>
-            <h1 className={`text-3xl font-bold ${darkMode ? 'text-white' : 'text-gray-800'}`}>⚡ {t('reaction')}</h1>
-          </div>
+        <div className="max-w-6xl mx-auto">
+          <Link href="/">
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className={`px-4 py-2 rounded-lg ${darkMode ? 'text-indigo-400 hover:text-indigo-300' : 'text-indigo-600 hover:text-indigo-700'}`}
+            >
+              ← {t('back')}
+            </motion.button>
+          </Link>
+          <h1 className={`text-4xl font-bold mt-4 ${darkMode ? 'text-white' : 'text-gray-800'}`}>⚡ {t('reaction')}</h1>
         </div>
       </header>
 
@@ -48,16 +73,13 @@ export default function ReactionPage() {
                     : 'bg-white hover:bg-gray-50'
                 }`}
               >
-                <span className={`absolute top-4 right-4 px-2 py-1 text-xs font-semibold rounded-full ${
-                  darkMode
-                    ? 'bg-indigo-600 text-white'
-                    : 'bg-indigo-100 text-indigo-700'
-                }`}>
-                  {game.difficulty}
-                </span>
                 <span className="text-5xl block mb-4">{game.icon}</span>
-                <h2 className={`text-2xl font-bold mb-2 ${darkMode ? 'text-white' : 'text-gray-800'}`}>{game.title}</h2>
-                <p className={darkMode ? 'text-gray-300' : 'text-gray-600'}>{game.description}</p>
+                <h2 className={`text-2xl font-bold mb-2 ${darkMode ? 'text-white' : 'text-gray-800'}`}>
+                  {game.title[lang as keyof typeof game.title] || game.title.en}
+                </h2>
+                <p className={darkMode ? 'text-gray-300' : 'text-gray-600'}>
+                  {game.description[lang as keyof typeof game.description] || game.description.en}
+                </p>
               </motion.div>
             </Link>
           ))}
