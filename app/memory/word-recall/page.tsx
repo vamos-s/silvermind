@@ -99,13 +99,6 @@ export default function WordRecallPage() {
     return baseScore + timeBonus
   }, [timeLeft])
 
-  const startGame = useCallback(() => {
-    setScore(0)
-    setTotalScore(0)
-    setLevel(1)
-    startLevel()
-  }, [startLevel])
-
   const startLevel = useCallback(() => {
     const wordList = WORDS[settings.difficulty as keyof typeof WORDS]
     const languageFilteredWords = filterByLanguage(wordList)
@@ -124,7 +117,7 @@ export default function WordRecallPage() {
     let index = 0
     const interval = setInterval(() => {
       index++
-      if (index < words.length) {
+      if (index < selectedWords.length) {
         setCurrentWordIndex(index)
       } else {
         clearInterval(interval)
@@ -133,7 +126,14 @@ export default function WordRecallPage() {
         }, 500)
       }
     }, settings.duration)
-  }, [settings.difficulty, settings.wordCount, settings.inputTime, settings.duration, filterByLanguage, words.length])
+  }, [settings.difficulty, settings.wordCount, settings.inputTime, settings.duration, filterByLanguage])
+
+  const startGame = useCallback(() => {
+    setScore(0)
+    setTotalScore(0)
+    setLevel(1)
+    startLevel()
+  }, [startLevel])
 
   const handleSubmit = useCallback(() => {
     if (!userInput.trim()) return

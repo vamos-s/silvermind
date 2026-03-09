@@ -153,6 +153,7 @@ const ANAGRAM_SETS: { [key: string]: string[] } = {
   'tan': ['ant', 'nat', 'tan'],
   'tar': ['art', 'rat', 'tar'],
   'tax': ['xat', 'tax'],
+  'tea': ['ate', 'eat', 'tea'],
   'tee': ['ete', 'tee'],
   'ten': ['net', 'ten'],
   'the': ['het', 'the'],

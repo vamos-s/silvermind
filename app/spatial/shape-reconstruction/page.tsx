@@ -308,7 +308,7 @@ export default function ShapeReconstructionPage() {
   }
 
   const renderOutlineShape = (shape: string) => {
-    const shapes: Record<string, JSX.Element> = {
+    const shapes: Record<string, React.ReactNode> = {
       star: (
         <svg viewBox="0 0 100 100" className="w-full h-full">
           <polygon points="50,5 61,35 95,35 68,57 79,91 50,70 21,91 32,57 5,35 39,35" 

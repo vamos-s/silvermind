@@ -20,7 +20,7 @@ export default function MathOperationsPage() {
   const [gameOver, setGameOver] = useState(false)
 
   const generateProblem = useCallback(() => {
-    let a: number, b: number, op: Operation, answer: number
+    let a: number, b: number, op: Operation = '+', answer: number
 
     switch (currentDifficulty) {
       case 'easy':
@@ -42,6 +42,11 @@ export default function MathOperationsPage() {
         op = hardOps[Math.floor(Math.random() * hardOps.length)]
         a = Math.floor(Math.random() * 100) + 1
         b = Math.floor(Math.random() * 20) + 1
+        break
+      default:
+        a = Math.floor(Math.random() * 10)
+        b = Math.floor(Math.random() * 10)
+        op = '+'
         break
     }
 

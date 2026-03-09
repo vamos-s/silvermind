@@ -5,7 +5,7 @@ import { Difficulty, QuestionLevelSettings } from '../types'
  */
 export interface IdiomRiddleLevelSettings extends QuestionLevelSettings {
   language: 'ko' | 'en' | 'both'
-  difficulty: 'common' | 'medium' | 'obscure'
+  idiomDifficulty: 'common' | 'medium' | 'obscure'
   hintCount: number
   timePerQuestion: number
 }
@@ -16,7 +16,7 @@ export const IDIOM_RIDDLE_LEVELS: Record<Difficulty, IdiomRiddleLevelSettings> =
     questionCount: 5,
     optionCount: 4,
     language: 'both',
-    difficulty: 'common',
+    idiomDifficulty: 'common',
     hintCount: 3,
     timePerQuestion: 45,
     inputTime: 225,
@@ -26,7 +26,7 @@ export const IDIOM_RIDDLE_LEVELS: Record<Difficulty, IdiomRiddleLevelSettings> =
     questionCount: 8,
     optionCount: 6,
     language: 'both',
-    difficulty: 'common',
+    idiomDifficulty: 'common',
     hintCount: 2,
     timePerQuestion: 40,
     inputTime: 320,
@@ -36,7 +36,7 @@ export const IDIOM_RIDDLE_LEVELS: Record<Difficulty, IdiomRiddleLevelSettings> =
     questionCount: 10,
     optionCount: 8,
     language: 'both',
-    difficulty: 'medium',
+    idiomDifficulty: 'medium',
     hintCount: 2,
     timePerQuestion: 35,
     inputTime: 350,
@@ -46,7 +46,7 @@ export const IDIOM_RIDDLE_LEVELS: Record<Difficulty, IdiomRiddleLevelSettings> =
     questionCount: 12,
     optionCount: 10,
     language: 'both',
-    difficulty: 'medium',
+    idiomDifficulty: 'medium',
     hintCount: 1,
     timePerQuestion: 30,
     inputTime: 360,
@@ -56,7 +56,7 @@ export const IDIOM_RIDDLE_LEVELS: Record<Difficulty, IdiomRiddleLevelSettings> =
     questionCount: 15,
     optionCount: 12,
     language: 'both',
-    difficulty: 'obscure',
+    idiomDifficulty: 'obscure',
     hintCount: 0,
     timePerQuestion: 25,
     inputTime: 375,

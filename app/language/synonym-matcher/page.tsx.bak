@@ -10,6 +10,99 @@ import { SYNONYMS, LEVEL_SETTINGS } from '@/lib/constants/synonym-matcher'
 const MAX_LEVELS = 30
 
 
+  'happy': ['joyful', 'glad', 'pleased', 'cheerful', 'delighted'],
+  'sad': ['unhappy', 'sorrowful', 'gloomy', 'mournful', 'downcast'],
+  'big': ['large', 'huge', 'giant', 'enormous', 'massive'],
+  'small': ['tiny', 'little', 'miniature', 'minute', 'petite'],
+  'fast': ['quick', 'rapid', 'swift', 'speedy', 'hasty'],
+  'slow': ['sluggish', 'leisurely', 'unhurried', 'gradual', 'delayed'],
+  'smart': ['clever', 'intelligent', 'bright', 'brilliant', 'sharp'],
+  'stupid': ['foolish', 'dumb', 'dense', 'unintelligent', 'ignorant'],
+  'good': ['excellent', 'great', 'wonderful', 'fine', 'superb'],
+  'bad': ['terrible', 'awful', 'poor', 'inferior', 'dreadful'],
+  'beautiful': ['pretty', 'lovely', 'gorgeous', 'attractive', 'stunning'],
+  'ugly': ['hideous', 'unattractive', 'unsightly', 'repulsive', 'grotesque'],
+  'rich': ['wealthy', 'affluent', 'prosperous', 'well-off', 'fortunate'],
+  'poor': ['impoverished', 'destitute', 'needy', 'penniless', 'broke'],
+  'strong': ['powerful', 'muscular', 'sturdy', 'robust', 'vigorous'],
+  'weak': ['feeble', 'fragile', 'frail', 'delicate', 'powerless'],
+  'hot': ['warm', 'scorching', 'sizzling', 'blazing', 'fiery'],
+  'cold': ['cool', 'chilly', 'frigid', 'freezing', 'icy'],
+  'hard': ['difficult', 'tough', 'challenging', 'demanding', 'complex'],
+  'easy': ['simple', 'effortless', 'uncomplicated', 'straightforward', 'painless'],
+  'brave': ['courageous', 'fearless', 'bold', 'daring', 'valiant'],
+  'scared': ['afraid', 'frightened', 'terrified', 'petrified', 'anxious'],
+  'angry': ['mad', 'furious', 'irate', 'livid', 'enraged'],
+  'calm': ['peaceful', 'serene', 'tranquil', 'composed', 'relaxed'],
+  'kind': ['nice', 'generous', 'benevolent', 'caring', 'compassionate'],
+  'mean': ['cruel', 'nasty', 'unkind', 'harsh', 'hostile'],
+  'loud': ['noisy', 'boisterous', 'deafening', 'thunderous', 'raucous'],
+  'quiet': ['silent', 'hushed', 'peaceful', 'still', 'muted'],
+  'clean': ['spotless', 'pristine', 'immaculate', 'pure', 'tidy'],
+  'dirty': ['filthy', 'unclean', 'soiled', 'grimy', 'messy'],
+  'old': ['ancient', 'aged', 'elderly', 'antique', 'vintage'],
+  'new': ['fresh', 'modern', 'recent', 'novel', 'brand-new'],
+  'important': ['significant', 'crucial', 'vital', 'essential', 'major'],
+  'unimportant': ['trivial', 'insignificant', 'minor', 'negligible', 'petty'],
+  'love': ['adore', 'cherish', 'treasure', 'value', 'admire'],
+  'hate': ['detest', 'loathe', 'despise', 'abhor', 'dislike'],
+  'laugh': ['giggle', 'chuckle', 'snicker', 'cackle', 'guffaw'],
+  'cry': ['weep', 'sob', 'wail', 'bawl', 'shed tears'],
+  'walk': ['stroll', 'march', 'saunter', 'stride', 'wander'],
+  'run': ['sprint', 'jog', 'dash', 'race', 'bolt'],
+  'jump': ['leap', 'hop', 'bound', 'spring', 'vault'],
+  'sit': ['perch', 'rest', 'settle', 'lounge', 'be seated'],
+  'stand': ['rise', 'upright', 'vertical', 'erect', 'on feet'],
+  'look': ['gaze', 'stare', 'glance', 'peek', 'observe'],
+  'listen': ['hear', 'attend', 'heed', 'pay attention', 'take in'],
+  'talk': ['speak', 'converse', 'chat', 'discuss', 'communicate'],
+  'think': ['ponder', 'consider', 'reflect', 'contemplate', 'meditate'],
+  'feel': ['sense', 'perceive', 'experience', 'emote', 'touch'],
+  'tired': ['exhausted', 'weary', 'fatigued', 'drained', 'worn out'],
+  'energetic': ['active', 'lively', 'vibrant', 'dynamic', 'vigorous'],
+  'hungry': ['famished', 'starving', 'ravenous', 'craving', 'empty'],
+  'thirsty': ['parched', 'dry', 'dehydrated', 'yearning', 'craving drink'],
+  'sleepy': ['drowsy', 'tired', 'sluggish', 'lethargic', 'groggy'],
+  'awake': ['alert', 'conscious', 'aware', 'vigilant', 'up'],
+  'right': ['correct', 'accurate', 'true', 'valid', 'precise'],
+  'wrong': ['incorrect', 'false', 'inaccurate', 'mistaken', 'erroneous'],
+  'true': ['genuine', 'real', 'authentic', 'valid', 'accurate'],
+  'false': ['fake', 'untrue', 'counterfeit', 'bogus', 'artificial'],
+}
+
+const LEVEL_SETTINGS = [
+  { pairs: 3, timeLimit: 45, distractions: 2 },  // Level 1
+  { pairs: 3, timeLimit: 40, distractions: 2 },  // Level 2
+  { pairs: 3, timeLimit: 35, distractions: 3 },  // Level 3
+  { pairs: 4, timeLimit: 50, distractions: 3 },  // Level 4
+  { pairs: 4, timeLimit: 45, distractions: 3 },  // Level 5
+  { pairs: 4, timeLimit: 40, distractions: 4 },  // Level 6
+  { pairs: 5, timeLimit: 55, distractions: 4 },  // Level 7
+  { pairs: 5, timeLimit: 50, distractions: 4 },  // Level 8
+  { pairs: 5, timeLimit: 45, distractions: 5 },  // Level 9
+  { pairs: 6, timeLimit: 60, distractions: 5 },  // Level 10
+  { pairs: 6, timeLimit: 55, distractions: 5 },  // Level 11
+  { pairs: 6, timeLimit: 50, distractions: 6 },  // Level 12
+  { pairs: 7, timeLimit: 65, distractions: 6 },  // Level 13
+  { pairs: 7, timeLimit: 60, distractions: 6 },  // Level 14
+  { pairs: 7, timeLimit: 55, distractions: 7 },  // Level 15
+  { pairs: 8, timeLimit: 70, distractions: 7 },  // Level 16
+  { pairs: 8, timeLimit: 65, distractions: 7 },  // Level 17
+  { pairs: 8, timeLimit: 60, distractions: 8 },  // Level 18
+  { pairs: 9, timeLimit: 75, distractions: 8 },  // Level 19
+  { pairs: 9, timeLimit: 70, distractions: 8 },  // Level 20
+  { pairs: 10, timeLimit: 80, distractions: 9 },  // Level 21
+  { pairs: 10, timeLimit: 75, distractions: 9 },  // Level 22
+  { pairs: 10, timeLimit: 70, distractions: 10 },  // Level 23
+  { pairs: 11, timeLimit: 85, distractions: 10 },  // Level 24
+  { pairs: 11, timeLimit: 80, distractions: 10 },  // Level 25
+  { pairs: 12, timeLimit: 90, distractions: 11 },  // Level 26
+  { pairs: 12, timeLimit: 85, distractions: 11 },  // Level 27
+  { pairs: 12, timeLimit: 80, distractions: 12 },  // Level 28
+  { pairs: 13, timeLimit: 95, distractions: 12 },  // Level 29
+  { pairs: 13, timeLimit: 90, distractions: 12 },  // Level 30
+}
+
 interface WordCard {
   id: number
   word: string
@@ -52,7 +145,7 @@ export default function SynonymMatcherPage() {
     const pairCount = settings.pairs
     const distractionCount = settings.distractions
     const words = Object.keys(SYNONYMS)
-    const selectedWords: string[] = []
+    const selectedWords = []
 
     // Select random words
     while (selectedWords.length < pairCount) {

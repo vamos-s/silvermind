@@ -2,7 +2,7 @@
  * Common types for game level settings
  */
 
-export type Difficulty = 'easy' | 'medium' | 'hard' | 'expert'
+export type Difficulty = 'easy' | 'medium' | 'hard' | 'expert' | 'master'
 
 export interface BaseLevelSettings {
   inputTime: number

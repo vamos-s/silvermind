@@ -123,12 +123,6 @@ export default function LogicPuzzlePage() {
     return { id: level, boxes, clues }
   }, [settings.boxCount, settings.clueCount, level])
 
-  const startGame = useCallback(() => {
-    setLevel(1)
-    setTotalScore(0)
-    startLevel()
-  }, [startLevel])
-
   const startLevel = useCallback(() => {
     const newPuzzle = generatePuzzle()
     setPuzzle(newPuzzle)
@@ -138,6 +132,12 @@ export default function LogicPuzzlePage() {
     setIsCorrect(false)
     setGameState('playing')
   }, [generatePuzzle])
+
+  const startGame = useCallback(() => {
+    setLevel(1)
+    setTotalScore(0)
+    startLevel()
+  }, [startLevel])
 
   const nextLevel = useCallback(() => {
     if (level >= MAX_LEVELS) {

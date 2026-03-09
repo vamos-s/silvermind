@@ -26,16 +26,21 @@ export default function LogicGridPage() {
       case 'easy': return 3
       case 'medium': return 4
       case 'hard': return 5
+      default: return 3
     }
   }, [currentDifficulty])
 
   const generatePuzzle = useCallback(() => {
     const count = getItemCount()
     const names = ['Apple', 'Banana', 'Cherry', 'Date', 'Elderberry', 'Fig', 'Grape', 'Honeydew']
-    const values = Array.from({ length: count }, (_, i) => ({
-      name: names[i],
-      value: Math.floor(Math.random() * 100) + 1
-    })).sort((a, b) => a.value - b.value)
+    const values: Item[] = []
+    for (let i = 0; i < count; i++) {
+      values.push({
+        name: names[i] || `Item${i + 1}`,
+        value: Math.floor(Math.random() * 100) + 1
+      })
+    }
+    values.sort((a, b) => a.value - b.value)
 
     const newHints: string[] = []
 

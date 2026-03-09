@@ -46,6 +46,7 @@ const resources = {
       locked: 'Locked',
       achievementUnlocked: 'Achievement Unlocked!',
       totalAchievements: 'Total Achievements',
+      progress: 'Progress',
       
       // Challenges
       challengesTitle: 'Daily Challenges',
@@ -258,6 +259,7 @@ const resources = {
       locked: '잠김',
       achievementUnlocked: '업적 해금!',
       totalAchievements: '총 업적',
+      progress: '진행률',
       
       // Challenges
       challengesTitle: '일일 챌린지',

@@ -60,8 +60,9 @@ const games = [
 ]
 
 export default function AttentionPage() {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
   const { darkMode } = useGameStore()
+  const lang = i18n.language
 
   return (
     <div className={`min-h-screen ${darkMode ? 'bg-slate-900 text-white' : 'bg-gray-50 text-gray-900'}`}>
@@ -94,9 +95,9 @@ export default function AttentionPage() {
               <Link href={`/attention/${game.id}`}>
                 <div className={`${darkMode ? 'bg-gray-800' : 'bg-white'} rounded-xl p-6 shadow-lg hover:shadow-xl transition-shadow h-full`}>
                   <div className="text-5xl mb-4">{game.icon}</div>
-                  <h2 className="text-xl font-bold mb-2">{game.title[ko] || game.title.en}</h2>
+                  <h2 className="text-xl font-bold mb-2">{game.title[lang as keyof typeof game.title] || game.title.en}</h2>
                   <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                    {game.description[ko] || game.description.en}
+                    {game.description[lang as keyof typeof game.description] || game.description.en}
                   </p>
                   <div className="mt-4 flex gap-2">
                     <span className={`px-3 py-1 rounded-full text-xs font-medium ${game.color} text-white`}>

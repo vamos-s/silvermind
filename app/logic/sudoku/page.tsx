@@ -32,8 +32,10 @@ export default function SudokuPage() {
     const baseMultiplier = {
       easy: 0.3,
       medium: 0.45,
-      hard: 0.6
-    }[currentDifficulty]
+      hard: 0.6,
+      expert: 0.7,
+      master: 0.75
+    }[currentDifficulty] || 0.45
 
     const levelBonus = Math.min(level * 0.01, 0.25)
     const emptyRatio = baseMultiplier + levelBonus
