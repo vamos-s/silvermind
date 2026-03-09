@@ -1,6 +1,6 @@
 // Google Analytics 4 configuration
 
-export const GA_MEASUREMENT_ID = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID || ''
+export const GA_MEASUREMENT_ID = process.env.NEXT_PUBLIC_GA_ID || ''
 
 // Track page views
 export const pageview = (url: string) => {

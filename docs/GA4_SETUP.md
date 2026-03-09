@@ -23,10 +23,12 @@ Copy this ID - you'll need it for the next step.
 Add your Measurement ID to `.env.local`:
 
 ```bash
-NEXT_PUBLIC_GA_MEASUREMENT_ID=G-XXXXXXXXXX
+NEXT_PUBLIC_GA_ID=G-XXXXXXXXXX
 ```
 
 Replace `G-XXXXXXXXXX` with your actual Measurement ID.
+
+> **Note**: To maintain consistency with other projects (e.g., fun-facts), the environment variable name is `NEXT_PUBLIC_GA_ID` (not `NEXT_PUBLIC_GA_MEASUREMENT_ID`).
 
 ## 4. Configure Vercel Environment Variables
 
@@ -36,8 +38,8 @@ Add the Measurement ID to Vercel:
 2. Navigate to **Settings** → **Environment Variables**
 3. Click **Add New**
 4. Add the following:
-   - **Key**: `NEXT_PUBLIC_GA_MEASUREMENT_ID`
-   - **Value**: Your Measurement ID (e.g., `G-XXXXXXXXXX`)
+   - **Key**: `NEXT_PUBLIC_GA_ID`
+   - **Value**: Your Measurement ID (e.g., `G-KNDN8VQTP4`)
    - **Environments**: Production, Preview, Development (all)
 5. Click **Save**
 6. Redeploy the project for the changes to take effect
