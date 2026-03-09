@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { motion, AnimatePresence } from 'framer-motion'
 import Link from 'next/link'
@@ -49,53 +49,44 @@ export default function SequenceMemoryPage() {
   const [sequence, setSequence] = useState<number[]>([])
   const [userSequence, setUserSequence] = useState<number[]>([])
   const [showingIndex, setShowingIndex] = useState(-1)
+  const [clickedIndex, setClickedIndex] = useState(-1)
+  const [isWrong, setIsWrong] = useState(false)
   const [level, setLevel] = useState(1)
   const [score, setScore] = useState(0)
   const [totalScore, setTotalScore] = useState(0)
 
-  const settings = LEVEL_SETTINGS[Math.min(level - 1, LEVEL_SETTINGS.length - 1)]
+  const settings = useMemo(
+    () => LEVEL_SETTINGS[Math.min(level - 1, LEVEL_SETTINGS.length - 1)],
+    [level]
+  )
   const gridSize = settings.gridSize
   const totalCells = gridSize * gridSize
 
-  const getSequenceLength = () => settings.sequenceStart
+  const getSequenceLength = useCallback(() => settings.sequenceStart, [settings.sequenceStart])
 
-  const getLevelScore = () => {
+  const getLevelScore = useCallback(() => {
     const baseScore = level * 50
-    const timeBonus = 0 // No time limit, but could add later
+    const timeBonus = 0
     return baseScore + timeBonus
-  }
-
-  const startGame = () => {
-    setScore(0)
-    setTotalScore(0)
-    setLevel(1)
-    startLevel()
-  }
+  }, [level])
 
   const generateSequence = useCallback(() => {
     const newSequence: number[] = []
-    for (let i = 0; i < getSequenceLength(); i++) {
+    const sequenceLength = getSequenceLength()
+    for (let i = 0; i < sequenceLength; i++) {
       newSequence.push(Math.floor(Math.random() * totalCells))
     }
     return newSequence
-  }, [totalCells])
+  }, [totalCells, getSequenceLength])
 
-  const startLevel = () => {
-    const newSequence = generateSequence()
-    setSequence(newSequence)
-    setUserSequence([])
-    setGameState('showing')
-    showSequence(newSequence)
-  }
-
-  const showSequence = (seq: number[]) => {
+  const showSequence = useCallback((seq: number[]) => {
     let index = 0
     setShowingIndex(-1)
 
     const interval = setInterval(() => {
       if (index < seq.length) {
         setShowingIndex(seq[index])
-        setTimeout(() => setShowingIndex(-1), 600 - level * 30) // Speed up as level increases
+        setTimeout(() => setShowingIndex(-1), 600 - level * 30)
         index++
       } else {
         clearInterval(interval)
@@ -104,39 +95,67 @@ export default function SequenceMemoryPage() {
         }, 800)
       }
     }, 800)
-  }
+  }, [level])
 
-  const handleCellClick = (cellIndex: number) => {
+  const startLevel = useCallback(() => {
+    const newSequence = generateSequence()
+    setSequence(newSequence)
+    setUserSequence([])
+    setGameState('showing')
+    showSequence(newSequence)
+  }, [generateSequence, showSequence])
+
+  const startGame = useCallback(() => {
+    setScore(0)
+    setTotalScore(0)
+    setLevel(1)
+    startLevel()
+  }, [startLevel])
+
+  const handleCellClick = useCallback((cellIndex: number) => {
     if (gameState !== 'playing') return
 
-    const newUserSequence = [...userSequence, cellIndex]
-    setUserSequence(newUserSequence)
+    // Show immediate visual feedback
+    setClickedIndex(cellIndex)
 
+    const newUserSequence = [...userSequence, cellIndex]
     const currentIndex = newUserSequence.length - 1
 
+    // Check if wrong
     if (cellIndex !== sequence[currentIndex]) {
-      // Wrong answer
-      addSession({
-        id: Date.now().toString(),
-        gameId: 'sequence-memory',
-        difficulty: 'medium',
-        score: totalScore,
-        completedAt: new Date(),
-        durationSeconds: 60
-      })
-      setGameState('gameOver')
+      setIsWrong(true)
+      // Play wrong animation
+      setTimeout(() => {
+        addSession({
+          id: Date.now().toString(),
+          gameId: 'sequence-memory',
+          difficulty: 'medium',
+          score: totalScore,
+          completedAt: new Date(),
+          durationSeconds: 60
+        })
+        setGameState('gameOver')
+        setClickedIndex(-1)
+        setIsWrong(false)
+      }, 500)
       return
     }
 
-    // Check if sequence is complete
+    // Correct click
+    setUserSequence(newUserSequence)
+
+    // Clear clicked feedback after delay
+    setTimeout(() => setClickedIndex(-1), 200)
+
+    // Check if level complete
     if (newUserSequence.length === sequence.length) {
       const levelScore = getLevelScore()
       setScore(levelScore)
       setGameState('levelComplete')
     }
-  }
+  }, [gameState, userSequence, sequence, totalScore, addSession, getLevelScore])
 
-  const nextLevel = () => {
+  const nextLevel = useCallback(() => {
     const levelScore = Math.round(getLevelScore())
     setTotalScore(prev => prev + levelScore)
 
@@ -155,13 +174,13 @@ export default function SequenceMemoryPage() {
       setGameState('menu')
       setTimeout(() => startLevel(), 100)
     }
-  }
+  }, [level, totalScore, getLevelScore, addSession, startLevel])
 
-  const getCellSize = () => {
+  const getCellSize = useCallback(() => {
     if (gridSize <= 3) return 'h-24 md:h-28'
     if (gridSize <= 4) return 'h-20 md:h-24'
     return 'h-16 md:h-20'
-  }
+  }, [gridSize])
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50 p-4 md:p-8">
@@ -278,6 +297,10 @@ export default function SequenceMemoryPage() {
                     className={`${getCellSize()} rounded-xl transition-all shadow-md ${
                       showingIndex === index
                         ? 'bg-indigo-500 scale-110 shadow-lg ring-4 ring-indigo-300'
+                        : clickedIndex === index && isWrong
+                        ? 'bg-red-500 scale-110 shadow-lg ring-4 ring-red-300'
+                        : clickedIndex === index
+                        ? 'bg-green-500 scale-110 shadow-lg ring-4 ring-green-300'
                         : gameState === 'playing'
                         ? 'bg-gray-200 hover:bg-gray-300'
                         : 'bg-gray-200'
@@ -285,8 +308,10 @@ export default function SequenceMemoryPage() {
                     animate={showingIndex === index ? {
                       scale: [1, 1.1, 1],
                       backgroundColor: ['#e5e7eb', '#6366f1', '#6366f1']
+                    } : clickedIndex === index ? {
+                      scale: [1, 1.15, 1.1],
                     } : {}}
-                    transition={{ duration: 0.3 }}
+                    transition={{ duration: 0.15 }}
                   />
                 ))}
               </div>

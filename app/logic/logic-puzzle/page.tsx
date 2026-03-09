@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
@@ -86,9 +86,9 @@ export default function LogicPuzzlePage() {
   const [showAnswer, setShowAnswer] = useState(false)
   const [isCorrect, setIsCorrect] = useState(false)
 
-  const settings = LEVELS[Math.min(level - 1, LEVELS.length - 1)]
+  const settings = useMemo(() => LEVELS[Math.min(level - 1, LEVELS.length - 1)], [level])
 
-  const generatePuzzle = () => {
+  const generatePuzzle = useCallback(() => {
     const shuffledColors = [...COLORS].sort(() => Math.random() - 0.5)
     const selectedColors = shuffledColors.slice(0, settings.boxCount)
     const sizes = Array.from({ length: settings.boxCount }, (_, i) => i + 1)
@@ -121,15 +121,15 @@ export default function LogicPuzzlePage() {
     }
 
     return { id: level, boxes, clues }
-  }
+  }, [settings.boxCount, settings.clueCount, level])
 
-  const startGame = () => {
+  const startGame = useCallback(() => {
     setLevel(1)
     setTotalScore(0)
     startLevel()
-  }
+  }, [startLevel])
 
-  const startLevel = () => {
+  const startLevel = useCallback(() => {
     const newPuzzle = generatePuzzle()
     setPuzzle(newPuzzle)
     setUserBoxes([...newPuzzle.boxes].sort(() => Math.random() - 0.5))
@@ -137,9 +137,9 @@ export default function LogicPuzzlePage() {
     setShowAnswer(false)
     setIsCorrect(false)
     setGameState('playing')
-  }
+  }, [generatePuzzle])
 
-  const nextLevel = () => {
+  const nextLevel = useCallback(() => {
     if (level >= MAX_LEVELS) {
       addSession({
         id: Date.now().toString(),
@@ -155,17 +155,17 @@ export default function LogicPuzzlePage() {
       setGameState('menu')
       setTimeout(() => startLevel(), 100)
     }
-  }
+  }, [level, totalScore, addSession, startLevel])
 
-  const handleDragStart = (e: any, index: number) => {
+  const handleDragStart = useCallback((e: any, index: number) => {
     e.dataTransfer.setData('text/plain', index.toString())
-  }
+  }, [])
 
-  const handleDragOver = (e: any) => {
+  const handleDragOver = useCallback((e: any) => {
     e.preventDefault()
-  }
+  }, [])
 
-  const handleDrop = (e: any, dropIndex: number) => {
+  const handleDrop = useCallback((e: any, dropIndex: number) => {
     e.preventDefault()
     if (showAnswer) return
 
@@ -178,9 +178,9 @@ export default function LogicPuzzlePage() {
     newBoxes.splice(dropIndex, 0, draggedBox)
 
     setUserBoxes(newBoxes)
-  }
+  }, [showAnswer, userBoxes])
 
-  const checkAnswer = () => {
+  const checkAnswer = useCallback(() => {
     if (!puzzle) return
 
     const isCorrect = userBoxes.every(
@@ -197,19 +197,19 @@ export default function LogicPuzzlePage() {
     if (isCorrect) {
       setTotalScore(prev => prev + levelScore)
     }
-  }
+  }, [puzzle, userBoxes, attempts])
 
-  const resetPuzzle = () => {
+  const resetPuzzle = useCallback(() => {
     if (!puzzle) return
     setUserBoxes([...puzzle.boxes].sort(() => Math.random() - 0.5))
     setAttempts(0)
     setShowAnswer(false)
     setIsCorrect(false)
-  }
+  }, [puzzle])
 
-  const getColorInfo = (colorName: string) => {
+  const getColorInfo = useCallback((colorName: string) => {
     return COLORS.find(c => c.name === colorName) || COLORS[0]
-  }
+  }, [])
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-blue-50 p-4 md:p-8">

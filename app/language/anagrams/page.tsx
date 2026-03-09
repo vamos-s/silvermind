@@ -1,0 +1,684 @@
+'use client'
+
+import { useState, useEffect, useCallback, useMemo } from 'react'
+import { useTranslation } from 'react-i18next'
+import { motion, AnimatePresence } from 'framer-motion'
+import Link from 'next/link'
+import { useGameStore } from '@/lib/store'
+
+const MAX_LEVELS = 30
+
+const ANAGRAM_SETS: { [key: string]: string[] } = {
+  'act': ['cat', 'act'],
+  'apt': ['pat', 'tap', 'apt'],
+  'art': ['rat', 'tar', 'art'],
+  'ate': ['eat', 'tea', 'ate'],
+  'ear': ['are', 'ear'],
+  'eat': ['ate', 'tea', 'eat'],
+  'pat': ['apt', 'tap', 'pat'],
+  'tap': ['apt', 'pat', 'tap'],
+  'tea': ['ate', 'eat', 'tea'],
+  'ant': ['tan', 'ant'],
+  'bad': ['dab', 'bad'],
+  'bag': ['gab', 'bag'],
+  'bar': ['bra', 'bar'],
+  'bat': ['tab', 'bat'],
+  'bog': ['gob', 'bog'],
+  'bow': ['obw', 'bow'],
+  'bus': ['sub', 'bus'],
+  'but': ['tub', 'but'],
+  'car': ['arc', 'car'],
+  'cot': ['oct', 'cot'],
+  'cow': ['cwo', 'cow'],
+  'cud': ['dcu', 'cud'],
+  'cup': ['cpu', 'cup'],
+  'cut': ['tuc', 'cut'],
+  'dog': ['god', 'dog'],
+  'dot': ['tod', 'dot'],
+  'dug': ['gud', 'dug'],
+  'dun': ['und', 'dun'],
+  'elf': ['lef', 'elf'],
+  'far': ['fra', 'far'],
+  'fit': ['tif', 'fit'],
+  'fog': ['gof', 'fog'],
+  'fop': ['pof', 'fop'],
+  'gap': ['pag', 'gap'],
+  'gas': ['sag', 'gas'],
+  'god': ['dog', 'god'],
+  'got': ['tog', 'got'],
+  'gum': ['mug', 'gum'],
+  'gut': ['tug', 'gut'],
+  'has': ['ash', 'has'],
+  'hat': ['hat', 'hat'],
+  'hen': ['ehn', 'hen'],
+  'her': ['her', 'her'],
+  'hip': ['pih', 'hip'],
+  'hod': ['doh', 'hod'],
+  'hog': ['goh', 'hog'],
+  'hop': ['poh', 'hop'],
+  'hot': ['toh', 'hot'],
+  'how': ['how', 'how'],
+  'hug': ['guh', 'hug'],
+  'hut': ['tuh', 'hut'],
+  'jam': ['maj', 'jam'],
+  'jaw': ['jaw', 'jaw'],
+  'jet': ['tej', 'jet'],
+  'jog': ['goj', 'jog'],
+  'jot': ['toj', 'jot'],
+  'kin': ['ink', 'kin'],
+  'kit': ['tik', 'kit'],
+  'lab': ['bal', 'lab'],
+  'lap': ['pal', 'lap'],
+  'law': ['law', 'law'],
+  'lay': ['lay', 'lay'],
+  'led': ['del', 'led'],
+  'leg': ['gel', 'leg'],
+  'let': ['tel', 'let'],
+  'lid': ['dil', 'lid'],
+  'lie': ['ile', 'lie'],
+  'lip': ['pil', 'lip'],
+  'log': ['gol', 'log'],
+  'low': ['owl', 'low'],
+  'mad': ['dam', 'mad'],
+  'man': ['nam', 'man'],
+  'map': ['pam', 'map'],
+  'mat': ['tam', 'mat'],
+  'mew': ['wem', 'mew'],
+  'mop': ['pom', 'mop'],
+  'mot': ['tom', 'mot'],
+  'mug': ['gum', 'mug'],
+  'nap': ['pan', 'nap'],
+  'net': ['ten', 'net'],
+  'new': ['wen', 'new'],
+  'nod': ['don', 'nod'],
+  'not': ['ton', 'not'],
+  'now': ['won', 'now'],
+  'nut': ['tun', 'nut'],
+  'oar': ['aro', 'oar'],
+  'odd': ['ddo', 'odd'],
+  'opt': ['pot', 'top', 'opt'],
+  'owl': ['low', 'owl'],
+  'own': ['now', 'won', 'own'],
+  'pan': ['nap', 'pan'],
+  'par': ['rap', 'par'],
+  'pat': ['apt', 'tap', 'pat'],
+  'paw': ['wap', 'paw'],
+  'pay': ['yap', 'pay'],
+  'pen': ['nep', 'pen'],
+  'pet': ['tep', 'pet'],
+  'pie': ['eip', 'pie'],
+  'pig': ['gip', 'pig'],
+  'pin': ['nip', 'pin'],
+  'pit': ['tip', 'pit'],
+  'pot': ['opt', 'top', 'pot'],
+  'pro': ['orp', 'pro'],
+  'put': ['tup', 'put'],
+  'rag': ['gar', 'rag'],
+  'ram': ['mar', 'ram'],
+  'rap': ['par', 'rap'],
+  'rat': ['art', 'tar', 'rat'],
+  'raw': ['war', 'raw'],
+  'red': ['der', 'red'],
+  'rib': ['bir', 'rib'],
+  'rig': ['gir', 'rig'],
+  'rim': ['mir', 'rim'],
+  'rob': ['bor', 'rob'],
+  'rod': ['dor', 'rod'],
+  'row': ['wor', 'row'],
+  'rub': ['bur', 'rub'],
+  'rug': ['gur', 'rug'],
+  'run': ['nur', 'run'],
+  'saw': ['was', 'saw'],
+  'say': ['yas', 'say'],
+  'sea': ['ase', 'sea'],
+  'set': ['tes', 'set'],
+  'sew': ['wes', 'sew'],
+  'she': ['hes', 'she'],
+  'sin': ['ins', 'sin'],
+  'sir': ['ris', 'sir'],
+  'sit': ['tis', 'sit'],
+  'ski': ['isk', 'ski'],
+  'sky': ['kys', 'sky'],
+  'sly': ['lys', 'sly'],
+  'sob': ['bos', 'sob'],
+  'sod': ['dos', 'sod'],
+  'sop': ['pos', 'sop'],
+  'sot': ['tos', 'sot'],
+  'spa': ['asp', 'spa'],
+  'spy': ['yps', 'spy'],
+  'sub': ['bus', 'sub'],
+  'sue': ['eis', 'sue'],
+  'sum': ['mus', 'sum'],
+  'tab': ['bat', 'tab'],
+  'tag': ['gat', 'tag'],
+  'tan': ['ant', 'nat', 'tan'],
+  'tap': ['apt', 'pat', 'tap'],
+  'tar': ['art', 'rat', 'tar'],
+  'tax': ['xat', 'tax'],
+  'tea': ['ate', 'eat', 'tea'],
+  'tee': ['ete', 'tee'],
+  'ten': ['net', 'ten'],
+  'the': ['het', 'the'],
+  'tin': ['nit', 'tin'],
+  'tip': ['pit', 'tip'],
+  'toe': ['eto', 'toe'],
+  'top': ['opt', 'pot', 'top'],
+  'tot': ['tot', 'tot'],
+  'tow': ['tow', 'tow'],
+  'toy': ['yot', 'toy'],
+  'tub': ['but', 'tub'],
+  'tug': ['gut', 'tug'],
+  'tun': ['nut', 'tun'],
+  'two': ['tow', 'two'],
+  'urn': ['nur', 'urn'],
+  'use': ['eus', 'use'],
+  'van': ['nav', 'van'],
+  'vet': ['tev', 'vet'],
+  'war': ['raw', 'war'],
+  'was': ['saw', 'was'],
+  'wax': ['xaw', 'wax'],
+  'way': ['yaw', 'way'],
+  'web': ['bew', 'web'],
+  'wed': ['dew', 'wed'],
+  'wet': ['tew', 'wet'],
+  'who': ['who', 'who'],
+  'why': ['yhw', 'why'],
+  'wig': ['giw', 'wig'],
+  'win': ['niw', 'win'],
+  'wit': ['tiw', 'wit'],
+  'won': ['now', 'own', 'won'],
+  'wow': ['wow', 'wow'],
+  'yak': ['kay', 'yak'],
+  'yam': ['may', 'yam'],
+  'yes': ['sey', 'yes'],
+  'yet': ['tey', 'yet'],
+  'yew': ['wey', 'yew'],
+  'yip': ['piy', 'yip'],
+  'you': ['uoy', 'you'],
+  'zip': ['piz', 'zip'],
+  'zoo': ['ooz', 'zoo'],
+}
+
+const LEVEL_SETTINGS = [
+  { minSolutions: 2, timeLimit: 45 },  // Level 1
+  { minSolutions: 2, timeLimit: 40 },  // Level 2
+  { minSolutions: 2, timeLimit: 35 },  // Level 3
+  { minSolutions: 3, timeLimit: 45 },  // Level 4
+  { minSolutions: 3, timeLimit: 40 },  // Level 5
+  { minSolutions: 3, timeLimit: 35 },  // Level 6
+  { minSolutions: 3, timeLimit: 30 },  // Level 7
+  { minSolutions: 4, timeLimit: 45 },  // Level 8
+  { minSolutions: 4, timeLimit: 40 },  // Level 9
+  { minSolutions: 4, timeLimit: 35 },  // Level 10
+  { minSolutions: 4, timeLimit: 30 },  // Level 11
+  { minSolutions: 5, timeLimit: 45 },  // Level 12
+  { minSolutions: 5, timeLimit: 40 },  // Level 13
+  { minSolutions: 5, timeLimit: 35 },  // Level 14
+  { minSolutions: 5, timeLimit: 30 },  // Level 15
+  { minSolutions: 5, timeLimit: 28 },  // Level 16
+  { minSolutions: 5, timeLimit: 25 },  // Level 17
+  { minSolutions: 6, timeLimit: 45 },  // Level 18
+  { minSolutions: 6, timeLimit: 40 },  // Level 19
+  { minSolutions: 6, timeLimit: 35 },  // Level 20
+  { minSolutions: 6, timeLimit: 30 },  // Level 21
+  { minSolutions: 6, timeLimit: 28 },  // Level 22
+  { minSolutions: 6, timeLimit: 25 },  // Level 23
+  { minSolutions: 7, timeLimit: 40 },  // Level 24
+  { minSolutions: 7, timeLimit: 35 },  // Level 25
+  { minSolutions: 7, timeLimit: 30 },  // Level 26
+  { minSolutions: 7, timeLimit: 28 },  // Level 27
+  { minSolutions: 7, timeLimit: 25 },  // Level 28
+  { minSolutions: 7, timeLimit: 22 },  // Level 29
+  { minSolutions: 7, timeLimit: 20 },  // Level 30
+]
+
+export default function AnagramsPage() {
+  const { t } = useTranslation()
+  const { addSession } = useGameStore()
+
+  const [gameState, setGameState] = useState<'menu' | 'playing' | 'levelComplete' | 'gameOver' | 'victory'>('menu')
+  const [level, setLevel] = useState(1)
+  const [score, setScore] = useState(0)
+  const [totalScore, setTotalScore] = useState(0)
+  const [timeLeft, setTimeLeft] = useState(0)
+  const [currentAnagram, setCurrentAnagram] = useState('')
+  const [solutions, setSolutions] = useState<string[]>([])
+  const [foundSolutions, setFoundSolutions] = useState<Set<string>>(new Set())
+  const [userGuess, setUserGuess] = useState('')
+  const [wrongAttempts, setWrongAttempts] = useState(0)
+  const [hintUsed, setHintUsed] = useState(false)
+
+  const settings = useMemo(
+    () => LEVEL_SETTINGS[Math.min(level - 1, LEVEL_SETTINGS.length - 1)],
+    [level]
+  )
+
+  const getLevelScore = useCallback(() => {
+    const baseScore = level * 50
+    const timeBonus = timeLeft * 3
+    const hintPenalty = hintUsed ? 20 : 0
+    const wrongPenalty = wrongAttempts * 5
+    return Math.max(0, baseScore + timeBonus - hintPenalty - wrongPenalty)
+  }, [level, timeLeft, hintUsed, wrongAttempts])
+
+  const getAnagramsForLevel = useCallback((minSolutions: number) => {
+    const validAnagrams: { letters: string; solutions: string[] }[] = []
+
+    for (const [letters, words] of Object.entries(ANAGRAM_SETS)) {
+      const uniqueWords = [...new Set(words)]
+      if (uniqueWords.length >= minSolutions) {
+        validAnagrams.push({ letters, solutions: uniqueWords })
+      }
+    }
+
+    return validAnagrams
+  }, [])
+
+  const generateLevel = useCallback(() => {
+    const timeLimit = LEVEL_SETTINGS[Math.min(level - 1, LEVEL_SETTINGS.length - 1)].timeLimit
+    setTimeLeft(timeLimit)
+
+    const validAnagrams = getAnagramsForLevel(settings.minSolutions)
+    if (validAnagrams.length === 0) return
+
+    const anagram = validAnagrams[Math.floor(Math.random() * validAnagrams.length)]
+    setCurrentAnagram(anagram.letters)
+    setSolutions(anagram.solutions)
+    setFoundSolutions(new Set())
+    setUserGuess('')
+    setWrongAttempts(0)
+    setHintUsed(false)
+  }, [level, settings.minSolutions, getAnagramsForLevel])
+
+  const handleLetterClick = useCallback((letter: string) => {
+    if (gameState !== 'playing') return
+    setUserGuess(prev => prev + letter)
+  }, [gameState])
+
+  const handleBackspace = useCallback(() => {
+    setUserGuess(prev => prev.slice(0, -1))
+  }, [])
+
+  const submitGuess = useCallback(() => {
+    if (gameState !== 'playing') return
+
+    const cleanGuess = userGuess.toLowerCase()
+
+    if (foundSolutions.has(cleanGuess)) {
+      // Already found this word
+      setUserGuess('')
+      return
+    }
+
+    if (solutions.includes(cleanGuess)) {
+      setFoundSolutions(prev => new Set([...prev, cleanGuess]))
+      setUserGuess('')
+
+      if (foundSolutions.size + 1 >= solutions.length) {
+        const levelScore = Math.round(getLevelScore())
+        setScore(levelScore)
+        setGameState('levelComplete')
+      }
+    } else {
+      setWrongAttempts(prev => prev + 1)
+      setUserGuess('')
+    }
+  }, [gameState, userGuess, solutions, foundSolutions, getLevelScore])
+
+  const useHint = useCallback(() => {
+    if (gameState !== 'playing' || hintUsed) return
+
+    // Find first unfound solution
+    for (const solution of solutions) {
+      if (!foundSolutions.has(solution)) {
+        setHintUsed(true)
+        // Flash the hint
+        setTimeout(() => {
+          // Could show a preview of one of the unfound words
+        }, 2000)
+        break
+      }
+    }
+  }, [gameState, hintUsed, solutions, foundSolutions])
+
+  const startGame = useCallback(() => {
+    setScore(0)
+    setTotalScore(0)
+    setLevel(1)
+    generateLevel()
+    setGameState('playing')
+  }, [generateLevel])
+
+  const nextLevel = useCallback(() => {
+    const levelScore = Math.round(getLevelScore())
+    setTotalScore(prev => prev + levelScore)
+
+    if (level >= MAX_LEVELS) {
+      addSession({
+        id: Date.now().toString(),
+        gameId: 'anagrams',
+        difficulty: 'hard',
+        score: totalScore + levelScore,
+        completedAt: new Date(),
+        durationSeconds: 0
+      })
+      setGameState('victory')
+    } else {
+      setLevel(prev => prev + 1)
+      generateLevel()
+      setGameState('playing')
+    }
+  }, [level, totalScore, getLevelScore, addSession, generateLevel])
+
+  // Timer
+  useEffect(() => {
+    if (gameState !== 'playing' || timeLeft <= 0) return
+
+    const timer = setInterval(() => {
+      setTimeLeft(prev => {
+        if (prev <= 1) {
+          addSession({
+            id: Date.now().toString(),
+            gameId: 'anagrams',
+            difficulty: 'medium',
+            score: totalScore,
+            completedAt: new Date(),
+            durationSeconds: settings.timeLimit - prev
+          })
+          setGameState('gameOver')
+          return 0
+        }
+        return prev - 1
+      })
+    }, 1000)
+
+    return () => clearInterval(timer)
+  }, [gameState, timeLeft, totalScore, addSession, settings.timeLimit])
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-orange-50 via-white to-amber-50 p-4 md:p-8">
+      <div className="max-w-2xl mx-auto">
+        {/* Header */}
+        <Link
+          href="/language"
+          className="inline-flex items-center text-gray-700 hover:text-gray-900 font-medium mb-6 text-lg"
+        >
+          <span className="mr-2">←</span> {t('back', 'Back')}
+        </Link>
+
+        <h1 className="text-3xl md:text-4xl font-bold text-gray-800 mb-2">
+          {t('anagrams.title', 'Anagrams')}
+        </h1>
+        <p className="text-lg text-gray-700 font-medium mb-8">
+          {t('anagrams.description', 'Find all words you can make from these letters!')}
+        </p>
+
+        {/* Menu */}
+        {gameState === 'menu' && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="bg-white rounded-2xl shadow-lg p-8 text-center"
+          >
+            <div className="text-6xl mb-4">🔄</div>
+            <h2 className="text-3xl font-bold text-gray-800 mb-2">
+              Level {level}
+            </h2>
+            <div className="bg-orange-50 rounded-xl p-4 mb-6 text-left">
+              <h3 className="font-bold text-gray-800 mb-2">{t('anagrams.levelInfo', 'Level Settings')}:</h3>
+              <ul className="text-gray-700 space-y-1 font-medium">
+                <li>• {t('anagrams.findAtLeast', 'Find at least')} {settings.minSolutions} {t('anagrams.words', 'words')}</li>
+                <li>• {t('anagrams.timeLimit', 'Time Limit')}: {settings.timeLimit}s</li>
+              </ul>
+            </div>
+            <button
+              onClick={startGame}
+              className="bg-gradient-to-r from-orange-500 to-amber-500 text-white text-2xl font-bold py-4 px-12 rounded-xl hover:from-orange-600 hover:to-amber-600 shadow-lg transition-all w-full"
+            >
+              {t('start', 'Start')}
+            </button>
+          </motion.div>
+        )}
+
+        {/* Playing */}
+        {gameState === 'playing' && (
+          <>
+            {/* Stats */}
+            <div className="bg-white rounded-2xl shadow-lg p-6 mb-6">
+              <div className="flex justify-around text-center">
+                <div>
+                  <p className="text-gray-700 text-sm font-medium">{t('anagrams.level', 'Level')}</p>
+                  <p className="text-3xl font-bold text-orange-600">{level}/{MAX_LEVELS}</p>
+                </div>
+                <div>
+                  <p className="text-gray-700 text-sm font-medium">{t('anagrams.score', 'Score')}</p>
+                  <p className="text-3xl font-bold text-amber-600">{totalScore}</p>
+                </div>
+                <div>
+                  <p className="text-gray-700 text-sm font-medium">{t('anagrams.timeLeft', 'Time')}</p>
+                  <p className={`text-3xl font-bold ${timeLeft <= 10 ? 'text-red-500' : 'text-orange-600'}`}>{timeLeft}s</p>
+                </div>
+                <div>
+                  <p className="text-gray-700 text-sm font-medium">{t('anagrams.found', 'Found')}</p>
+                  <p className="text-3xl font-bold text-orange-600">{foundSolutions.size}/{solutions.length}</p>
+                </div>
+              </div>
+              {/* Progress Bar */}
+              <div className="mt-4 bg-gray-200 rounded-full h-3 overflow-hidden">
+                <motion.div
+                  initial={{ width: 0 }}
+                  animate={{ width: `${((level - 1) / MAX_LEVELS) * 100}%` }}
+                  className="bg-gradient-to-r from-orange-500 to-amber-500 h-full"
+                />
+              </div>
+            </div>
+
+            {/* Anagram Display */}
+            <div className="bg-white rounded-2xl shadow-lg p-8 mb-6 text-center">
+              <p className="text-gray-700 font-medium mb-4">{t('anagrams.makeWordsFrom', 'Make words from these letters:')}</p>
+              <div className="flex justify-center gap-3 mb-4">
+                {currentAnagram.split('').map((letter, index) => (
+                  <motion.div
+                    key={index}
+                    initial={{ scale: 0, rotate: -180 }}
+                    animate={{ scale: 1, rotate: 0 }}
+                    transition={{ delay: index * 0.1 }}
+                    className="w-14 h-14 md:w-16 md:h-16 bg-orange-100 rounded-lg flex items-center justify-center text-3xl md:text-4xl font-bold text-orange-600"
+                  >
+                    {letter.toUpperCase()}
+                  </motion.div>
+                ))}
+              </div>
+            </div>
+
+            {/* Found Words */}
+            <div className="bg-white rounded-2xl shadow-lg p-6 mb-6">
+              <p className="text-gray-700 font-medium mb-3 text-center">{t('anagrams.foundWords', 'Found Words')}:</p>
+              <div className="flex flex-wrap justify-center gap-2">
+                {foundSolutions.size > 0 ? (
+                  [...foundSolutions].map((word, index) => (
+                    <motion.div
+                      key={index}
+                      initial={{ scale: 0 }}
+                      animate={{ scale: 1 }}
+                      className="bg-green-100 text-green-700 px-4 py-2 rounded-lg font-bold"
+                    >
+                      {word.toUpperCase()}
+                    </motion.div>
+                  ))
+                ) : (
+                  <p className="text-gray-400">{t('anagrams.noneFound', 'None yet')}</p>
+                )}
+              </div>
+            </div>
+
+            {/* User Guess */}
+            <div className="bg-white rounded-2xl shadow-lg p-6 mb-6">
+              <div className="flex justify-center gap-2 mb-4">
+                {userGuess.split('').map((letter, index) => (
+                  <div
+                    key={index}
+                    className="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center text-2xl font-bold text-orange-600"
+                  >
+                    {letter.toUpperCase()}
+                  </div>
+                ))}
+              </div>
+
+              {/* Letter Buttons */}
+              <div className="grid grid-cols-7 gap-2 mb-4">
+                {currentAnagram.split('').map((letter, index) => (
+                  <motion.button
+                    key={index}
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.9 }}
+                    onClick={() => handleLetterClick(letter)}
+                    className="aspect-square bg-orange-100 hover:bg-orange-200 rounded-lg text-xl font-bold text-orange-600 transition-all"
+                  >
+                    {letter.toUpperCase()}
+                  </motion.button>
+                ))}
+              </div>
+
+              {/* Action Buttons */}
+              <div className="flex gap-2">
+                <button
+                  onClick={handleBackspace}
+                  className="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold py-3 px-4 rounded-lg transition-all"
+                >
+                  ⌫ {t('anagrams.backspace', 'Backspace')}
+                </button>
+                <button
+                  onClick={useHint}
+                  disabled={hintUsed}
+                  className={`flex-1 font-bold py-3 px-4 rounded-lg transition-all ${
+                    hintUsed
+                      ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                      : 'bg-yellow-400 hover:bg-yellow-500 text-gray-800'
+                  }`}
+                >
+                  💡 {t('anagrams.hint', 'Hint')}
+                </button>
+                <button
+                  onClick={submitGuess}
+                  className="flex-1 bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-4 rounded-lg transition-all"
+                >
+                  ✓ {t('anagrams.submit', 'Submit')}
+                </button>
+              </div>
+            </div>
+
+            {/* Wrong Attempts */}
+            {wrongAttempts > 0 && (
+              <div className="bg-red-50 rounded-xl p-4 text-center">
+                <p className="text-red-600 font-bold">{t('anagrams.wrongAttempts', 'Wrong attempts:')} {wrongAttempts} (-{wrongAttempts * 5} points)</p>
+              </div>
+            )}
+          </>
+        )}
+
+        {/* Level Complete */}
+        {gameState === 'levelComplete' && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="bg-white rounded-2xl shadow-lg p-8 text-center"
+          >
+            <div className="text-6xl mb-4">✅</div>
+            <h2 className="text-4xl font-bold text-orange-600 mb-4">{t('anagrams.levelComplete', 'Level Complete!')}</h2>
+            <div className="bg-orange-50 rounded-xl p-6 mb-6">
+              <p className="text-gray-700 mb-4 font-medium">{t('anagrams.allWords', 'All words:')}</p>
+              <div className="flex flex-wrap justify-center gap-2 mb-4">
+                {solutions.map((word, index) => (
+                  <motion.div
+                    key={index}
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1 }}
+                    transition={{ delay: index * 0.1 }}
+                    className={`${foundSolutions.has(word) ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-400'} px-4 py-2 rounded-lg font-bold`}
+                  >
+                    {word.toUpperCase()}
+                  </motion.div>
+                ))}
+              </div>
+              <div className="grid grid-cols-2 gap-4 mt-4">
+                <div>
+                  <p className="text-gray-700 text-sm font-medium">{t('anagrams.levelScore', 'Level Score')}</p>
+                  <p className="text-3xl font-bold text-orange-600">{Math.round(score)}</p>
+                </div>
+                <div>
+                  <p className="text-gray-700 text-sm font-medium">{t('anagrams.totalScore', 'Total Score')}</p>
+                  <p className="text-3xl font-bold text-amber-600">{totalScore + Math.round(score)}</p>
+                </div>
+              </div>
+            </div>
+            <button
+              onClick={nextLevel}
+              className="bg-gradient-to-r from-orange-500 to-amber-500 text-white text-2xl font-bold py-4 px-12 rounded-xl hover:from-orange-600 hover:to-amber-600 shadow-lg transition-all w-full"
+            >
+              {level < MAX_LEVELS ? `Next Level ${level + 1}` : 'View Final Score'}
+            </button>
+          </motion.div>
+        )}
+
+        {/* Game Over */}
+        {gameState === 'gameOver' && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="bg-white rounded-2xl shadow-lg p-8 text-center"
+          >
+            <div className="text-6xl mb-4">❌</div>
+            <h2 className="text-4xl font-bold text-gray-800 mb-4">{t('anagrams.gameOver', 'Time\'s Up!')}</h2>
+            <div className="bg-orange-50 rounded-xl p-6 mb-6">
+              <p className="text-gray-700 mb-4 font-medium">{t('anagrams.allWords', 'All words:')}</p>
+              <div className="flex flex-wrap justify-center gap-2 mb-4">
+                {solutions.map((word, index) => (
+                  <div
+                    key={index}
+                    className={`${foundSolutions.has(word) ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-400'} px-4 py-2 rounded-lg font-bold`}
+                  >
+                    {word.toUpperCase()}
+                  </div>
+                ))}
+              </div>
+              <p className="text-gray-700 text-sm font-medium">{t('anagrams.finalScore', 'Final Score')}</p>
+              <p className="text-3xl font-bold text-orange-600">{totalScore}</p>
+            </div>
+            <button
+              onClick={startGame}
+              className="bg-gradient-to-r from-orange-500 to-red-500 text-white text-2xl font-bold py-4 px-12 rounded-xl hover:from-orange-600 hover:to-red-600 shadow-lg transition-all w-full"
+            >
+              {t('tryAgain', 'Try Again')}
+            </button>
+          </motion.div>
+        )}
+
+        {/* Victory */}
+        {gameState === 'victory' && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="bg-white rounded-2xl shadow-lg p-8 text-center"
+          >
+            <div className="text-6xl mb-4">🎉</div>
+            <h2 className="text-4xl font-bold text-orange-600 mb-4">{t('anagrams.victory', 'Congratulations!')}</h2>
+            <p className="text-xl text-gray-700 font-medium mb-6">
+              {t('anagrams.victoryMessage', 'You completed all {count} levels!', { count: MAX_LEVELS })}
+            </p>
+            <div className="bg-orange-50 rounded-xl p-6 mb-6">
+              <p className="text-gray-700 text-sm font-medium">{t('anagrams.finalScore', 'Final Score')}</p>
+              <p className="text-5xl font-bold text-orange-600">{totalScore + Math.round(score)}</p>
+            </div>
+            <button
+              onClick={startGame}
+              className="bg-gradient-to-r from-orange-500 to-amber-500 text-white text-2xl font-bold py-4 px-12 rounded-xl hover:from-orange-600 hover:to-amber-600 shadow-lg transition-all w-full"
+            >
+              {t('playAgain', 'Play Again')}
+            </button>
+          </motion.div>
+        )}
+      </div>
+    </div>
+  )
+}

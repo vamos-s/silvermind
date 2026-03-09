@@ -1,434 +1,499 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
-import { motion } from 'framer-motion'
+import { motion, AnimatePresence } from 'framer-motion'
 import Link from 'next/link'
 import { useGameStore } from '@/lib/store'
 
-const DIRECTIONS = {
-  UP: 'UP',
-  DOWN: 'DOWN',
-  LEFT: 'LEFT',
-  RIGHT: 'RIGHT'
-}
+const MAX_LEVELS = 30
 
-type CellType = 'empty' | 'wall' | 'start' | 'end' | 'player'
+type Position = { x: number; y: number }
+
+const LEVEL_SETTINGS = [
+  // Levels 1-5: Easy introduction
+  { gridSize: 5, inputTime: 30, difficulty: 'easy' },    // Level 1
+  { gridSize: 5, inputTime: 28, difficulty: 'easy' },    // Level 2
+  { gridSize: 6, inputTime: 30, difficulty: 'easy' },    // Level 3
+  { gridSize: 6, inputTime: 28, difficulty: 'easy' },    // Level 4
+  { gridSize: 7, inputTime: 30, difficulty: 'easy' },    // Level 5
+
+  // Levels 6-10: Medium challenge
+  { gridSize: 7, inputTime: 28, difficulty: 'medium' },  // Level 6
+  { gridSize: 8, inputTime: 30, difficulty: 'medium' },  // Level 7
+  { gridSize: 8, inputTime: 28, difficulty: 'medium' },  // Level 8
+  { gridSize: 9, inputTime: 30, difficulty: 'medium' },  // Level 9
+  { gridSize: 9, inputTime: 28, difficulty: 'medium' },  // Level 10
+
+  // Levels 11-15: Harder progression
+  { gridSize: 10, inputTime: 30, difficulty: 'hard' },   // Level 11
+  { gridSize: 10, inputTime: 28, difficulty: 'hard' },    // Level 12
+  { gridSize: 11, inputTime: 30, difficulty: 'hard' },    // Level 13
+  { gridSize: 11, inputTime: 28, difficulty: 'hard' },   // Level 14
+  { gridSize: 12, inputTime: 30, difficulty: 'hard' },   // Level 15
+
+  // Levels 16-20: Advanced challenge
+  { gridSize: 12, inputTime: 28, difficulty: 'hard' },    // Level 16
+  { gridSize: 13, inputTime: 30, difficulty: 'hard' },  // Level 17
+  { gridSize: 13, inputTime: 28, difficulty: 'hard' },  // Level 18
+  { gridSize: 14, inputTime: 30, difficulty: 'hard' },  // Level 19
+  { gridSize: 14, inputTime: 28, difficulty: 'hard' },   // Level 20
+
+  // Levels 21-25: Expert level
+  { gridSize: 15, inputTime: 30, difficulty: 'expert' }, // Level 21
+  { gridSize: 15, inputTime: 28, difficulty: 'expert' }, // Level 22
+  { gridSize: 16, inputTime: 30, difficulty: 'expert' }, // Level 23
+  { gridSize: 16, inputTime: 28, difficulty: 'expert' }, // Level 24
+  { gridSize: 17, inputTime: 30, difficulty: 'expert' }, // Level 25
+
+  // Levels 26-30: Master level
+  { gridSize: 17, inputTime: 28, difficulty: 'expert' }, // Level 26
+  { gridSize: 18, inputTime: 30, difficulty: 'expert' }, // Level 27
+  { gridSize: 18, inputTime: 28, difficulty: 'expert' }, // Level 28
+  { gridSize: 19, inputTime: 30, difficulty: 'expert' }, // Level 29
+  { gridSize: 19, inputTime: 28, difficulty: 'expert' }, // Level 30
+]
 
 export default function MazeNavigationPage() {
   const { t } = useTranslation()
-  const { currentDifficulty, addSession } = useGameStore()
+  const { addSession } = useGameStore()
 
-  const [maze, setMaze] = useState<CellType[][]>([])
-  const [playerPos, setPlayerPos] = useState<[number, number]>([0, 0])
-  const [endPos, setEndPos] = useState<[number, number]>([0, 0])
-  const [moves, setMoves] = useState(0)
+  const [gameState, setGameState] = useState<'menu' | 'playing' | 'levelComplete' | 'gameOver' | 'victory'>('menu')
+  const [maze, setMaze] = useState<boolean[][]>([])
+  const [playerPos, setPlayerPos] = useState<Position>({ x: 0, y: 0 })
+  const [endPos, setEndPos] = useState<Position>({ x: 0, y: 0 })
+  const [timeLeft, setTimeLeft] = useState(0)
   const [level, setLevel] = useState(1)
   const [score, setScore] = useState(0)
-  const [gameOver, setGameOver] = useState(false)
-  const [victory, setVictory] = useState(false)
-  const [timeLeft, setTimeLeft] = useState(60)
-  const [minMoves, setMinMoves] = useState(0)
+  const [totalScore, setTotalScore] = useState(0)
+  const [moves, setMoves] = useState(0)
 
-  const getMazeSize = () => {
-    // Size increases with both difficulty and level
-    const baseSize = {
-      easy: 7,
-      medium: 9,
-      hard: 11
-    }[currentDifficulty]
-    // Cap at reasonable size (19x19)
-    return Math.min(baseSize + Math.floor(level / 2), 19)
+  const settings = LEVEL_SETTINGS[Math.min(level - 1, LEVEL_SETTINGS.length - 1)]
+
+  const getLevelScore = (movesTaken: number) => {
+    const baseScore = 500 + (level * 30)
+    const movePenalty = movesTaken * 10
+    const timeBonus = timeLeft * 15
+    return Math.max(0, baseScore - movePenalty + timeBonus)
   }
 
-  // BFS to find shortest path (minimum moves)
-  const findShortestPath = (mazeGrid: CellType[][], start: [number, number], end: [number, number]): number => {
-    const queue: [[number, number], number][] = [[start, 0]]
-    const visited = new Set<string>()
-    visited.add(`${start[0]},${start[1]}`)
+  const generateMaze = useCallback(() => {
+    const size = settings.gridSize
+    const newMaze: boolean[][] = []
 
-    while (queue.length > 0) {
-      const [[x, y], dist] = queue.shift()!
-
-      if (x === end[0] && y === end[1]) {
-        return dist
-      }
-
-      const directions = [[0, -1], [0, 1], [-1, 0], [1, 0]]
-      for (const [dx, dy] of directions) {
-        const nx = x + dx
-        const ny = y + dy
-        const key = `${nx},${ny}`
-
-        if (nx >= 0 && nx < mazeGrid.length &&
-            ny >= 0 && ny < mazeGrid.length &&
-            mazeGrid[ny][nx] !== 'wall' &&
-            !visited.has(key)) {
-          visited.add(key)
-          queue.push([[nx, ny], dist + 1])
-        }
+    // Initialize maze with all walls
+    for (let i = 0; i < size; i++) {
+      newMaze[i] = []
+      for (let j = 0; j < size; j++) {
+        newMaze[i][j] = true
       }
     }
 
-    return 999 // Shouldn't happen if maze is valid
-  }
+    // Simple maze generation using randomized DFS
+    const stack: Position[] = []
+    const start: Position = { x: 0, y: 0 }
+    newMaze[start.y][start.x] = false
+    stack.push(start)
 
-  const generateMaze = () => {
-    const size = getMazeSize()
-    const newMaze: CellType[][] = []
+    while (stack.length > 0) {
+      const current = stack[stack.length - 1]
+      const neighbors: Position[] = []
 
-    // Initialize with walls
-    for (let y = 0; y < size; y++) {
-      newMaze.push(Array(size).fill('wall'))
-    }
-
-    // Recursive backtracking maze generator for more winding paths
-    const visited = new Set<string>()
-    const getKey = (x: number, y: number) => `${x},${y}`
-
-    const carve = (x: number, y: number): void => {
-      visited.add(getKey(x, y))
-      newMaze[y][x] = 'empty'
-
-      // Try all 4 directions, prioritizing unvisited ones
       const directions = [
-        [0, -2], [0, 2], [-2, 0], [2, 0]
-      ].sort(() => Math.random() - 0.5)
+        { dx: 0, dy: -2 },
+        { dx: 2, dy: 0 },
+        { dx: 0, dy: 2 },
+        { dx: -2, dy: 0 }
+      ]
 
-      for (const [dx, dy] of directions) {
-        const nx = x + dx
-        const ny = y + dy
+      for (const dir of directions) {
+        const nx = current.x + dir.dx
+        const ny = current.y + dir.dy
 
-        if (nx >= 1 && nx < size - 1 && ny >= 1 && ny < size - 1 && !visited.has(getKey(nx, ny))) {
-          newMaze[y + dy / 2][x + dx / 2] = 'empty'
-          carve(nx, ny)
+        if (nx >= 0 && nx < size && ny >= 0 && ny < size && newMaze[ny][nx]) {
+          neighbors.push({ x: nx, y: ny })
         }
+      }
+
+      if (neighbors.length > 0) {
+        const next = neighbors[Math.floor(Math.random() * neighbors.length)]
+        newMaze[current.y + (next.y - current.y) / 2][current.x + (next.x - current.x) / 2] = false
+        newMaze[next.y][next.x] = false
+        stack.push(next)
+      } else {
+        stack.pop()
       }
     }
 
-    // Start from odd position for better maze structure
-    const startX = 1
-    const startY = 1
-    carve(startX, startY)
-    newMaze[startY][startX] = 'start'
-    setPlayerPos([startX, startY])
+    // Set end position
+    const end: Position = { x: size - 1, y: size - 1 }
+    newMaze[end.y][end.x] = false
 
-    // Place end at bottom right (or nearest empty cell)
-    let endX = size - 2
-    let endY = size - 2
-    let attempts = 0
-    while (newMaze[endY][endX] === 'wall' && attempts < 50) {
-      endX = Math.floor(Math.random() * (size - 4)) + 2
-      endY = Math.floor(Math.random() * (size - 4)) + 2
-      attempts++
-    }
-    newMaze[endY][endX] = 'end'
-    setEndPos([endX, endY])
+    return { maze: newMaze, start, end }
+  }, [settings.gridSize])
 
-    // Calculate minimum moves for scoring
-    const minPath = findShortestPath(newMaze, [startX, startY], [endX, endY])
-    setMinMoves(minPath)
+  const startGame = () => {
+    setScore(0)
+    setTotalScore(0)
+    setLevel(1)
+    startLevel()
+  }
 
+  const startLevel = () => {
+    const { maze: newMaze, start, end } = generateMaze()
     setMaze(newMaze)
+    setPlayerPos(start)
+    setEndPos(end)
     setMoves(0)
-    setGameOver(false)
-    setVictory(false)
-
-    // Set time limit based on level (harder = less time)
-    const baseTime = {
-      easy: 90,
-      medium: 60,
-      hard: 45
-    }[currentDifficulty]
-    // Decrease time as levels increase, but cap at minimum
-    setTimeLeft(Math.max(baseTime - level * 2, 20))
+    setTimeLeft(settings.inputTime)
+    setGameState('playing')
   }
 
-  const movePlayer = (direction: string) => {
-    if (gameOver) return
+  const movePlayer = useCallback((dx: number, dy: number) => {
+    if (gameState !== 'playing') return
 
-    const [x, y] = playerPos
-    let newX = x
-    let newY = y
+    const newX = playerPos.x + dx
+    const newY = playerPos.y + dy
 
-    switch (direction) {
-      case DIRECTIONS.UP:
-        newY = y - 1
-        break
-      case DIRECTIONS.DOWN:
-        newY = y + 1
-        break
-      case DIRECTIONS.LEFT:
-        newX = x - 1
-        break
-      case DIRECTIONS.RIGHT:
-        newX = x + 1
-        break
-    }
+    if (
+      newX >= 0 &&
+      newX < settings.gridSize &&
+      newY >= 0 &&
+      newY < settings.gridSize &&
+      !maze[newY][newX]
+    ) {
+      const newPlayerPos = { x: newX, y: newY }
+      setPlayerPos(newPlayerPos)
+      setMoves(prev => prev + 1)
 
-    const size = maze.length
-
-    if (newX >= 0 && newX < size && newY >= 0 && newY < size) {
-      if (maze[newY][newX] !== 'wall') {
-        setPlayerPos([newX, newY])
-        setMoves(moves + 1)
-
-        if (maze[newY][newX] === 'end') {
-          setVictory(true)
-          setGameOver(true)
-          // Bonus for efficiency (fewer moves than minimum is impossible, so just penalize extra moves)
-          const efficiencyBonus = Math.max(0, minMoves * 10 - (moves - minMoves) * 2)
-          const levelScore = (getMazeSize() * level * 2 + efficiencyBonus + timeLeft * level)
-          setScore(score + levelScore)
-          addSession({
-            id: Date.now().toString(),
-            gameId: 'maze-navigation',
-            difficulty: currentDifficulty,
-            score: score + levelScore,
-            completedAt: new Date(),
-            durationSeconds: 60 * level
-          })
-        }
+      // Check if reached end
+      if (newX === endPos.x && newY === endPos.y) {
+        const levelScore = Math.round(getLevelScore(moves + 1))
+        setScore(levelScore)
+        setGameState('levelComplete')
       }
     }
-  }
+  }, [gameState, playerPos, maze, settings.gridSize, endPos, moves])
 
-  // Timer countdown
   useEffect(() => {
-    if (gameOver || victory) return
+    let timer: NodeJS.Timeout | null = null
 
-    const timer = setInterval(() => {
-      setTimeLeft(prev => {
-        if (prev <= 1) {
-          setGameOver(true)
-          setVictory(false)
-          addSession({
-            id: Date.now().toString(),
-            gameId: 'maze-navigation',
-            difficulty: currentDifficulty,
-            score: score,
-            completedAt: new Date(),
-            durationSeconds: 60 * level
-          })
-          return 0
-        }
-        return prev - 1
+    if (gameState === 'playing' && timeLeft > 0) {
+      timer = setTimeout(() => {
+        setTimeLeft(prev => prev - 1)
+      }, 1000)
+    } else if (gameState === 'playing' && timeLeft === 0) {
+      setGameState('gameOver')
+    }
+
+    return () => {
+      if (timer) clearTimeout(timer)
+    }
+  }, [gameState, timeLeft])
+
+  useEffect(() => {
+    const handleKeyPress = (e: KeyboardEvent) => {
+      if (gameState !== 'playing') return
+
+      switch (e.key) {
+        case 'ArrowUp':
+        case 'w':
+        case 'W':
+          movePlayer(0, -1)
+          break
+        case 'ArrowDown':
+        case 's':
+        case 'S':
+          movePlayer(0, 1)
+          break
+        case 'ArrowLeft':
+        case 'a':
+        case 'A':
+          movePlayer(-1, 0)
+          break
+        case 'ArrowRight':
+        case 'd':
+        case 'D':
+          movePlayer(1, 0)
+          break
+      }
+    }
+
+    window.addEventListener('keydown', handleKeyPress)
+    return () => window.removeEventListener('keydown', handleKeyPress)
+  }, [gameState, movePlayer])
+
+  const nextLevel = () => {
+    const levelScore = score
+    setTotalScore(prev => prev + levelScore)
+
+    if (level >= MAX_LEVELS) {
+      addSession({
+        id: Date.now().toString(),
+        gameId: 'maze-navigation',
+        difficulty: 'hard',
+        score: totalScore + levelScore,
+        completedAt: new Date(),
+        durationSeconds: 0
       })
-    }, 1000)
-
-    return () => clearInterval(timer)
-  }, [gameOver, victory, score, level])
-
-  useEffect(() => {
-    generateMaze()
-  }, [])
-
-  const handleKeyDown = (e: KeyboardEvent) => {
-    switch (e.key) {
-      case 'ArrowUp':
-      case 'w':
-      case 'W':
-        movePlayer(DIRECTIONS.UP)
-        break
-      case 'ArrowDown':
-      case 's':
-      case 'S':
-        movePlayer(DIRECTIONS.DOWN)
-        break
-      case 'ArrowLeft':
-      case 'a':
-      case 'A':
-        movePlayer(DIRECTIONS.LEFT)
-        break
-      case 'ArrowRight':
-      case 'd':
-      case 'D':
-        movePlayer(DIRECTIONS.RIGHT)
-        break
+      setGameState('victory')
+    } else {
+      setLevel(prev => prev + 1)
+      setGameState('menu')
+      setTimeout(() => startLevel(), 100)
     }
-  }
-
-  useEffect(() => {
-    window.addEventListener('keydown', handleKeyDown)
-    return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [playerPos, maze, gameOver])
-
-  // Regenerate maze when level changes
-  useEffect(() => {
-    if (level > 1) {
-      generateMaze()
-    }
-  }, [level])
-
-  const getCellContent = (type: CellType) => {
-    switch (type) {
-      case 'wall':
-        return '⬛'
-      case 'start':
-        return '🚩'
-      case 'end':
-        return '🏁'
-      case 'player':
-        return '🧙'
-      default:
-        return ''
-    }
-  }
-
-  const getCellColor = (type: CellType, isPlayer: boolean) => {
-    if (isPlayer) return 'bg-yellow-400'
-    switch (type) {
-      case 'wall':
-        return 'bg-gray-800'
-      case 'start':
-        return 'bg-blue-500'
-      case 'end':
-        return 'bg-green-500'
-      default:
-        return 'bg-white'
-    }
-  }
-
-  if (gameOver) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-purple-50 to-pink-50 flex items-center justify-center">
-        <motion.div
-          initial={{ scale: 0.8, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          className="bg-white rounded-2xl p-8 shadow-xl text-center max-w-md"
-        >
-          <h2 className={`text-3xl font-bold ${victory ? 'text-green-600' : 'text-red-600'} mb-4`}>
-            {victory ? '🎉 Victory!' : '⏰ Time\'s Up!'}
-          </h2>
-          <p className="text-xl text-gray-600 mb-2">Score: {score}</p>
-          <p className="text-lg text-gray-500 mb-2">Moves: {moves}</p>
-          <p className="text-lg text-gray-500 mb-6">Level: {level}</p>
-          {victory ? (
-            <>
-              <button
-                onClick={() => {
-                  setLevel(level + 1)
-                  generateMaze()
-                }}
-                className="bg-green-500 text-white px-8 py-3 rounded-xl text-xl font-bold hover:bg-green-600 transition mb-4"
-              >
-                Next Level
-              </button>
-              <br />
-            </>
-          ) : null}
-          <button
-            onClick={() => {
-              if (!victory) {
-                setScore(0)
-                setLevel(1)
-              }
-              generateMaze()
-            }}
-            className={`px-8 py-3 rounded-xl text-xl font-bold transition ${victory ? 'bg-purple-500 hover:bg-purple-600' : 'bg-red-500 hover:bg-red-600'} text-white`}
-          >
-            {victory ? 'Restart' : 'Try Again'}
-          </button>
-          <Link href="/pattern" className="block mt-4 text-purple-500 hover:underline">
-            ← Back to Games
-          </Link>
-        </motion.div>
-      </div>
-    )
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 to-pink-50">
-      <header className="p-6 bg-white shadow-sm">
-        <Link href="/pattern" className="text-purple-500 hover:underline mb-4 block">
-          ← Back
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-gray-50 p-4 md:p-8">
+      <div className="max-w-2xl mx-auto">
+        {/* Header */}
+        <Link
+          href="/pattern"
+          className="inline-flex items-center text-gray-700 hover:text-gray-900 font-medium mb-6 text-lg"
+        >
+          <span className="mr-2">←</span> {t('back', 'Back')}
         </Link>
-        <h1 className="text-3xl font-bold text-gray-800">🧩 Maze Navigation</h1>
-      </header>
 
-      <main className="container mx-auto px-4 py-8">
-        <div className="max-w-lg mx-auto text-center mb-8">
-          <div className="flex justify-center gap-4 text-2xl mb-4 flex-wrap">
-            <p className="font-bold text-purple-600">Score: {score}</p>
-            <p className="font-bold text-pink-600">Level: {level}</p>
-            <p className="font-bold text-blue-600">Moves: {moves}</p>
-            <p className={`font-bold ${timeLeft < 15 ? 'text-red-500 animate-pulse' : 'text-green-600'}`}>
-              Time: {timeLeft}s
-            </p>
-          </div>
-          <p className="text-lg text-gray-600">Use arrow keys or buttons to navigate. Reach the goal before time runs out!</p>
-        </div>
+        <h1 className="text-3xl md:text-4xl font-bold text-gray-800 mb-2">
+          {t('mazeNavigation.title', 'Maze Navigation')}
+        </h1>
+        <p className="text-lg text-gray-700 font-medium mb-8">
+          {t('mazeNavigation.description', 'Navigate through the maze to the exit!')}
+        </p>
 
-        <div className="bg-gray-800 p-4 rounded-2xl shadow-xl max-w-lg mx-auto mb-6">
-          <div className="grid gap-1" style={{ gridTemplateColumns: `repeat(${maze.length}, minmax(0, 1fr))` }}>
-            {maze.map((row, y) =>
-              row.map((cell, x) => {
-                const isPlayer = playerPos[0] === x && playerPos[1] === y
-                const isStart = cell === 'start' && !isPlayer
-                const isEnd = cell === 'end' && !isPlayer
-
-                return (
-                  <motion.div
-                    key={`${x}-${y}`}
-                    initial={{ scale: 0 }}
-                    animate={{ scale: 1 }}
-                    transition={{ delay: (x + y) * 0.02 }}
-                    className={`aspect-square rounded flex items-center justify-center text-2xl ${getCellColor(cell, isPlayer)}`}
-                  >
-                    {isPlayer ? getCellContent('player') : getCellContent(cell)}
-                  </motion.div>
-                )
-              })
+        {/* Menu */}
+        {gameState === 'menu' && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="bg-white rounded-2xl shadow-lg p-8 text-center"
+          >
+            <h2 className="text-3xl font-bold text-gray-800 mb-2">
+              Level {level}
+            </h2>
+            {level > 1 && (
+              <p className="text-lg text-gray-700 mb-4 font-medium">
+                Total Score: <span className="text-slate-600 font-bold">{totalScore}</span>
+              </p>
             )}
-          </div>
-        </div>
+            <div className="bg-slate-50 rounded-xl p-4 mb-6 text-left">
+              <h3 className="font-bold text-gray-800 mb-2">{t('mazeNavigation.levelInfo', 'Level Settings')}:</h3>
+              <ul className="text-gray-700 space-y-1 font-medium">
+                <li>• {t('mazeNavigation.gridSize', 'Grid Size')}: {settings.gridSize}x{settings.gridSize}</li>
+                <li>• {t('mazeNavigation.inputTime', 'Time Limit')}: {settings.inputTime}s</li>
+              </ul>
+            </div>
+            <button
+              onClick={startLevel}
+              className="bg-gradient-to-r from-slate-500 to-gray-500 text-white text-2xl font-bold py-4 px-12 rounded-xl hover:from-slate-600 hover:to-gray-600 shadow-lg transition-all w-full"
+            >
+              {t('start', 'Start')}
+            </button>
+          </motion.div>
+        )}
 
-        <div className="grid grid-cols-3 gap-2 max-w-xs mx-auto">
-          <div></div>
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            onClick={() => movePlayer(DIRECTIONS.UP)}
-            className="bg-purple-500 text-white text-2xl font-bold py-4 rounded-xl shadow-lg hover:bg-purple-600 transition"
-          >
-            ↑
-          </motion.button>
-          <div></div>
+        {/* Playing */}
+        {gameState === 'playing' && (
+          <>
+            {/* Stats */}
+            <div className="bg-white rounded-2xl shadow-lg p-6 mb-6">
+              <div className="flex justify-between items-center">
+                <div>
+                  <p className="text-gray-700 text-sm font-medium">{t('mazeNavigation.level', 'Level')}</p>
+                  <p className="text-3xl font-bold text-slate-600">{level}/{MAX_LEVELS}</p>
+                </div>
+                <div>
+                  <p className="text-gray-700 text-sm font-medium">{t('mazeNavigation.moves', 'Moves')}</p>
+                  <p className="text-3xl font-bold text-gray-600">{moves}</p>
+                </div>
+                <div>
+                  <p className="text-gray-700 text-sm font-medium">{t('mazeNavigation.timeLeft', 'Time Left')}</p>
+                  <p className={`text-4xl font-bold ${timeLeft <= 10 ? 'text-red-500' : 'text-slate-600'}`}>
+                    {timeLeft}s
+                  </p>
+                </div>
+              </div>
+              {/* Progress Bar */}
+              <div className="mt-4 bg-gray-200 rounded-full h-3 overflow-hidden">
+                <motion.div
+                  initial={{ width: 0 }}
+                  animate={{ width: `${((level - 1) / MAX_LEVELS) * 100}%` }}
+                  className="bg-gradient-to-r from-slate-500 to-gray-500 h-full"
+                />
+              </div>
+            </div>
 
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            onClick={() => movePlayer(DIRECTIONS.LEFT)}
-            className="bg-purple-500 text-white text-2xl font-bold py-4 rounded-xl shadow-lg hover:bg-purple-600 transition"
-          >
-            ←
-          </motion.button>
-          <div></div>
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            onClick={() => movePlayer(DIRECTIONS.RIGHT)}
-            className="bg-purple-500 text-white text-2xl font-bold py-4 rounded-xl shadow-lg hover:bg-purple-600 transition"
-          >
-            →
-          </motion.button>
+            {/* Maze */}
+            <div className="bg-white rounded-2xl shadow-lg p-8 mb-6 text-center">
+              <p className="text-sm text-gray-500 mb-4">
+                {t('mazeNavigation.controls', 'Use Arrow Keys or WASD to move')}
+              </p>
+              <div className="grid gap-1 max-w-md mx-auto" style={{
+                gridTemplateColumns: `repeat(${settings.gridSize}, minmax(0, 1fr))`
+              }}>
+                {maze.map((row, y) =>
+                  row.map((isWall, x) => (
+                    <motion.div
+                      key={`${x}-${y}`}
+                      initial={{ opacity: 0, scale: 0.5 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      transition={{ delay: (x + y) * 0.02 }}
+                      className={`aspect-square rounded-lg ${
+                        isWall
+                          ? 'bg-slate-700'
+                          : 'bg-slate-100'
+                      } ${playerPos.x === x && playerPos.y === y ? 'bg-blue-500' : ''} ${
+                        endPos.x === x && endPos.y === y ? 'bg-green-500' : ''
+                      }`}
+                    >
+                      {playerPos.x === x && playerPos.y === y && (
+                        <span className="text-white text-lg">🧍</span>
+                      )}
+                      {endPos.x === x && endPos.y === y && (
+                        <span className="text-white text-lg">🚪</span>
+                      )}
+                    </motion.div>
+                  ))
+                )}
+              </div>
 
-          <div></div>
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            onClick={() => movePlayer(DIRECTIONS.DOWN)}
-            className="bg-purple-500 text-white text-2xl font-bold py-4 rounded-xl shadow-lg hover:bg-purple-600 transition"
-          >
-            ↓
-          </motion.button>
-          <div></div>
-        </div>
+              {/* Mobile Controls */}
+              <div className="mt-6 flex justify-center">
+                <div className="grid grid-cols-3 gap-2">
+                  <div></div>
+                  <motion.button
+                    onClick={() => movePlayer(0, -1)}
+                    className="w-16 h-16 bg-slate-200 rounded-xl hover:bg-slate-300 active:bg-slate-400 transition-colors text-2xl font-bold"
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                  >
+                    ↑
+                  </motion.button>
+                  <div></div>
+                  <motion.button
+                    onClick={() => movePlayer(-1, 0)}
+                    className="w-16 h-16 bg-slate-200 rounded-xl hover:bg-slate-300 active:bg-slate-400 transition-colors text-2xl font-bold"
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                  >
+                    ←
+                  </motion.button>
+                  <motion.button
+                    onClick={() => movePlayer(0, 1)}
+                    className="w-16 h-16 bg-slate-200 rounded-xl hover:bg-slate-300 active:bg-slate-400 transition-colors text-2xl font-bold"
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                  >
+                    ↓
+                  </motion.button>
+                  <motion.button
+                    onClick={() => movePlayer(1, 0)}
+                    className="w-16 h-16 bg-slate-200 rounded-xl hover:bg-slate-300 active:bg-slate-400 transition-colors text-2xl font-bold"
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                  >
+                    →
+                  </motion.button>
+                </div>
+              </div>
+            </div>
+          </>
+        )}
 
-        <div className="text-center mt-6 text-gray-500">
-          <p>🚩 Start | 🏁 Goal</p>
-        </div>
-      </main>
+        {/* Level Complete */}
+        {gameState === 'levelComplete' && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="bg-white rounded-2xl shadow-lg p-8 text-center"
+          >
+            <div className="text-6xl mb-4">✅</div>
+            <h2 className="text-4xl font-bold text-slate-600 mb-4">Level {level} Complete!</h2>
+            <div className="bg-slate-50 rounded-xl p-6 mb-6">
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <p className="text-gray-700 text-sm font-medium">{t('mazeNavigation.moves', 'Moves')}</p>
+                  <p className="text-3xl font-bold text-slate-600">{moves}</p>
+                </div>
+                <div>
+                  <p className="text-gray-700 text-sm font-medium">{t('mazeNavigation.levelScore', 'Level Score')}</p>
+                  <p className="text-3xl font-bold text-slate-600">{score}</p>
+                </div>
+              </div>
+              <div className="mt-4">
+                <p className="text-gray-700 text-sm font-medium">{t('mazeNavigation.totalScore', 'Total Score')}</p>
+                <p className="text-4xl font-bold text-gray-600">{totalScore + score}</p>
+              </div>
+            </div>
+            <button
+              onClick={nextLevel}
+              className="bg-gradient-to-r from-slate-500 to-gray-500 text-white text-2xl font-bold py-4 px-12 rounded-xl hover:from-slate-600 hover:to-gray-600 shadow-lg transition-all w-full mb-3"
+            >
+              {level < MAX_LEVELS ? `Next Level ${level + 1}` : 'View Final Score'}
+            </button>
+            <button
+              onClick={startGame}
+              className="text-gray-600 hover:text-gray-800 font-medium"
+            >
+              {t('mazeNavigation.restart', 'Restart from Level 1')}
+            </button>
+          </motion.div>
+        )}
+
+        {/* Game Over */}
+        {gameState === 'gameOver' && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="bg-white rounded-2xl shadow-lg p-8 text-center"
+          >
+            <div className="text-6xl mb-4">⏰</div>
+            <h2 className="text-4xl font-bold text-gray-800 mb-4">{t('mazeNavigation.timeUp', 'Time is up!')}</h2>
+            <div className="bg-orange-50 rounded-xl p-6 mb-6">
+              <p className="text-gray-700 text-sm font-medium">{t('mazeNavigation.totalScore', 'Total Score')}</p>
+              <p className="text-3xl font-bold text-orange-600">{totalScore}</p>
+            </div>
+            <button
+              onClick={startLevel}
+              className="bg-gradient-to-r from-orange-500 to-red-500 text-white text-2xl font-bold py-4 px-12 rounded-xl hover:from-orange-600 hover:to-red-600 shadow-lg transition-all w-full mb-3"
+            >
+              {t('tryAgain', 'Try Again')}
+            </button>
+            <button
+              onClick={startGame}
+              className="text-gray-600 hover:text-gray-800 font-medium"
+            >
+              {t('mazeNavigation.restart', 'Restart from Level 1')}
+            </button>
+          </motion.div>
+        )}
+
+        {/* Victory */}
+        {gameState === 'victory' && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="bg-white rounded-2xl shadow-lg p-8 text-center"
+          >
+            <div className="text-6xl mb-4">🎉</div>
+            <h2 className="text-4xl font-bold text-slate-600 mb-4">{t('mazeNavigation.victory', 'Congratulations!')}</h2>
+            <p className="text-xl text-gray-700 font-medium mb-6">
+              {t('mazeNavigation.victoryMessage', 'You completed all {count} levels!', { count: MAX_LEVELS })}
+            </p>
+            <div className="bg-slate-50 rounded-xl p-6 mb-6">
+              <p className="text-gray-700 text-sm font-medium">{t('mazeNavigation.finalScore', 'Final Score')}</p>
+              <p className="text-5xl font-bold text-slate-600">{totalScore + score}</p>
+            </div>
+            <button
+              onClick={startGame}
+              className="bg-gradient-to-r from-slate-500 to-gray-500 text-white text-2xl font-bold py-4 px-12 rounded-xl hover:from-slate-600 hover:to-gray-600 shadow-lg transition-all w-full"
+            >
+              {t('playAgain', 'Play Again')}
+            </button>
+          </motion.div>
+        )}
+      </div>
     </div>
   )
 }

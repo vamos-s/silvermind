@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
@@ -21,15 +21,15 @@ export default function LogicGridPage() {
   const [gameOver, setGameOver] = useState(false)
   const [victory, setVictory] = useState(false)
 
-  const getItemCount = () => {
+  const getItemCount = useCallback(() => {
     switch (currentDifficulty) {
       case 'easy': return 3
       case 'medium': return 4
       case 'hard': return 5
     }
-  }
+  }, [currentDifficulty])
 
-  const generatePuzzle = () => {
+  const generatePuzzle = useCallback(() => {
     const count = getItemCount()
     const names = ['Apple', 'Banana', 'Cherry', 'Date', 'Elderberry', 'Fig', 'Grape', 'Honeydew']
     const values = Array.from({ length: count }, (_, i) => ({
@@ -72,9 +72,9 @@ export default function LogicGridPage() {
     setSelectedItem(null)
     setGameOver(false)
     setVictory(false)
-  }
+  }, [currentDifficulty, getItemCount])
 
-  const handleItemClick = (item: string) => {
+  const handleItemClick = useCallback((item: string) => {
     if (gameOver) return
 
     if (selectedItem === item) {
@@ -95,20 +95,20 @@ export default function LogicGridPage() {
       }
       setSelectedItem(null)
     }
-  }
+  }, [gameOver, selectedItem, userOrder])
 
-  const handleAddToOrder = () => {
+  const handleAddToOrder = useCallback(() => {
     if (selectedItem && !userOrder.includes(selectedItem)) {
       setUserOrder([...userOrder, selectedItem])
       setSelectedItem(null)
     }
-  }
+  }, [selectedItem, userOrder])
 
-  const handleRemoveFromOrder = (item: string) => {
+  const handleRemoveFromOrder = useCallback((item: string) => {
     setUserOrder(userOrder.filter(i => i !== item))
-  }
+  }, [userOrder])
 
-  const checkSolution = () => {
+  const checkSolution = useCallback(() => {
     if (userOrder.length !== items.length) return
 
     const isCorrect = userOrder.every((item, i) => {
@@ -130,7 +130,7 @@ export default function LogicGridPage() {
         durationSeconds: 90 * level
       })
     }
-  }
+  }, [userOrder, items, level, score, addSession, currentDifficulty])
 
   useEffect(() => {
     generatePuzzle()

@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { motion, AnimatePresence } from 'framer-motion'
 import Link from 'next/link'
@@ -19,47 +19,50 @@ export default function NumberRecallPage() {
   const [totalScore, setTotalScore] = useState(0)
   const [level, setLevel] = useState(1)
 
-  const getSequenceLength = () => {
-    if (level <= 5) return 3 + level - 1 // 3, 4, 5, 6, 7
-    if (level <= 10) return 7 + (level - 5) // 8, 9, 10, 11, 12
-    if (level <= 15) return 12 + (level - 10) // 13, 14, 15, 16, 17
-    if (level <= 20) return 17 + (level - 15) // 18, 19, 20, 21, 22
-    return 22 + (level - 20) // 23, 24, 25, 26, 27, 28, 29, 30
-  }
+  const getSequenceLength = useCallback(() => {
+    if (level <= 5) return 3 + level - 1
+    if (level <= 10) return 7 + (level - 5)
+    if (level <= 15) return 12 + (level - 10)
+    if (level <= 20) return 17 + (level - 15)
+    return 22 + (level - 20)
+  }, [level])
 
-  const getDisplayTime = () => {
-    if (level <= 5) return 3000 - (level - 1) * 300 // 3000, 2700, 2400, 2100, 1800
-    if (level <= 10) return 1800 - (level - 6) * 200 // 1600, 1400, 1200, 1000, 800
-    if (level <= 15) return 800 - (level - 11) * 100 // 700, 600, 500, 400, 300
-    if (level <= 20) return 300 - (level - 16) * 40 // 260, 220, 180, 140, 100
-    return 100 - (level - 21) * 10 // 90, 80, 70, 60, 50, 40, 30, 20
-  }
+  const getDisplayTime = useCallback(() => {
+    if (level <= 5) return 3000 - (level - 1) * 300
+    if (level <= 10) return 1800 - (level - 6) * 200
+    if (level <= 15) return 800 - (level - 11) * 100
+    if (level <= 20) return 300 - (level - 16) * 40
+    return 100 - (level - 21) * 10
+  }, [level])
 
-  const getLevelScore = () => {
-    return level * 10 * (getDisplayTime() / 1000)
-  }
+  const getLevelScore = useCallback(() => {
+    const displayTime = getDisplayTime()
+    return level * 10 * (displayTime / 1000)
+  }, [level, getDisplayTime])
 
-  const startGame = () => {
-    setScore(0)
-    setTotalScore(0)
-    setLevel(1)
-    startLevel()
-  }
-
-  const startLevel = () => {
-    const newSequence = Array.from({ length: getSequenceLength() }, () =>
+  const startLevel = useCallback(() => {
+    const seqLength = getSequenceLength()
+    const newSequence = Array.from({ length: seqLength }, () =>
       Math.floor(Math.random() * 10)
     )
     setSequence(newSequence)
     setPlayerInput('')
     setGameState('showing')
 
+    const displayTime = getDisplayTime()
     setTimeout(() => {
       setGameState('input')
-    }, getDisplayTime())
-  }
+    }, displayTime)
+  }, [getSequenceLength, getDisplayTime])
 
-  const nextLevel = () => {
+  const startGame = useCallback(() => {
+    setScore(0)
+    setTotalScore(0)
+    setLevel(1)
+    startLevel()
+  }, [startLevel])
+
+  const nextLevel = useCallback(() => {
     const levelScore = Math.round(getLevelScore())
     setTotalScore(prev => prev + levelScore)
 
@@ -78,9 +81,9 @@ export default function NumberRecallPage() {
       setGameState('menu')
       setTimeout(() => startLevel(), 100)
     }
-  }
+  }, [level, totalScore, getLevelScore, addSession, startLevel])
 
-  const handleNumberClick = (num: number) => {
+  const handleNumberClick = useCallback((num: number) => {
     const newInput = playerInput + num
     setPlayerInput(newInput)
 
@@ -102,16 +105,15 @@ export default function NumberRecallPage() {
         setGameState('gameOver')
       }
     }
-  }
+  }, [playerInput, sequence, level, totalScore, getLevelScore, addSession])
 
-  const handleDelete = () => {
+  const handleDelete = useCallback(() => {
     setPlayerInput(playerInput.slice(0, -1))
-  }
+  }, [playerInput])
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 p-4 md:p-8">
       <div className="max-w-lg mx-auto">
-        {/* Header */}
         <header className="mb-6">
           <Link href="/memory" className="text-gray-700 hover:text-gray-900 font-medium mb-4 block">
             ← {t('back', 'Back')}
@@ -124,16 +126,13 @@ export default function NumberRecallPage() {
           </p>
         </header>
 
-        {/* Menu */}
         {gameState === 'menu' && (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             className="bg-white rounded-2xl shadow-lg p-8 text-center"
           >
-            <h2 className="text-3xl font-bold text-gray-800 mb-2">
-              Level {level}
-            </h2>
+            <h2 className="text-3xl font-bold text-gray-800 mb-2">Level {level}</h2>
             {level > 1 && (
               <p className="text-lg text-gray-700 mb-4 font-medium">
                 Total Score: <span className="text-blue-600 font-bold">{totalScore}</span>
@@ -146,34 +145,21 @@ export default function NumberRecallPage() {
                 <li>• {t('numberRecall.displayTime', 'Display Time')}: {Math.round(getDisplayTime() / 100) / 10}s</li>
               </ul>
             </div>
-            <button
-              onClick={startLevel}
-              className="bg-gradient-to-r from-blue-500 to-purple-500 text-white text-2xl font-bold py-4 px-12 rounded-xl hover:from-blue-600 hover:to-purple-600 shadow-lg transition-all w-full"
-            >
+            <button onClick={startLevel} className="bg-gradient-to-r from-blue-500 to-purple-500 text-white text-2xl font-bold py-4 px-12 rounded-xl hover:from-blue-600 hover:to-purple-600 shadow-lg transition-all w-full">
               {t('start', 'Start')}
             </button>
           </motion.div>
         )}
 
-        {/* Showing Sequence */}
         {gameState === 'showing' && (
-          <motion.div
-            initial={{ scale: 0.8 }}
-            animate={{ scale: 1 }}
-            className="bg-white rounded-2xl p-12 shadow-xl text-center"
-          >
+          <motion.div initial={{ scale: 0.8 }} animate={{ scale: 1 }} className="bg-white rounded-2xl p-12 shadow-xl text-center">
             <p className="text-xl text-gray-700 font-medium mb-6">{t('numberRecall.remember', 'Remember this sequence:')}</p>
-            <p className={`font-bold text-blue-600 tracking-widest ${
-              sequence.length <= 6 ? 'text-6xl' :
-              sequence.length <= 10 ? 'text-4xl' :
-              'text-2xl'
-            }`}>
+            <p className={`font-bold text-blue-600 tracking-widest ${sequence.length <= 6 ? 'text-6xl' : sequence.length <= 10 ? 'text-4xl' : 'text-2xl'}`}>
               {sequence.join('')}
             </p>
           </motion.div>
         )}
 
-        {/* Input */}
         {gameState === 'input' && (
           <>
             <div className="bg-white rounded-2xl shadow-lg p-6 mb-6">
@@ -181,156 +167,63 @@ export default function NumberRecallPage() {
                 <p className="font-bold text-blue-600">{t('numberRecall.level', 'Level')}: {level}/{MAX_LEVELS}</p>
                 <p className="font-bold text-purple-600">{t('numberRecall.score', 'Score')}: {totalScore}</p>
               </div>
-              {/* Progress Bar */}
               <div className="bg-gray-200 rounded-full h-3 overflow-hidden">
-                <motion.div
-                  initial={{ width: 0 }}
-                  animate={{ width: `${((level - 1) / MAX_LEVELS) * 100}%` }}
-                  className="bg-gradient-to-r from-blue-500 to-purple-500 h-full"
-                />
+                <motion.div initial={{ width: 0 }} animate={{ width: `${((level - 1) / MAX_LEVELS) * 100}%` }} className="bg-gradient-to-r from-blue-500 to-purple-500 h-full" />
               </div>
             </div>
 
             <div className="bg-white rounded-xl p-6 shadow-lg mb-6">
               <p className="text-center text-xl text-gray-700 font-medium mb-4">{t('numberRecall.yourAnswer', 'Your answer:')}</p>
-              <input
-                type="text"
-                value={playerInput}
-                readOnly
-                className={`w-full bg-gray-100 rounded-lg p-4 text-center font-bold tracking-widest text-gray-800 border-2 border-transparent ${
-                  sequence.length <= 6 ? 'text-4xl h-16' :
-                  sequence.length <= 10 ? 'text-2xl h-14' :
-                  'text-xl h-12'
-                }`}
-                placeholder={'_'.repeat(sequence.length)}
-              />
+              <input type="text" value={playerInput} readOnly className={`w-full bg-gray-100 rounded-lg p-4 text-center font-bold tracking-widest text-gray-800 border-2 border-transparent ${sequence.length <= 6 ? 'text-4xl h-16' : sequence.length <= 10 ? 'text-2xl h-14' : 'text-xl h-12'}`} placeholder={'_'.repeat(sequence.length)} />
             </div>
 
             <div className="grid grid-cols-3 gap-4">
               {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((num) => (
-                <motion.button
-                  key={num}
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  onClick={() => handleNumberClick(num)}
-                  className="bg-blue-500 text-white text-4xl font-bold py-4 rounded-xl shadow-lg hover:bg-blue-600 transition"
-                >
-                  {num}
-                </motion.button>
+                <motion.button key={num} whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} onClick={() => handleNumberClick(num)} className="bg-blue-500 text-white text-4xl font-bold py-4 rounded-xl shadow-lg hover:bg-blue-600 transition">{num}</motion.button>
               ))}
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={handleDelete}
-                className="bg-red-500 text-white text-2xl font-bold py-4 rounded-xl shadow-lg hover:bg-red-600 transition"
-              >
-                ⌫
-              </motion.button>
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={() => handleNumberClick(0)}
-                className="bg-blue-500 text-white text-4xl font-bold py-4 rounded-xl shadow-lg hover:bg-blue-600 transition"
-              >
-                0
-              </motion.button>
+              <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} onClick={handleDelete} className="bg-red-500 text-white text-2xl font-bold py-4 rounded-xl shadow-lg hover:bg-red-600 transition">⌫</motion.button>
+              <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} onClick={() => handleNumberClick(0)} className="bg-blue-500 text-white text-4xl font-bold py-4 rounded-xl shadow-lg hover:bg-blue-600 transition">0</motion.button>
             </div>
           </>
         )}
 
-        {/* Level Complete */}
         {gameState === 'levelComplete' && (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="bg-white rounded-2xl shadow-lg p-8 text-center"
-          >
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="bg-white rounded-2xl shadow-lg p-8 text-center">
             <div className="text-6xl mb-4">✅</div>
             <h2 className="text-4xl font-bold text-blue-600 mb-4">Level {level} Complete!</h2>
-            <p className="text-xl text-gray-700 font-medium mb-6">
-              {t('numberRecall.sequence', 'Sequence')}: {sequence.join('')}
-            </p>
+            <p className="text-xl text-gray-700 font-medium mb-6">{t('numberRecall.sequence', 'Sequence')}: {sequence.join('')}</p>
             <div className="bg-blue-50 rounded-xl p-6 mb-6">
               <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <p className="text-gray-700 text-sm font-medium">{t('numberRecall.levelScore', 'Level Score')}</p>
-                  <p className="text-3xl font-bold text-blue-600">{Math.round(score)}</p>
-                </div>
-                <div>
-                  <p className="text-gray-700 text-sm font-medium">{t('numberRecall.totalScore', 'Total Score')}</p>
-                  <p className="text-3xl font-bold text-blue-600">{totalScore + Math.round(score)}</p>
-                </div>
+                <div><p className="text-gray-700 text-sm font-medium">{t('numberRecall.levelScore', 'Level Score')}</p><p className="text-3xl font-bold text-blue-600">{Math.round(score)}</p></div>
+                <div><p className="text-gray-700 text-sm font-medium">{t('numberRecall.totalScore', 'Total Score')}</p><p className="text-3xl font-bold text-blue-600">{totalScore + Math.round(score)}</p></div>
               </div>
             </div>
-            <button
-              onClick={nextLevel}
-              className="bg-gradient-to-r from-blue-500 to-purple-500 text-white text-2xl font-bold py-4 px-12 rounded-xl hover:from-blue-600 hover:to-purple-600 shadow-lg transition-all w-full mb-3"
-            >
-              {level < MAX_LEVELS ? `Next Level ${level + 1}` : 'View Final Score'}
-            </button>
-            <button
-              onClick={startGame}
-              className="text-gray-600 hover:text-gray-800 font-medium"
-            >
-              {t('numberRecall.restart', 'Restart from Level 1')}
-            </button>
+            <button onClick={nextLevel} className="bg-gradient-to-r from-blue-500 to-purple-500 text-white text-2xl font-bold py-4 px-12 rounded-xl hover:from-blue-600 hover:to-purple-600 shadow-lg transition-all w-full mb-3">{level < MAX_LEVELS ? `Next Level ${level + 1}` : 'View Final Score'}</button>
+            <button onClick={startGame} className="text-gray-600 hover:text-gray-800 font-medium">{t('numberRecall.restart', 'Restart from Level 1')}</button>
           </motion.div>
         )}
 
-        {/* Game Over */}
         {gameState === 'gameOver' && (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="bg-white rounded-2xl shadow-lg p-8 text-center"
-          >
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="bg-white rounded-2xl shadow-lg p-8 text-center">
             <div className="text-6xl mb-4">❌</div>
             <h2 className="text-4xl font-bold text-gray-800 mb-4">{t('numberRecall.gameOver', 'Game Over!')}</h2>
             <p className="text-lg text-gray-700 font-medium mb-2">{t('numberRecall.correctSequence', 'Correct sequence:')}</p>
             <p className="text-2xl font-bold text-blue-600 mb-2">{sequence.join('')}</p>
             <p className="text-lg text-gray-700 font-medium mb-2">{t('numberRecall.yourAnswer', 'Your answer:')}</p>
             <p className="text-2xl font-bold text-red-500 mb-6">{playerInput}</p>
-            <div className="bg-orange-50 rounded-xl p-6 mb-6">
-              <p className="text-gray-700 text-sm font-medium">{t('numberRecall.finalScore', 'Final Score')}</p>
-              <p className="text-3xl font-bold text-orange-600">{totalScore}</p>
-            </div>
-            <button
-              onClick={startGame}
-              className="bg-gradient-to-r from-orange-500 to-red-500 text-white text-2xl font-bold py-4 px-12 rounded-xl hover:from-orange-600 hover:to-red-600 shadow-lg transition-all w-full mb-3"
-            >
-              {t('tryAgain', 'Try Again')}
-            </button>
-            <button
-              onClick={startGame}
-              className="text-gray-600 hover:text-gray-800 font-medium"
-            >
-              {t('numberRecall.restart', 'Restart from Level 1')}
-            </button>
+            <div className="bg-orange-50 rounded-xl p-6 mb-6"><p className="text-gray-700 text-sm font-medium">{t('numberRecall.finalScore', 'Final Score')}</p><p className="text-3xl font-bold text-orange-600">{totalScore}</p></div>
+            <button onClick={startGame} className="bg-gradient-to-r from-orange-500 to-red-500 text-white text-2xl font-bold py-4 px-12 rounded-xl hover:from-orange-600 hover:to-red-600 shadow-lg transition-all w-full mb-3">{t('tryAgain', 'Try Again')}</button>
+            <button onClick={startGame} className="text-gray-600 hover:text-gray-800 font-medium">{t('numberRecall.restart', 'Restart from Level 1')}</button>
           </motion.div>
         )}
 
-        {/* Victory */}
         {gameState === 'victory' && (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="bg-white rounded-2xl shadow-lg p-8 text-center"
-          >
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="bg-white rounded-2xl shadow-lg p-8 text-center">
             <div className="text-6xl mb-4">🎉</div>
             <h2 className="text-4xl font-bold text-blue-600 mb-4">{t('numberRecall.victory', 'Congratulations!')}</h2>
-            <p className="text-xl text-gray-700 font-medium mb-6">
-              {t('numberRecall.victoryMessage', 'You completed all {count} levels!', { count: MAX_LEVELS })}
-            </p>
-            <div className="bg-blue-50 rounded-xl p-6 mb-6">
-              <p className="text-gray-700 text-sm font-medium">{t('numberRecall.finalScore', 'Final Score')}</p>
-              <p className="text-5xl font-bold text-blue-600">{totalScore + Math.round(score)}</p>
-            </div>
-            <button
-              onClick={startGame}
-              className="bg-gradient-to-r from-blue-500 to-purple-500 text-white text-2xl font-bold py-4 px-12 rounded-xl hover:from-blue-600 hover:to-purple-600 shadow-lg transition-all w-full"
-            >
-              {t('playAgain', 'Play Again')}
-            </button>
+            <p className="text-xl text-gray-700 font-medium mb-6">{t('numberRecall.victoryMessage', 'You completed all {count} levels!', { count: MAX_LEVELS })}</p>
+            <div className="bg-blue-50 rounded-xl p-6 mb-6"><p className="text-gray-700 text-sm font-medium">{t('numberRecall.finalScore', 'Final Score')}</p><p className="text-5xl font-bold text-blue-600">{totalScore + Math.round(score)}</p></div>
+            <button onClick={startGame} className="bg-gradient-to-r from-blue-500 to-purple-500 text-white text-2xl font-bold py-4 px-12 rounded-xl hover:from-blue-600 hover:to-purple-600 shadow-lg transition-all w-full">{t('playAgain', 'Play Again')}</button>
           </motion.div>
         )}
       </div>

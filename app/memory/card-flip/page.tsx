@@ -213,6 +213,10 @@ export default function CardFlipPage() {
     if (card.isMatched) return
     if (card.isFlipped) return
 
+    // Prevent flipping if 2 cards are already flipped and waiting for match check
+    const currentlyFlipped = cards.filter(c => c.isFlipped && !c.isMatched)
+    if (currentlyFlipped.length >= 2) return
+
     // Flip the card
     setCards(prev =>
       prev.map(c =>
@@ -220,8 +224,7 @@ export default function CardFlipPage() {
       )
     )
 
-    // Get currently flipped cards
-    const currentlyFlipped = cards.filter(c => c.isFlipped && !c.isMatched)
+    // Get currently flipped cards (including the one we just flipped)
     const flippedIds = [...currentlyFlipped.map(c => c.id), cardId]
 
     if (flippedIds.length === 2) {

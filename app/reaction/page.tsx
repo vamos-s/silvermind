@@ -3,24 +3,38 @@
 import { useTranslation } from 'react-i18next'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
+import { useGameStore } from '@/lib/store'
 
 const games = [
-  { id: 'timing-game', icon: '⏱️', title: 'Timing Game', description: 'Click when the color changes' },
-  { id: 'target-detection', icon: '🎯', title: 'Target Detection', description: 'Find the targets quickly' },
-  { id: 'color-match', icon: '🌈', title: 'Color Match', description: 'Match the color or word' },
-  { id: 'quick-reaction', icon: '⚡', title: 'Quick Reaction', description: 'Test your reaction speed' },
+  { id: 'timing-game', icon: '⏱️', title: 'Timing Game', description: 'Click when the color changes', difficulty: 'Easy' },
+  { id: 'target-detection', icon: '🎯', title: 'Target Detection', description: 'Find the targets quickly', difficulty: 'Medium' },
+  { id: 'color-match', icon: '🌈', title: 'Color Match', description: 'Match the color or word', difficulty: 'Medium' },
+  { id: 'quick-reaction', icon: '⚡', title: 'Quick Reaction', description: 'Test your reaction speed', difficulty: 'Easy' },
 ]
 
 export default function ReactionPage() {
   const { t } = useTranslation()
+  const { darkMode, toggleDarkMode } = useGameStore()
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-yellow-50 to-orange-50">
-      <header className="p-6 bg-white shadow-sm">
-        <Link href="/" className="text-yellow-500 hover:underline mb-4 block">
-          ← Back
-        </Link>
-        <h1 className="text-3xl font-bold text-gray-800">⚡ {t('reaction')}</h1>
+    <div className={`min-h-screen ${darkMode ? 'bg-gradient-to-br from-slate-900 to-slate-800' : 'bg-gradient-to-br from-blue-50 to-purple-50'}`}>
+      <header className="p-6 bg-white dark:bg-slate-800 shadow-sm">
+        <div className="flex justify-between items-center">
+          <div>
+            <Link href="/" className="hover:underline mb-4 block">
+              ← Back
+            </Link>
+            <h1 className="text-3xl font-bold text-gray-800 dark:text-slate-50">⚡ {t('reaction')}</h1>
+          </div>
+          <motion.button
+            onClick={toggleDarkMode}
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.9 }}
+            className={`p-3 rounded-full transition-colors ${darkMode ? 'bg-gray-700 text-yellow-400' : 'bg-gray-200 text-gray-700'}`}
+          >
+            {darkMode ? '☀️' : '🌙'}
+          </motion.button>
+        </div>
       </header>
 
       <main className="container mx-auto px-4 py-8">
@@ -32,11 +46,14 @@ export default function ReactionPage() {
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: 0.1 * i }}
                 whileHover={{ scale: 1.03 }}
-                className="bg-white rounded-xl p-6 shadow-lg cursor-pointer"
+                className={`${darkMode ? 'dark:bg-slate-700' : 'bg-white'} text-gray-800 rounded-xl p-6 shadow-lg dark:shadow-slate-900/50 cursor-pointer relative transition-colors`}
               >
+                <span className={`absolute top-4 right-4 px-2 py-1 text-xs font-semibold rounded-full bg-gray-100 dark:bg-slate-600 text-gray-600 dark:text-slate-200`}>
+                  {game.difficulty}
+                </span>
                 <span className="text-5xl block mb-4">{game.icon}</span>
-                <h2 className="text-2xl font-bold text-gray-800 mb-2">{game.title}</h2>
-                <p className="text-gray-600">{game.description}</p>
+                <h2 className="text-2xl font-bold text-gray-800 dark:text-slate-50 mb-2">{game.title}</h2>
+                <p className="text-gray-600 dark:text-slate-300">{game.description}</p>
               </motion.div>
             </Link>
           ))}

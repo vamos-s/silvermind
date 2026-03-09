@@ -17,9 +17,202 @@ const resources = {
       logic: 'Logic',
       reaction: 'Reaction',
       spatial: 'Spatial',
+      attention: 'Attention & Focus',
+      language: 'Language & Verbal',
       achievements: 'Achievements',
       progress: 'Progress',
-      settings: 'Settings'
+      settings: 'Settings',
+      back: 'Back',
+      start: 'Start',
+      playAgain: 'Play Again',
+      
+      // Navigation
+      leaderboard: 'Leaderboard',
+      challenges: 'Daily Challenges',
+      
+      // Leaderboard
+      leaderboardTitle: 'Leaderboard',
+      topScores: 'Top Scores',
+      rank: 'Rank',
+      player: 'Player',
+      game: 'Game',
+      noScores: 'No scores yet. Start playing!',
+      filterByGame: 'Filter by Game',
+      allGames: 'All Games',
+      
+      // Achievements
+      achievementsTitle: 'Achievements',
+      unlocked: 'Unlocked',
+      locked: 'Locked',
+      achievementUnlocked: 'Achievement Unlocked!',
+      totalAchievements: 'Total Achievements',
+      progress: 'Progress',
+      
+      // Challenges
+      challengesTitle: 'Daily Challenges',
+      todayChallenges: 'Today\'s Challenges',
+      completed: 'Completed',
+      inProgress: 'In Progress',
+      notStarted: 'Not Started',
+      challengeCompleted: 'Challenge Completed!',
+      allChallengesCompleted: 'All challenges completed today!',
+      
+      // Notifications
+      newAchievement: 'New Achievement!',
+      challengeComplete: 'Challenge Complete!',
+      bestScore: 'New Best Score!',
+      
+      // Stats
+      totalGames: 'Total Games',
+      totalScore: 'Total Score',
+      currentStreak: 'Current Streak',
+      days: 'days',
+      bestScores: 'Best Scores',
+      
+      // Pattern in 3D
+      patternIn3D: {
+        title: 'Pattern in 3D',
+        description: 'Match 3D patterns by selecting matching options',
+        levelInfo: 'Level Settings',
+        patternComplexity: 'Pattern Complexity',
+        optionCount: 'Options per Question',
+        timeLimit: 'Time Limit',
+        memorize: 'Memorize the pattern!',
+        question: 'Question',
+        score: 'Score',
+        timeLeft: 'Time Left',
+        selectMatching: 'Select the matching pattern!',
+        nextQuestion: 'Next Question',
+        seeResults: 'See Results',
+        correctAnswer: 'Correct Answer',
+        correctAnswers: 'Correct Answers',
+        levelScore: 'Level Score',
+        totalScore: 'Total Score',
+        restart: 'Restart from Level 1',
+        victory: 'Congratulations!',
+        victoryMessage: 'You completed all {count} levels!',
+        finalScore: 'Final Score'
+      },
+      
+      // Mental Rotation Advanced
+      mentalRotationAdvanced: {
+        title: 'Mental Rotation Advanced',
+        description: 'Advanced mental rotation with more complex shapes',
+        levelInfo: 'Level Settings',
+        shapeCount: 'Shape Count',
+        optionCount: 'Options per Question',
+        timeLimit: 'Time Limit',
+        memorize: 'Memorize the rotation!',
+        question: 'Question',
+        score: 'Score',
+        timeLeft: 'Time Left',
+        selectRotation: 'Select the rotation angle!',
+        nextQuestion: 'Next Question',
+        seeResults: 'See Results',
+        yourAnswer: 'Your Answer',
+        correctAnswer: 'Correct Answer',
+        correctAnswers: 'Correct Answers',
+        levelScore: 'Level Score',
+        totalScore: 'Total Score',
+        restart: 'Restart from Level 1',
+        victory: 'Congratulations!',
+        victoryMessage: 'You completed all {count} levels!',
+        finalScore: 'Final Score'
+      },
+      
+      // Shape Reconstruction
+      shapeReconstruction: {
+        title: 'Shape Reconstruction',
+        description: 'Reconstruct shapes from parts',
+        levelInfo: 'Level Settings',
+        partCount: 'Part Count',
+        gridSize: 'Grid Size',
+        timeLimit: 'Time Limit',
+        memorize: 'Memorize the shape!',
+        question: 'Question',
+        score: 'Score',
+        timeLeft: 'Time Left',
+        selectParts: 'Select parts in correct order!',
+        selectedParts: 'Selected Parts',
+        nextQuestion: 'Next Question',
+        seeResults: 'See Results',
+        correctOrder: 'Correct Order',
+        correctAnswers: 'Correct Answers',
+        levelScore: 'Level Score',
+        totalScore: 'Total Score',
+        restart: 'Restart from Level 1',
+        victory: 'Congratulations!',
+        victoryMessage: 'You completed all {count} levels!',
+        finalScore: 'Final Score'
+      },
+      
+      // Perspective Matching
+      perspectiveMatching: {
+        title: 'Perspective Matching',
+        description: 'Match different perspectives of the same object',
+        levelInfo: 'Level Settings',
+        objectCount: 'Object Count',
+        optionCount: 'Options per Question',
+        timeLimit: 'Time Limit',
+        memorize: 'Memorize the object!',
+        question: 'Question',
+        score: 'Score',
+        timeLeft: 'Time Left',
+        targetView: 'Target View',
+        selectView: 'Select the matching view!',
+        nextQuestion: 'Next Question',
+        seeResults: 'See Results',
+        yourAnswer: 'Your Answer',
+        correctAnswer: 'Correct Answer',
+        correctAnswers: 'Correct Answers',
+        levelScore: 'Level Score',
+        totalScore: 'Total Score',
+        restart: 'Restart from Level 1',
+        victory: 'Congratulations!',
+        victoryMessage: 'You completed all {count} levels!',
+        finalScore: 'Final Score',
+        view: {
+          front: 'Front',
+          top: 'Top',
+          side: 'Side',
+          isometric: 'Isometric'
+        }
+      },
+      
+      // Cube Navigation
+      cubeNavigation: {
+        title: 'Cube Navigation',
+        description: 'Navigate through a 3D cube',
+        levelInfo: 'Level Settings',
+        instructionCount: 'Instruction Count',
+        optionCount: 'Options per Question',
+        timeLimit: 'Time Limit',
+        memorize: 'Memorize the navigation!',
+        question: 'Question',
+        score: 'Score',
+        timeLeft: 'Time Left',
+        instructions: 'Instructions',
+        selectDestination: 'Select the final position!',
+        nextQuestion: 'Next Question',
+        seeResults: 'See Results',
+        yourAnswer: 'Your Answer',
+        correctAnswer: 'Correct Answer',
+        correctAnswers: 'Correct Answers',
+        levelScore: 'Level Score',
+        totalScore: 'Total Score',
+        restart: 'Restart from Level 1',
+        victory: 'Congratulations!',
+        victoryMessage: 'You completed all {count} levels!',
+        finalScore: 'Final Score',
+        direction: {
+          up: 'Up',
+          down: 'Down',
+          left: 'Left',
+          right: 'Right',
+          forward: 'Forward',
+          backward: 'Backward'
+        }
+      }
     }
   },
   ko: {
@@ -37,9 +230,202 @@ const resources = {
       logic: '논리',
       reaction: '반응',
       spatial: '공간',
+      attention: '주의력/집중력',
+      language: '언어/언어적 능력',
       achievements: '업적',
       progress: '진행',
-      settings: '설정'
+      settings: '설정',
+      back: '뒤로',
+      start: '시작',
+      playAgain: '다시 플레이',
+      
+      // Navigation
+      leaderboard: '리더보드',
+      challenges: '일일 챌린지',
+      
+      // Leaderboard
+      leaderboardTitle: '리더보드',
+      topScores: '최고 점수',
+      rank: '순위',
+      player: '플레이어',
+      game: '게임',
+      noScores: '아직 점수가 없습니다. 플레이를 시작하세요!',
+      filterByGame: '게임별 필터',
+      allGames: '모든 게임',
+      
+      // Achievements
+      achievementsTitle: '업적',
+      unlocked: '해금됨',
+      locked: '잠김',
+      achievementUnlocked: '업적 해금!',
+      totalAchievements: '총 업적',
+      progress: '진행률',
+      
+      // Challenges
+      challengesTitle: '일일 챌린지',
+      todayChallenges: '오늘의 챌린지',
+      completed: '완료',
+      inProgress: '진행 중',
+      notStarted: '시작 안 함',
+      challengeCompleted: '챌린지 완료!',
+      allChallengesCompleted: '오늘 모든 챌린지 완료!',
+      
+      // Notifications
+      newAchievement: '새 업적!',
+      challengeComplete: '챌린지 완료!',
+      bestScore: '최고 점수!',
+      
+      // Stats
+      totalGames: '총 게임',
+      totalScore: '총 점수',
+      currentStreak: '현재 스트릭',
+      days: '일',
+      bestScores: '최고 점수',
+      
+      // Pattern in 3D
+      patternIn3D: {
+        title: '3D 패턴 매칭',
+        description: '일치하는 옵션을 선택하여 3D 패턴을 맞추세요',
+        levelInfo: '레벨 설정',
+        patternComplexity: '패턴 복잡도',
+        optionCount: '질문당 옵션',
+        timeLimit: '시간 제한',
+        memorize: '패턴을 기억하세요!',
+        question: '질문',
+        score: '점수',
+        timeLeft: '남은 시간',
+        selectMatching: '일치하는 패턴을 선택하세요!',
+        nextQuestion: '다음 질문',
+        seeResults: '결과 보기',
+        correctAnswer: '정답',
+        correctAnswers: '정답 수',
+        levelScore: '레벨 점수',
+        totalScore: '총 점수',
+        restart: '레벨 1부터 다시 시작',
+        victory: '축하합니다!',
+        victoryMessage: '모든 {count} 레벨을 완료했습니다!',
+        finalScore: '최종 점수'
+      },
+      
+      // Mental Rotation Advanced
+      mentalRotationAdvanced: {
+        title: '고급 멘탈 로테이션',
+        description: '더 복잡한 모양으로 고급 멘탈 로테이션',
+        levelInfo: '레벨 설정',
+        shapeCount: '모양 수',
+        optionCount: '질문당 옵션',
+        timeLimit: '시간 제한',
+        memorize: '회전을 기억하세요!',
+        question: '질문',
+        score: '점수',
+        timeLeft: '남은 시간',
+        selectRotation: '회전 각도를 선택하세요!',
+        nextQuestion: '다음 질문',
+        seeResults: '결과 보기',
+        yourAnswer: '답변',
+        correctAnswer: '정답',
+        correctAnswers: '정답 수',
+        levelScore: '레벨 점수',
+        totalScore: '총 점수',
+        restart: '레벨 1부터 다시 시작',
+        victory: '축하합니다!',
+        victoryMessage: '모든 {count} 레벨을 완료했습니다!',
+        finalScore: '최종 점수'
+      },
+      
+      // Shape Reconstruction
+      shapeReconstruction: {
+        title: '모양 재구성',
+        description: '부분으로부터 모양을 재구성하세요',
+        levelInfo: '레벨 설정',
+        partCount: '부분 수',
+        gridSize: '그리드 크기',
+        timeLimit: '시간 제한',
+        memorize: '모양을 기억하세요!',
+        question: '질문',
+        score: '점수',
+        timeLeft: '남은 시간',
+        selectParts: '올바른 순서로 부분을 선택하세요!',
+        selectedParts: '선택된 부분',
+        nextQuestion: '다음 질문',
+        seeResults: '결과 보기',
+        correctOrder: '올바른 순서',
+        correctAnswers: '정답 수',
+        levelScore: '레벨 점수',
+        totalScore: '총 점수',
+        restart: '레벨 1부터 다시 시작',
+        victory: '축하합니다!',
+        victoryMessage: '모든 {count} 레벨을 완료했습니다!',
+        finalScore: '최종 점수'
+      },
+      
+      // Perspective Matching
+      perspectiveMatching: {
+        title: '관점 매칭',
+        description: '같은 물체의 다른 관점을 맞추세요',
+        levelInfo: '레벨 설정',
+        objectCount: '물체 수',
+        optionCount: '질문당 옵션',
+        timeLimit: '시간 제한',
+        memorize: '물체를 기억하세요!',
+        question: '질문',
+        score: '점수',
+        timeLeft: '남은 시간',
+        targetView: '목표 관점',
+        selectView: '일치하는 관점을 선택하세요!',
+        nextQuestion: '다음 질문',
+        seeResults: '결과 보기',
+        yourAnswer: '답변',
+        correctAnswer: '정답',
+        correctAnswers: '정답 수',
+        levelScore: '레벨 점수',
+        totalScore: '총 점수',
+        restart: '레벨 1부터 다시 시작',
+        victory: '축하합니다!',
+        victoryMessage: '모든 {count} 레벨을 완료했습니다!',
+        finalScore: '최종 점수',
+        view: {
+          front: '정면',
+          top: '위쪽',
+          side: '측면',
+          isometric: '등각'
+        }
+      },
+      
+      // Cube Navigation
+      cubeNavigation: {
+        title: '큐브 내비게이션',
+        description: '3D 큐브를 통해 이동하세요',
+        levelInfo: '레벨 설정',
+        instructionCount: '명령 수',
+        optionCount: '질문당 옵션',
+        timeLimit: '시간 제한',
+        memorize: '이동 경로를 기억하세요!',
+        question: '질문',
+        score: '점수',
+        timeLeft: '남은 시간',
+        instructions: '명령',
+        selectDestination: '최종 위치를 선택하세요!',
+        nextQuestion: '다음 질문',
+        seeResults: '결과 보기',
+        yourAnswer: '답변',
+        correctAnswer: '정답',
+        correctAnswers: '정답 수',
+        levelScore: '레벨 점수',
+        totalScore: '총 점수',
+        restart: '레벨 1부터 다시 시작',
+        victory: '축하합니다!',
+        victoryMessage: '모든 {count} 레벨을 완료했습니다!',
+        finalScore: '최종 점수',
+        direction: {
+          up: '위',
+          down: '아래',
+          left: '왼쪽',
+          right: '오른쪽',
+          forward: '앞',
+          backward: '뒤'
+        }
+      }
     }
   }
 }

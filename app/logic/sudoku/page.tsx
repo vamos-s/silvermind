@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
@@ -22,37 +22,32 @@ export default function SudokuPage() {
   const [gameOver, setGameOver] = useState(false)
   const [victory, setVictory] = useState(false)
 
-  const getGridSize = () => {
-    // Scale with level: 4x4 → 6x6 → 9x9
+  const getGridSize = useCallback(() => {
     if (level <= 6) return 4
     if (level <= 12) return 6
     return 9
-  }
+  }, [level])
 
-  const getEmptyCells = (size: number) => {
-    // More empty cells for higher levels and difficulties
+  const getEmptyCells = useCallback((size: number) => {
     const baseMultiplier = {
       easy: 0.3,
       medium: 0.45,
       hard: 0.6
     }[currentDifficulty]
 
-    // Add level bonus (harder at higher levels) - scaled for 30 levels
     const levelBonus = Math.min(level * 0.01, 0.25)
-
     const emptyRatio = baseMultiplier + levelBonus
     return Math.floor(size * size * emptyRatio)
-  }
+  }, [level, currentDifficulty])
 
-  const getSubGridSize = (size: number): [number, number] => {
-    // Return [rows, cols] for subgrid
+  const getSubGridSize = useCallback((size: number): [number, number] => {
     if (size === 4) return [2, 2]
     if (size === 6) return [2, 3]
     if (size === 9) return [3, 3]
-    return [2, 2] // default
-  }
+    return [2, 2]
+  }, [])
 
-  const generateSudoku = () => {
+  const generateSudoku = useCallback(() => {
     const size = getGridSize()
     const [subRows, subCols] = getSubGridSize(size)
 
@@ -102,7 +97,7 @@ export default function SudokuPage() {
     setSelectedCell(null)
     setGameOver(false)
     setVictory(false)
-  }
+  }, [level, currentDifficulty, getGridSize, getEmptyCells, getSubGridSize])
 
   const solveSudoku = (grid: CellValue[][], size: number): boolean => {
     const [subRows, subCols] = getSubGridSize(size)
@@ -156,12 +151,12 @@ export default function SudokuPage() {
     return false
   }
 
-  const handleCellClick = (row: number, col: number) => {
+  const handleCellClick = useCallback((row: number, col: number) => {
     if (gameOver || grid[row][col] !== null) return
     setSelectedCell([row, col])
-  }
+  }, [gameOver, grid])
 
-  const handleNumberInput = (num: number) => {
+  const handleNumberInput = useCallback((num: number) => {
     if (!selectedCell || gameOver) return
 
     const [row, col] = selectedCell
@@ -209,7 +204,7 @@ export default function SudokuPage() {
       }
     }
     setSelectedCell(null)
-  }
+  }, [selectedCell, gameOver, solution, mistakes, score, level, currentDifficulty, addSession, grid])
 
   useEffect(() => {
     generateSudoku()

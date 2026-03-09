@@ -1,306 +1,376 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { motion } from 'framer-motion'
+import { motion, AnimatePresence } from 'framer-motion'
 import Link from 'next/link'
 import { useGameStore } from '@/lib/store'
+import { SEQUENCE_COMPLETION_LEVELS } from '@/lib/game-data/levels'
 
-type PatternType = 'numbers' | 'colors' | 'shapes'
+const MAX_LEVELS = 30
 
 export default function SequenceCompletionPage() {
   const { t } = useTranslation()
-  const { currentDifficulty, addSession } = useGameStore()
+  const { addSession } = useGameStore()
 
-  const [pattern, setPattern] = useState<string[]>([])
-  const [options, setOptions] = useState<string[]>([])
-  const [correctAnswer, setCorrectAnswer] = useState('')
-  const [score, setScore] = useState(0)
+  const [gameState, setGameState] = useState<'menu' | 'showing' | 'input' | 'levelComplete' | 'gameOver' | 'victory'>('menu')
+  const [sequence, setSequence] = useState<string[]>([])
+  const [userInput, setUserInput] = useState('')
+  const [timeLeft, setTimeLeft] = useState(0)
   const [level, setLevel] = useState(1)
-  const [gameOver, setGameOver] = useState(false)
-  const [showResult, setShowResult] = useState(false)
-  const [isCorrect, setIsCorrect] = useState(false)
+  const [score, setScore] = useState(0)
+  const [totalScore, setTotalScore] = useState(0)
+  const [correctAnswer, setCorrectAnswer] = useState('')
 
-  const getSequenceLength = () => {
-    switch (currentDifficulty) {
-      case 'easy': return 4
-      case 'medium': return 5
-      case 'hard': return 6
-    }
-  }
+  const settings = useMemo(
+    () => SEQUENCE_COMPLETION_LEVELS[Math.min(level - 1, SEQUENCE_COMPLETION_LEVELS.length - 1)],
+    [level]
+  )
 
-  const generateNumberPattern = (length: number): { pattern: string[], next: string } => {
-    const patterns = [
-      // Simple arithmetic progression (easy to spot)
-      () => {
-        const start = Math.floor(Math.random() * 5) + 1
-        const step = Math.floor(Math.random() * 2) + 1
-        const seq = Array.from({ length: length - 1 }, (_, i) => (start + i * step).toString())
-        return { pattern: seq, next: (start + (length - 1) * step).toString() }
-      },
-      // Counting by 2, 5, or 10
-      () => {
-        const multiples = [2, 5, 10]
-        const step = multiples[Math.floor(Math.random() * multiples.length)]
-        const start = step
-        const seq = Array.from({ length: length - 1 }, (_, i) => (start + i * step).toString())
-        return { pattern: seq, next: (start + (length - 1) * step).toString() }
-      },
-      // Squares: 1, 4, 9, 16...
-      () => {
-        const start = Math.floor(Math.random() * 3) + 1
-        const seq = Array.from({ length: length - 1 }, (_, i) => Math.pow(i + start, 2).toString())
-        return { pattern: seq, next: Math.pow(length - 1 + start, 2).toString() }
-      },
-      // Doubles: 2, 4, 8, 16...
-      () => {
-        const start = Math.floor(Math.random() * 2) + 1
-        const seq = Array.from({ length: length - 1 }, (_, i) => Math.pow(2, i + start).toString())
-        return { pattern: seq, next: Math.pow(2, length - 1 + start).toString() }
-      },
-      // Triangular numbers: 1, 3, 6, 10...
-      () => {
-        const seq = Array.from({ length: length - 1 }, (_, i) => ((i + 1) * (i + 2) / 2).toString())
-        return { pattern: seq, next: (length * (length + 1) / 2).toString() }
-      },
-    ]
-    const patternFunc = patterns[Math.floor(Math.random() * patterns.length)]
-    return patternFunc()
-  }
+  const getLevelScore = useCallback((correct: boolean) => {
+    if (!correct) return 0
+    const baseScore = 200 + (level * 20)
+    const timeBonus = timeLeft * 8
+    return baseScore + timeBonus
+  }, [level, timeLeft])
 
-  const generateColorPattern = (length: number): { pattern: string[], next: string } => {
-    const colors = ['🔴', '🔵', '🟢', '🟡', '🟣']
-    const patterns = [
-      // Alternating
-      () => {
-        const idx1 = Math.floor(Math.random() * colors.length)
-        const idx2 = Math.floor(Math.random() * colors.length)
-        const seq = Array.from({ length: length - 1 }, (_, i) => colors[(idx1 + idx2 * i) % colors.length])
-        return { pattern: seq, next: colors[(idx1 + idx2 * (length - 1)) % colors.length] }
-      },
-      // Repeating sequence
-      () => {
-        const seqLength = Math.floor(Math.random() * 2) + 2
-        const base = colors.slice(0, seqLength)
-        const seq = Array.from({ length: length - 1 }, (_, i) => base[i % seqLength])
-        return { pattern: seq, next: base[(length - 1) % seqLength] }
-      },
-    ]
-    const patternFunc = patterns[Math.floor(Math.random() * patterns.length)]
-    return patternFunc()
-  }
+  const generateSequence = useCallback(() => {
+    let newSequence: string[] = []
 
-  const generateShapePattern = (length: number): { pattern: string[], next: string } => {
-    const shapes = ['⬜', '⬛', '🔺', '🔷', '⭐', '❌']
-    const patterns = [
-      // Alternating
-      () => {
-        const idx1 = Math.floor(Math.random() * shapes.length)
-        const idx2 = Math.floor(Math.random() * shapes.length)
-        const seq = Array.from({ length: length - 1 }, (_, i) => shapes[(idx1 + idx2 * i) % shapes.length])
-        return { pattern: seq, next: shapes[(idx1 + idx2 * (length - 1)) % shapes.length] }
-      },
-      // Repeating sequence
-      () => {
-        const seqLength = Math.floor(Math.random() * 2) + 2
-        const base = shapes.slice(0, seqLength)
-        const seq = Array.from({ length: length - 1 }, (_, i) => base[i % seqLength])
-        return { pattern: seq, next: base[(length - 1) % seqLength] }
-      },
-    ]
-    const patternFunc = patterns[Math.floor(Math.random() * patterns.length)]
-    return patternFunc()
-  }
-
-  const generateQuestion = () => {
-    const length = getSequenceLength()
-    const type = Math.floor(Math.random() * 3) // 0: numbers, 1: colors, 2: shapes
-
-    let result: { pattern: string[], next: string }
-    switch (type) {
-      case 0:
-        result = generateNumberPattern(length)
-        break
-      case 1:
-        result = generateColorPattern(length)
-        break
-      default:
-        result = generateShapePattern(length)
-        break
-    }
-
-    setPattern(result.pattern)
-    setCorrectAnswer(result.next)
-
-    // Generate logical wrong options
-    const wrongOptions: string[] = []
-    while (wrongOptions.length < 3) {
-      let wrong: string
-      if (type === 0) {
-        // For numbers, generate logical distractors
-        const nextNum = parseInt(result.next)
-        const distractorOffsets = [
-          nextNum - 1,
-          nextNum + 1,
-          nextNum - 2,
-          nextNum + 2,
-          Math.floor(nextNum / 2),
-          Math.floor(nextNum * 1.5),
-        ]
-        wrong = distractorOffsets[Math.floor(Math.random() * distractorOffsets.length)].toString()
-      } else {
-        const pool = type === 1 ? ['🔴', '🔵', '🟢', '🟡', '🟣'] : ['⬜', '⬛', '🔺', '🔷', '⭐', '❌']
-        wrong = pool[Math.floor(Math.random() * pool.length)]
+    if (settings.type === 'number') {
+      const start = Math.floor(Math.random() * 10) + 1
+      const step = Math.floor(Math.random() * 5) + 1
+      for (let i = 0; i < settings.sequenceLength; i++) {
+        newSequence.push((start + step * i).toString())
       }
-      if (wrong !== result.next && !wrongOptions.includes(wrong)) {
-        wrongOptions.push(wrong)
+      setCorrectAnswer((start + step * settings.sequenceLength).toString())
+    } else if (settings.type === 'letter') {
+      const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+      const start = Math.floor(Math.random() * (letters.length - 10))
+      const step = Math.floor(Math.random() * 3) + 1
+      for (let i = 0; i < settings.sequenceLength; i++) {
+        newSequence.push(letters[(start + step * i) % letters.length])
       }
-    }
-
-    const allOptions = [result.next, ...wrongOptions].sort(() => Math.random() - 0.5)
-    setOptions(allOptions)
-    setShowResult(false)
-  }
-
-  const handleAnswer = (answer: string) => {
-    if (showResult) return
-
-    const correct = answer === correctAnswer
-    setIsCorrect(correct)
-    setShowResult(true)
-
-    if (correct) {
-      setScore(score + level * 10)
-      setLevel(level + 1)
-      setTimeout(() => {
-        generateQuestion()
-      }, 1500)
+      setCorrectAnswer(letters[(start + step * settings.sequenceLength) % letters.length])
     } else {
-      setGameOver(true)
+      const colors = [
+        { name: 'Red', class: 'bg-red-500 text-white' },
+        { name: 'Blue', class: 'bg-blue-500 text-white' },
+        { name: 'Green', class: 'bg-green-500 text-white' },
+        { name: 'Yellow', class: 'bg-yellow-500 text-black' },
+        { name: 'Purple', class: 'bg-purple-500 text-white' },
+        { name: 'Orange', class: 'bg-orange-500 text-white' },
+      ]
+      const patternLength = Math.min(3, Math.floor(settings.sequenceLength / 2))
+      const pattern = []
+      for (let i = 0; i < patternLength; i++) {
+        pattern.push(colors[Math.floor(Math.random() * colors.length)])
+      }
+
+      for (let i = 0; i < settings.sequenceLength; i++) {
+        newSequence.push(pattern[i % patternLength].name)
+      }
+      setCorrectAnswer(pattern[settings.sequenceLength % patternLength].name)
+    }
+
+    return newSequence
+  }, [settings.type, settings.sequenceLength])
+
+  const startLevel = useCallback(() => {
+    const newSequence = generateSequence()
+    setSequence(newSequence)
+    setUserInput('')
+    setTimeLeft(settings.inputTime)
+    setGameState('showing')
+
+    setTimeout(() => {
+      setGameState('input')
+    }, settings.displayTime)
+  }, [generateSequence, settings.inputTime, settings.displayTime])
+
+  const startGame = useCallback(() => {
+    setScore(0)
+    setTotalScore(0)
+    setLevel(1)
+    startLevel()
+  }, [startLevel])
+
+  const handleSubmit = useCallback(() => {
+    const isCorrect = userInput.trim().toLowerCase() === correctAnswer.toLowerCase()
+    const levelScore = Math.round(getLevelScore(isCorrect))
+    setScore(levelScore)
+    setGameState('levelComplete')
+  }, [userInput, correctAnswer, getLevelScore])
+
+  const nextLevel = useCallback(() => {
+    const levelScore = score
+
+    if (level >= MAX_LEVELS) {
       addSession({
         id: Date.now().toString(),
         gameId: 'sequence-completion',
-        difficulty: currentDifficulty,
-        score: score,
+        difficulty: 'hard',
+        score: totalScore + levelScore,
         completedAt: new Date(),
-        durationSeconds: 15 * level
+        durationSeconds: 0
       })
+      setGameState('victory')
+    } else {
+      setLevel(prev => prev + 1)
+      setTotalScore(prev => prev + levelScore)
+      setGameState('menu')
+      setTimeout(() => startLevel(), 100)
     }
-  }
+  }, [score, level, totalScore, startLevel, addSession])
 
   useEffect(() => {
-    generateQuestion()
-  }, [])
+    let timer: NodeJS.Timeout | null = null
 
-  if (gameOver) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-purple-50 to-pink-50 flex items-center justify-center">
-        <motion.div
-          initial={{ scale: 0.8, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          className="bg-white rounded-2xl p-8 shadow-xl text-center max-w-md"
-        >
-          <h2 className="text-3xl font-bold text-gray-800 mb-4">Game Over!</h2>
-          <p className="text-xl text-gray-600 mb-2">Final Score: {score}</p>
-          <p className="text-lg text-gray-500 mb-6">Level Reached: {level}</p>
-          <p className="text-lg text-gray-500 mb-6">Correct answer: {correctAnswer}</p>
-          <button
-            onClick={() => {
-              setScore(0)
-              setLevel(1)
-              generateQuestion()
-              setGameOver(false)
-            }}
-            className="bg-purple-500 text-white px-8 py-3 rounded-xl text-xl font-bold hover:bg-purple-600 transition"
-          >
-            Play Again
-          </button>
-          <Link href="/pattern" className="block mt-4 text-purple-500 hover:underline">
-            ← Back to Games
-          </Link>
-        </motion.div>
-      </div>
-    )
-  }
+    if (gameState === 'input' && timeLeft > 0) {
+      timer = setTimeout(() => {
+        setTimeLeft(prev => prev - 1)
+      }, 1000)
+    } else if (gameState === 'input' && timeLeft === 0) {
+      handleSubmit()
+    }
+
+    return () => {
+      if (timer) clearTimeout(timer)
+    }
+  }, [gameState, timeLeft])
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 to-pink-50">
-      <header className="p-6 bg-white shadow-sm">
-        <Link href="/pattern" className="text-purple-500 hover:underline mb-4 block">
-          ← Back
+    <div className="min-h-screen bg-gradient-to-br from-amber-50 via-white to-orange-50 p-4 md:p-8">
+      <div className="max-w-2xl mx-auto">
+        {/* Header */}
+        <Link
+          href="/pattern"
+          className="inline-flex items-center text-gray-700 hover:text-gray-900 font-medium mb-6 text-lg"
+        >
+          <span className="mr-2">←</span> {t('back', 'Back')}
         </Link>
-        <h1 className="text-3xl font-bold text-gray-800">📊 Sequence Completion</h1>
-      </header>
 
-      <main className="container mx-auto px-4 py-8">
-        <div className="max-w-lg mx-auto text-center mb-8">
-          <div className="flex justify-center gap-8 text-2xl mb-4">
-            <p className="font-bold text-purple-600">Score: {score}</p>
-            <p className="font-bold text-pink-600">Level: {level}</p>
-          </div>
-          <p className="text-xl text-gray-600">What comes next?</p>
-        </div>
+        <h1 className="text-3xl md:text-4xl font-bold text-gray-800 mb-2">
+          {t('sequenceCompletion.title', 'Sequence Completion')}
+        </h1>
+        <p className="text-lg text-gray-700 font-medium mb-8">
+          {t('sequenceCompletion.description', 'Find the pattern and complete the sequence!')}
+        </p>
 
-        <div className="bg-white rounded-2xl p-8 shadow-xl max-w-lg mx-auto mb-8">
-          <div className="flex justify-center items-center gap-4 flex-wrap">
-            {pattern.map((item, i) => (
-              <motion.div
-                key={i}
-                initial={{ scale: 0, y: 20 }}
-                animate={{ scale: 1, y: 0 }}
-                transition={{ delay: i * 0.1 }}
-                className="text-5xl text-gray-800 font-bold"
-              >
-                {item}
-              </motion.div>
-            ))}
-            <motion.div
-              initial={{ scale: 0 }}
-              animate={{ scale: 1 }}
-              transition={{ delay: pattern.length * 0.1 }}
-              className="text-5xl text-purple-500 font-bold"
-            >
-              ?
-            </motion.div>
-          </div>
-        </div>
-
-        <div className="grid grid-cols-2 gap-4 max-w-lg mx-auto">
-          {options.map((option, i) => (
-            <motion.button
-              key={i}
-              initial={{ scale: 0.8, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              transition={{ delay: 0.5 + i * 0.1 }}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              onClick={() => handleAnswer(option)}
-              disabled={showResult}
-              className={`text-5xl py-8 rounded-xl shadow-lg transition-all ${
-                showResult
-                  ? option === correctAnswer
-                    ? 'bg-green-500 text-white cursor-default'
-                    : 'bg-gray-200 opacity-50 cursor-not-allowed'
-                  : 'bg-white hover:bg-gray-100 hover:shadow-xl cursor-pointer'
-              }`}
-            >
-              {option}
-            </motion.button>
-          ))}
-        </div>
-
-        {showResult && (
+        {/* Menu */}
+        {gameState === 'menu' && (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="text-center mt-8"
+            className="bg-white rounded-2xl shadow-lg p-8 text-center"
           >
-            <p className={`text-2xl font-bold ${isCorrect ? 'text-green-500' : 'text-red-500'}`}>
-              {isCorrect ? '✅ Correct!' : '❌ Wrong!'}
-            </p>
+            <h2 className="text-3xl font-bold text-gray-800 mb-2">
+              Level {level}
+            </h2>
+            {level > 1 && (
+              <p className="text-lg text-gray-700 mb-4 font-medium">
+                Total Score: <span className="text-amber-600 font-bold">{totalScore}</span>
+              </p>
+            )}
+            <div className="bg-amber-50 rounded-xl p-4 mb-6 text-left">
+              <h3 className="font-bold text-gray-800 mb-2">{t('sequenceCompletion.levelInfo', 'Level Settings')}:</h3>
+              <ul className="text-gray-700 space-y-1 font-medium">
+                <li>• {t('sequenceCompletion.type', 'Type')}: {settings.type.toUpperCase()}</li>
+                <li>• {t('sequenceCompletion.sequenceLength', 'Sequence Length')}: {settings.sequenceLength}</li>
+                <li>• {t('sequenceCompletion.displayTime', 'Display Time')}: {settings.displayTime / 1000}s</li>
+                <li>• {t('sequenceCompletion.inputTime', 'Input Time')}: {settings.inputTime}s</li>
+              </ul>
+            </div>
+            <button
+              onClick={startLevel}
+              className="bg-gradient-to-r from-amber-500 to-orange-500 text-white text-2xl font-bold py-4 px-12 rounded-xl hover:from-amber-600 hover:to-orange-600 shadow-lg transition-all w-full"
+            >
+              {t('start', 'Start')}
+            </button>
           </motion.div>
         )}
-      </main>
+
+        {/* Showing sequence */}
+        {gameState === 'showing' && (
+          <div className="bg-white rounded-2xl shadow-lg p-8 text-center">
+            <p className="text-xl text-gray-600 mb-4 font-medium">
+              {t('sequenceCompletion.memorize', 'Memorize the pattern!')}
+            </p>
+            <div className="flex flex-wrap justify-center gap-3 mb-4">
+              {sequence.map((item, index) => (
+                <motion.div
+                  key={index}
+                  initial={{ opacity: 0, scale: 0.5 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ delay: index * 0.1 }}
+                  className={`px-6 py-4 rounded-xl font-bold text-2xl ${
+                    settings.type === 'color'
+                      ? ''
+                      : 'bg-gradient-to-br from-amber-100 to-orange-100 text-amber-800'
+                  }`}
+                >
+                  {item}
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Input phase */}
+        {gameState === 'input' && (
+          <>
+            {/* Stats */}
+            <div className="bg-white rounded-2xl shadow-lg p-6 mb-6">
+              <div className="flex justify-between items-center">
+                <div>
+                  <p className="text-gray-700 text-sm font-medium">{t('sequenceCompletion.level', 'Level')}</p>
+                  <p className="text-3xl font-bold text-amber-600">{level}/{MAX_LEVELS}</p>
+                </div>
+                <div>
+                  <p className="text-gray-700 text-sm font-medium">{t('sequenceCompletion.score', 'Score')}</p>
+                  <p className="text-3xl font-bold text-orange-600">{totalScore}</p>
+                </div>
+                <div>
+                  <p className="text-gray-700 text-sm font-medium">{t('sequenceCompletion.timeLeft', 'Time Left')}</p>
+                  <p className={`text-4xl font-bold ${timeLeft <= 10 ? 'text-red-500' : 'text-amber-600'}`}>
+                    {timeLeft}s
+                  </p>
+                </div>
+              </div>
+              {/* Progress Bar */}
+              <div className="mt-4 bg-gray-200 rounded-full h-3 overflow-hidden">
+                <motion.div
+                  initial={{ width: 0 }}
+                  animate={{ width: `${((level - 1) / MAX_LEVELS) * 100}%` }}
+                  className="bg-gradient-to-r from-amber-500 to-orange-500 h-full"
+                />
+              </div>
+            </div>
+
+            {/* Input area */}
+            <div className="bg-white rounded-2xl shadow-lg p-8 mb-6 text-center">
+              <p className="text-2xl font-bold text-gray-800 mb-4">
+                {t('sequenceCompletion.nextItem', 'What comes next?')}
+              </p>
+              <div className="flex flex-wrap justify-center gap-2 mb-6">
+                {sequence.map((item, index) => (
+                  <span
+                    key={index}
+                    className={`px-3 py-2 rounded-lg font-medium ${
+                      settings.type === 'color'
+                        ? ''
+                        : 'bg-gray-100 text-gray-700'
+                    }`}
+                  >
+                    {item}
+                  </span>
+                ))}
+                <span className="px-3 py-2 rounded-lg border-2 border-dashed border-gray-300 text-gray-400">
+                  ?
+                </span>
+              </div>
+              <motion.input
+                type="text"
+                value={userInput}
+                onChange={(e) => setUserInput(e.target.value)}
+                placeholder={t('sequenceCompletion.placeholder', 'Enter the next item')}
+                className="w-full p-6 text-2xl border-4 border-gray-200 rounded-xl focus:border-amber-300 focus:outline-none mb-6 text-center"
+                autoFocus
+                whileFocus={{ scale: 1.01 }}
+                onKeyPress={(e) => {
+                  if (e.key === 'Enter') {
+                    handleSubmit()
+                  }
+                }}
+              />
+              <motion.button
+                onClick={handleSubmit}
+                className="w-full bg-gradient-to-r from-amber-500 to-orange-500 text-white text-2xl font-bold py-4 rounded-xl hover:from-amber-600 hover:to-orange-600 shadow-lg transition-all"
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                {t('sequenceCompletion.submit', 'Submit')}
+              </motion.button>
+            </div>
+          </>
+        )}
+
+        {/* Level Complete */}
+        {gameState === 'levelComplete' && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="bg-white rounded-2xl shadow-lg p-8 text-center"
+          >
+            <div className="text-6xl mb-4">
+              {score > 0 ? '✅' : '❌'}
+            </div>
+            <h2 className={`text-4xl font-bold mb-4 ${score > 0 ? 'text-amber-600' : 'text-red-600'}`}>
+              {score > 0 ? `Level ${level} Complete!` : 'Level Failed!'}
+            </h2>
+            {score > 0 ? (
+              <div className="bg-amber-50 rounded-xl p-6 mb-6">
+                <p className="text-gray-700 mb-2">{t('sequenceCompletion.correctAnswer', 'Correct Answer')}:</p>
+                <p className="text-3xl font-bold text-amber-600">{correctAnswer}</p>
+                <div className="grid grid-cols-2 gap-4 mt-4">
+                  <div>
+                    <p className="text-gray-700 text-sm font-medium">{t('sequenceCompletion.levelScore', 'Level Score')}</p>
+                    <p className="text-3xl font-bold text-amber-600">{score}</p>
+                  </div>
+                  <div>
+                    <p className="text-gray-700 text-sm font-medium">{t('sequenceCompletion.totalScore', 'Total Score')}</p>
+                    <p className="text-3xl font-bold text-orange-600">{totalScore + score}</p>
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <div className="bg-red-50 rounded-xl p-6 mb-6">
+                <p className="text-gray-700 mb-2">{t('sequenceCompletion.yourAnswer', 'Your Answer')}:</p>
+                <p className="text-2xl font-bold text-red-600">{userInput || '---'}</p>
+                <p className="text-gray-700 mt-4">{t('sequenceCompletion.correctAnswer', 'Correct Answer')}:</p>
+                <p className="text-2xl font-bold text-green-600">{correctAnswer}</p>
+              </div>
+            )}
+            <button
+              onClick={nextLevel}
+              className="bg-gradient-to-r from-amber-500 to-orange-500 text-white text-2xl font-bold py-4 px-12 rounded-xl hover:from-amber-600 hover:to-orange-600 shadow-lg transition-all w-full mb-3"
+            >
+              {level < MAX_LEVELS ? `Next Level ${level + 1}` : 'View Final Score'}
+            </button>
+            <button
+              onClick={startGame}
+              className="text-gray-600 hover:text-gray-800 font-medium"
+            >
+              {t('sequenceCompletion.restart', 'Restart from Level 1')}
+            </button>
+          </motion.div>
+        )}
+
+        {/* Victory */}
+        {gameState === 'victory' && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="bg-white rounded-2xl shadow-lg p-8 text-center"
+          >
+            <div className="text-6xl mb-4">🎉</div>
+            <h2 className="text-4xl font-bold text-amber-600 mb-4">{t('sequenceCompletion.victory', 'Congratulations!')}</h2>
+            <p className="text-xl text-gray-700 font-medium mb-6">
+              {t('sequenceCompletion.victoryMessage', 'You completed all {count} levels!', { count: MAX_LEVELS })}
+            </p>
+            <div className="bg-amber-50 rounded-xl p-6 mb-6">
+              <p className="text-gray-700 text-sm font-medium">{t('sequenceCompletion.finalScore', 'Final Score')}</p>
+              <p className="text-5xl font-bold text-amber-600">{totalScore + score}</p>
+            </div>
+            <button
+              onClick={startGame}
+              className="bg-gradient-to-r from-amber-500 to-orange-500 text-white text-2xl font-bold py-4 px-12 rounded-xl hover:from-amber-600 hover:to-orange-600 shadow-lg transition-all w-full"
+            >
+              {t('playAgain', 'Play Again')}
+            </button>
+          </motion.div>
+        )}
+      </div>
     </div>
   )
 }

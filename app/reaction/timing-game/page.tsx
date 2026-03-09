@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
@@ -65,30 +65,37 @@ export default function TimingGamePage() {
   const [totalScore, setTotalScore] = useState(0)
   const [level, setLevel] = useState(1)
 
-  const settings = LEVEL_SETTINGS[Math.min(level - 1, LEVEL_SETTINGS.length - 1)]
+  const settings = useMemo(() => LEVEL_SETTINGS[Math.min(level - 1, LEVEL_SETTINGS.length - 1)], [level])
 
-  const calculateRoundScore = (time: number) => {
+  const calculateRoundScore = useCallback((time: number) => {
     if (time < 0) return 0 // Too early
     const ratio = settings.targetTime / time
     return Math.round(ratio * 100)
-  }
+  }, [settings.targetTime])
 
-  const startGame = () => {
-    setScore(0)
-    setTotalScore(0)
-    setLevel(1)
-    startLevel()
-  }
-
-  const startLevel = () => {
+  const startLevel = useCallback(() => {
     setRound(0)
     setReactionTimes([])
     setScore(0)
     setGameState('menu')
-    setTimeout(() => startRound(), 100)
-  }
+    setTimeout(() => {
+      setGameState('waiting')
+      setRound(1)
+      setTimeout(() => {
+        setGameState('ready')
+        setStartTime(Date.now())
+      }, 1200)
+    }, 100)
+  }, [])
 
-  const startRound = () => {
+  const startGame = useCallback(() => {
+    setScore(0)
+    setTotalScore(0)
+    setLevel(1)
+    startLevel()
+  }, [startLevel])
+
+  const startRound = useCallback(() => {
     setRound(prev => prev + 1)
     setGameState('waiting')
     setReactionTime(0)
@@ -100,9 +107,9 @@ export default function TimingGamePage() {
         setStartTime(Date.now())
       }
     }, delay)
-  }
+  }, [settings.minDelay, settings.maxDelay, gameState])
 
-  const handleClick = () => {
+  const handleClick = useCallback(() => {
     if (gameState === 'ready') {
       const endTime = Date.now()
       const time = endTime - startTime
@@ -142,9 +149,9 @@ export default function TimingGamePage() {
         setGameState('levelComplete')
       }
     }
-  }
+  }, [gameState, startTime, reactionTimes, round, settings.rounds, calculateRoundScore, startRound])
 
-  const nextLevel = () => {
+  const nextLevel = useCallback(() => {
     setTotalScore(prev => prev + score)
 
     if (level >= MAX_LEVELS) {
@@ -162,9 +169,9 @@ export default function TimingGamePage() {
       setGameState('menu')
       setTimeout(() => startLevel(), 100)
     }
-  }
+  }, [score, level, totalScore, addSession, startLevel])
 
-  const avgTime = reactionTimes.filter(t => t > 0).reduce((a, b) => a + b, 0) / reactionTimes.filter(t => t > 0).length || 0
+  const avgTime = useMemo(() => reactionTimes.filter(t => t > 0).reduce((a, b) => a + b, 0) / reactionTimes.filter(t => t > 0).length || 0, [reactionTimes])
 
   if (gameState === 'menu') {
     return (

@@ -1,299 +1,469 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
-import { motion } from 'framer-motion'
+import { motion, AnimatePresence } from 'framer-motion'
 import Link from 'next/link'
 import { useGameStore } from '@/lib/store'
 
-type Shape = { id: number, type: string, path: string, rotation: number, color: string }
+const MAX_LEVELS = 30
+
+type ShapeType = 'square' | 'triangle' | 'pentagon' | 'hexagon'
+type Question = {
+  id: number
+  shape: ShapeType
+  rotation: number
+  options: number[]
+  correctAnswer: number
+}
+
+const LEVEL_SETTINGS = [
+  // Levels 1-5: Easy introduction
+  { shapeCount: 2, optionCount: 4, inputTime: 20, difficulty: 'easy' },    // Level 1
+  { shapeCount: 2, optionCount: 4, inputTime: 18, difficulty: 'easy' },    // Level 2
+  { shapeCount: 3, optionCount: 5, inputTime: 22, difficulty: 'easy' },    // Level 3
+  { shapeCount: 3, optionCount: 5, inputTime: 20, difficulty: 'easy' },    // Level 4
+  { shapeCount: 4, optionCount: 6, inputTime: 25, difficulty: 'easy' },    // Level 5
+
+  // Levels 6-10: Medium challenge
+  { shapeCount: 4, optionCount: 6, inputTime: 23, difficulty: 'medium' },  // Level 6
+  { shapeCount: 5, optionCount: 7, inputTime: 28, difficulty: 'medium' },  // Level 7
+  { shapeCount: 5, optionCount: 7, inputTime: 26, difficulty: 'medium' },  // Level 8
+  { shapeCount: 6, optionCount: 8, inputTime: 30, difficulty: 'medium' },  // Level 9
+  { shapeCount: 6, optionCount: 8, inputTime: 28, difficulty: 'medium' },  // Level 10
+
+  // Levels 11-15: Harder progression
+  { shapeCount: 7, optionCount: 9, inputTime: 33, difficulty: 'hard' },   // Level 11
+  { shapeCount: 7, optionCount: 9, inputTime: 30, difficulty: 'hard' },    // Level 12
+  { shapeCount: 8, optionCount: 10, inputTime: 35, difficulty: 'hard' },    // Level 13
+  { shapeCount: 8, optionCount: 10, inputTime: 33, difficulty: 'hard' },   // Level 14
+  { shapeCount: 9, optionCount: 11, inputTime: 38, difficulty: 'hard' },   // Level 15
+
+  // Levels 16-20: Advanced challenge
+  { shapeCount: 9, optionCount: 11, inputTime: 35, difficulty: 'hard' },    // Level 16
+  { shapeCount: 10, optionCount: 12, inputTime: 40, difficulty: 'hard' },  // Level 17
+  { shapeCount: 10, optionCount: 12, inputTime: 38, difficulty: 'hard' },  // Level 18
+  { shapeCount: 11, optionCount: 13, inputTime: 43, difficulty: 'hard' },  // Level 19
+  { shapeCount: 11, optionCount: 13, inputTime: 40, difficulty: 'hard' },   // Level 20
+
+  // Levels 21-25: Expert level
+  { shapeCount: 12, optionCount: 14, inputTime: 45, difficulty: 'expert' }, // Level 21
+  { shapeCount: 12, optionCount: 14, inputTime: 43, difficulty: 'expert' }, // Level 22
+  { shapeCount: 13, optionCount: 15, inputTime: 48, difficulty: 'expert' }, // Level 23
+  { shapeCount: 13, optionCount: 15, inputTime: 45, difficulty: 'expert' }, // Level 24
+  { shapeCount: 14, optionCount: 16, inputTime: 50, difficulty: 'expert' }, // Level 25
+
+  // Levels 26-30: Master level
+  { shapeCount: 14, optionCount: 16, inputTime: 48, difficulty: 'expert' }, // Level 26
+  { shapeCount: 15, optionCount: 17, inputTime: 53, difficulty: 'expert' }, // Level 27
+  { shapeCount: 15, optionCount: 17, inputTime: 50, difficulty: 'expert' }, // Level 28
+  { shapeCount: 16, optionCount: 18, inputTime: 55, difficulty: 'expert' }, // Level 29
+  { shapeCount: 16, optionCount: 18, inputTime: 53, difficulty: 'expert' }, // Level 30
+]
+
+const SHAPES: Record<ShapeType, string> = {
+  square: 'M50 10 L90 50 L50 90 L10 50 Z',
+  triangle: 'M50 10 L90 90 L10 90 Z',
+  pentagon: 'M50 10 L85 40 L72 85 L28 85 L15 40 Z',
+  hexagon: 'M50 10 L85 30 L85 70 L50 90 L15 70 L15 30 Z',
+}
 
 export default function RotatedShapesPage() {
   const { t } = useTranslation()
-  const { currentDifficulty, addSession } = useGameStore()
+  const { addSession } = useGameStore()
 
-  const [targetShape, setTargetShape] = useState<Shape | null>(null)
-  const [options, setOptions] = useState<Shape[]>([])
-  const [score, setScore] = useState(0)
+  const [gameState, setGameState] = useState<'menu' | 'showing' | 'input' | 'levelComplete' | 'gameOver' | 'victory'>('menu')
+  const [questions, setQuestions] = useState<Question[]>([])
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0)
+  const [selectedAnswers, setSelectedAnswers] = useState<number[]>([])
+  const [timeLeft, setTimeLeft] = useState(0)
   const [level, setLevel] = useState(1)
-  const [gameOver, setGameOver] = useState(false)
-  const [showResult, setShowResult] = useState(false)
-  const [isCorrect, setIsCorrect] = useState(false)
-  const [timeLeft, setTimeLeft] = useState(3)
+  const [score, setScore] = useState(0)
+  const [totalScore, setTotalScore] = useState(0)
+  const [showAnswer, setShowAnswer] = useState(false)
 
-  const getOptionCount = () => {
-    switch (currentDifficulty) {
-      case 'easy': return 4
-      case 'medium': return 6
-      case 'hard': return 8
-    }
+  const settings = LEVEL_SETTINGS[Math.min(level - 1, LEVEL_SETTINGS.length - 1)]
+
+  const getLevelScore = (correct: number, total: number) => {
+    const baseScore = (correct / total) * 1000
+    const timeBonus = timeLeft * 15
+    return Math.round(baseScore + timeBonus)
   }
 
-  const getShapes = () => {
-    return [
-      { type: 'triangle', path: 'polygon(50% 0%, 0% 100%, 100% 100%)' },
-      { type: 'square', path: 'none' },
-      { type: 'circle', path: '50%' },
-      { type: 'diamond', path: 'polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%)' },
-      { type: 'pentagon', path: 'polygon(50% 0%, 100% 38%, 82% 100%, 18% 100%, 0% 38%)' },
-      { type: 'hexagon', path: 'polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%)' },
-      { type: 'star', path: 'polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%)' },
-      { type: 'arrow', path: 'polygon(50% 0%, 100% 50%, 70% 50%, 70% 100%, 30% 100%, 30% 50%, 0% 50%)' }
-    ]
-  }
+  const generateQuestions = useCallback(() => {
+    const newQuestions: Question[] = []
+    const shapeTypes: ShapeType[] = ['square', 'triangle', 'pentagon', 'hexagon']
 
-  const getColors = () => {
-    return ['#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FFEAA7', '#DDA0DD', '#98D8C8', '#F7DC6F']
-  }
+    for (let i = 0; i < settings.shapeCount; i++) {
+      const shape = shapeTypes[Math.floor(Math.random() * shapeTypes.length)]
+      const rotation = Math.floor(Math.random() * 360)
+      const correctAnswer = rotation
 
-  const generateQuestion = () => {
-    const shapes = getShapes()
-    const colors = getColors()
-    const optionCount = getOptionCount()
-
-    // Select target shape
-    const target = shapes[Math.floor(Math.random() * shapes.length)]
-    const targetColor = colors[Math.floor(Math.random() * colors.length)]
-    const targetRotation = Math.floor(Math.random() * 8) * 45
-
-    const newTarget: Shape = {
-      id: 0,
-      type: target.type,
-      path: target.path,
-      rotation: targetRotation,
-      color: targetColor
-    }
-    setTargetShape(newTarget)
-
-    // Generate options
-    const newOptions: Shape[] = []
-
-    // Add correct answer
-    newOptions.push({
-      id: 1,
-      type: target.type,
-      path: target.path,
-      rotation: targetRotation,
-      color: targetColor
-    })
-
-    // Add wrong answers
-    const wrongShapes = shapes.filter(s => s.type !== target.type)
-    const wrongColors = colors.filter(c => c !== targetColor)
-
-    while (newOptions.length < optionCount) {
-      const useSameShape = Math.random() < 0.5
-      const useSameColor = Math.random() < 0.5
-
-      if (useSameShape && useSameColor) {
-        // Same shape, same color, different rotation
-        const rotation = targetRotation + 45 + Math.floor(Math.random() * 3) * 45
-        newOptions.push({
-          id: newOptions.length + 1,
-          type: target.type,
-          path: target.path,
-          rotation,
-          color: targetColor
-        })
-      } else if (useSameShape) {
-        // Same shape, different color
-        const color = wrongColors[Math.floor(Math.random() * wrongColors.length)]
-        newOptions.push({
-          id: newOptions.length + 1,
-          type: target.type,
-          path: target.path,
-          rotation: targetRotation,
-          color
-        })
-      } else {
-        // Different shape
-        const shape = wrongShapes[Math.floor(Math.random() * wrongShapes.length)]
-        const color = colors[Math.floor(Math.random() * colors.length)]
-        const rotation = Math.floor(Math.random() * 8) * 45
-        newOptions.push({
-          id: newOptions.length + 1,
-          type: shape.type,
-          path: shape.path,
-          rotation,
-          color
-        })
+      // Generate options
+      const options = [correctAnswer]
+      while (options.length < settings.optionCount) {
+        const offset = Math.floor(Math.random() * 30) + 5
+        const newOption = (rotation + (Math.random() > 0.5 ? offset : -offset) + 360) % 360
+        if (!options.includes(newOption)) {
+          options.push(newOption)
+        }
       }
+
+      newQuestions.push({
+        id: i,
+        shape,
+        rotation,
+        options: options.sort(() => Math.random() - 0.5),
+        correctAnswer
+      })
     }
 
-    setOptions(newOptions.sort(() => Math.random() - 0.5))
-    setShowResult(false)
-    setTimeLeft(3) // Reset timer to 3 seconds
+    return newQuestions
+  }, [settings.shapeCount, settings.optionCount])
+
+  const startGame = () => {
+    setScore(0)
+    setTotalScore(0)
+    setLevel(1)
+    startLevel()
   }
 
-  const handleAnswer = (shape: Shape) => {
-    if (showResult || !targetShape) return
+  const startLevel = () => {
+    const newQuestions = generateQuestions()
+    setQuestions(newQuestions)
+    setCurrentQuestionIndex(0)
+    setSelectedAnswers([])
+    setShowAnswer(false)
+    setTimeLeft(settings.inputTime)
+    setGameState('showing')
 
-    const correct = shape.type === targetShape.type &&
-                   shape.color === targetShape.color &&
-                   shape.rotation === targetShape.rotation
+    setTimeout(() => {
+      setGameState('input')
+    }, 2000)
+  }
 
-    setIsCorrect(correct)
-    setShowResult(true)
+  const handleAnswerSelect = (answer: number) => {
+    if (gameState !== 'input' || showAnswer) return
 
-    if (correct) {
-      setScore(score + level * 10)
-      setLevel(level + 1)
-      setTimeout(() => {
-        generateQuestion()
-      }, 1500)
+    const newAnswers = [...selectedAnswers]
+    newAnswers[currentQuestionIndex] = answer
+    setSelectedAnswers(newAnswers)
+    setShowAnswer(true)
+  }
+
+  const handleNext = () => {
+    setShowAnswer(false)
+    if (currentQuestionIndex < questions.length - 1) {
+      setCurrentQuestionIndex(prev => prev + 1)
     } else {
-      setGameOver(true)
-      addSession({
-        id: Date.now().toString(),
-        gameId: 'rotated-shapes',
-        difficulty: currentDifficulty,
-        score: score,
-        completedAt: new Date(),
-        durationSeconds: 15 * level
-      })
+      const correctCount = selectedAnswers.filter((answer, index) => {
+        const question = questions[index]
+        return answer === question.correctAnswer
+      }).length
+
+      const levelScore = getLevelScore(correctCount, questions.length)
+      setScore(levelScore)
+      setGameState('levelComplete')
     }
   }
 
   useEffect(() => {
-    generateQuestion()
-  }, [])
+    let timer: NodeJS.Timeout | null = null
 
-  // Timer countdown effect
-  useEffect(() => {
-    if (timeLeft > 0 && !showResult && !gameOver) {
-      const timer = setTimeout(() => setTimeLeft(timeLeft - 1), 1000)
-      return () => clearTimeout(timer)
-    } else if (timeLeft === 0 && !showResult && !gameOver) {
-      // Time's up - game over
-      setGameOver(true)
+    if (gameState === 'input' && timeLeft > 0) {
+      timer = setTimeout(() => {
+        setTimeLeft(prev => prev - 1)
+      }, 1000)
+    } else if (gameState === 'input' && timeLeft === 0) {
+      // Calculate score with current answers
+      const correctCount = selectedAnswers.filter((answer, index) => {
+        const question = questions[index]
+        return question && answer === question.correctAnswer
+      }).length
+
+      const levelScore = getLevelScore(correctCount, questions.length)
+      setScore(levelScore)
+      setGameState('levelComplete')
+    }
+
+    return () => {
+      if (timer) clearTimeout(timer)
+    }
+  }, [gameState, timeLeft, selectedAnswers, questions])
+
+  const nextLevel = () => {
+    const levelScore = score
+    setTotalScore(prev => prev + levelScore)
+
+    if (level >= MAX_LEVELS) {
       addSession({
         id: Date.now().toString(),
         gameId: 'rotated-shapes',
-        difficulty: currentDifficulty,
-        score: score,
+        difficulty: 'hard',
+        score: totalScore + levelScore,
         completedAt: new Date(),
-        durationSeconds: 3 * level
+        durationSeconds: 0
       })
+      setGameState('victory')
+    } else {
+      setLevel(prev => prev + 1)
+      setGameState('menu')
+      setTimeout(() => startLevel(), 100)
     }
-  }, [timeLeft, showResult, gameOver, score, level, currentDifficulty])
-
-  if (gameOver) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-red-50 to-pink-50 flex items-center justify-center">
-        <motion.div
-          initial={{ scale: 0.8, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          className="bg-white rounded-2xl p-8 shadow-xl text-center max-w-md"
-        >
-          <h2 className="text-3xl font-bold text-gray-800 mb-4">Game Over!</h2>
-          <p className="text-xl text-gray-600 mb-2">Final Score: {score}</p>
-          <p className="text-lg text-gray-500 mb-6">Level Reached: {level}</p>
-          <button
-            onClick={() => {
-              setScore(0)
-              setLevel(1)
-              setTimeLeft(3)
-              generateQuestion()
-              setGameOver(false)
-            }}
-            className="bg-red-500 text-white px-8 py-3 rounded-xl text-xl font-bold hover:bg-red-600 transition"
-          >
-            Play Again
-          </button>
-          <Link href="/spatial" className="block mt-4 text-red-500 hover:underline">
-            ← Back to Games
-          </Link>
-        </motion.div>
-      </div>
-    )
   }
 
-  const renderShape = (shape: Shape, size: number = 60) => {
-    const styles: React.CSSProperties = {
-      width: `${size}px`,
-      height: `${size}px`,
-      backgroundColor: shape.color,
-      transform: `rotate(${shape.rotation}deg)`,
-      borderRadius: shape.type === 'circle' ? '50%' : '0'
-    }
+  const renderShape = (shape: ShapeType, rotation: number, size = 100) => (
+    <svg width={size} height={size} viewBox="0 0 100 100" className="drop-shadow-lg">
+      <motion.path
+        d={SHAPES[shape]}
+        fill="currentColor"
+        className="text-purple-600"
+        style={{ transform: `rotate(${rotation}deg)`, transformOrigin: 'center' }}
+      />
+    </svg>
+  )
 
-    if (shape.path !== 'none') {
-      styles.clipPath = shape.path
-    }
-
-    return <div style={styles} />
-  }
+  const currentQuestion = questions[currentQuestionIndex]
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-red-50 to-pink-50">
-      <header className="p-6 bg-white shadow-sm">
-        <Link href="/spatial" className="text-red-500 hover:underline mb-4 block">
-          ← Back
+    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-violet-50 p-4 md:p-8">
+      <div className="max-w-2xl mx-auto">
+        {/* Header */}
+        <Link
+          href="/spatial"
+          className="inline-flex items-center text-gray-700 hover:text-gray-900 font-medium mb-6 text-lg"
+        >
+          <span className="mr-2">←</span> {t('back', 'Back')}
         </Link>
-        <h1 className="text-3xl font-bold text-gray-800">🔷 Rotated Shapes</h1>
-      </header>
 
-      <main className="container mx-auto px-4 py-8">
-        <div className="max-w-lg mx-auto text-center mb-8">
-          <div className="flex justify-center gap-8 text-2xl mb-4">
-            <p className="font-bold text-red-600">Score: {score}</p>
-            <p className="font-bold text-pink-600">Level: {level}</p>
-            <p className={`font-bold ${timeLeft <= 1 ? 'text-red-600' : 'text-blue-600'}`}>
-              ⏱️ {timeLeft}s
-            </p>
-          </div>
-          <p className="text-xl text-gray-600">Which shape matches?</p>
-        </div>
+        <h1 className="text-3xl md:text-4xl font-bold text-gray-800 mb-2">
+          {t('rotatedShapes.title', 'Rotated Shapes')}
+        </h1>
+        <p className="text-lg text-gray-700 font-medium mb-8">
+          {t('rotatedShapes.description', 'Estimate the rotation angle of each shape!')}
+        </p>
 
-        {targetShape && (
-          <motion.div
-            initial={{ scale: 0.8, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            className="bg-white rounded-2xl p-12 shadow-xl max-w-lg mx-auto mb-8 flex items-center justify-center min-h-[200px]"
-          >
-            {renderShape(targetShape, 120)}
-          </motion.div>
-        )}
-
-        <div className="grid grid-cols-2 gap-4 max-w-lg mx-auto">
-          {options.map((shape) => (
-            <motion.button
-              key={shape.id}
-              initial={{ scale: 0.8, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              transition={{ delay: 0.1 * shape.id }}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              onClick={() => handleAnswer(shape)}
-              disabled={showResult}
-              className={`bg-white rounded-xl shadow-lg p-8 flex items-center justify-center transition-all ${
-                showResult
-                  ? targetShape &&
-                    shape.type === targetShape.type &&
-                    shape.color === targetShape.color &&
-                    shape.rotation === targetShape.rotation
-                    ? 'bg-green-200 border-4 border-green-500'
-                    : 'opacity-50'
-                  : 'hover:shadow-xl'
-              }`}
-            >
-              {renderShape(shape, 80)}
-            </motion.button>
-          ))}
-        </div>
-
-        {showResult && (
+        {/* Menu */}
+        {gameState === 'menu' && (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="text-center mt-8"
+            className="bg-white rounded-2xl shadow-lg p-8 text-center"
           >
-            <p className={`text-2xl font-bold ${isCorrect ? 'text-green-500' : 'text-red-500'}`}>
-              {isCorrect ? '✅ Correct!' : '❌ Wrong!'}
-            </p>
+            <h2 className="text-3xl font-bold text-gray-800 mb-2">
+              Level {level}
+            </h2>
+            {level > 1 && (
+              <p className="text-lg text-gray-700 mb-4 font-medium">
+                Total Score: <span className="text-purple-600 font-bold">{totalScore}</span>
+              </p>
+            )}
+            <div className="bg-purple-50 rounded-xl p-4 mb-6 text-left">
+              <h3 className="font-bold text-gray-800 mb-2">{t('rotatedShapes.levelInfo', 'Level Settings')}:</h3>
+              <ul className="text-gray-700 space-y-1 font-medium">
+                <li>• {t('rotatedShapes.shapeCount', 'Shape Count')}: {settings.shapeCount}</li>
+                <li>• {t('rotatedShapes.optionCount', 'Options per Question')}: {settings.optionCount}</li>
+                <li>• {t('rotatedShapes.inputTime', 'Time Limit')}: {settings.inputTime}s</li>
+              </ul>
+            </div>
+            <button
+              onClick={startLevel}
+              className="bg-gradient-to-r from-purple-500 to-violet-500 text-white text-2xl font-bold py-4 px-12 rounded-xl hover:from-purple-600 hover:to-violet-600 shadow-lg transition-all w-full"
+            >
+              {t('start', 'Start')}
+            </button>
           </motion.div>
         )}
-      </main>
+
+        {/* Showing shape */}
+        {gameState === 'showing' && (
+          <div className="bg-white rounded-2xl shadow-lg p-8 text-center">
+            <p className="text-xl text-gray-600 mb-4 font-medium">
+              {t('rotatedShapes.memorize', 'Memorize the rotation!')}
+            </p>
+            {currentQuestion && (
+              <div className="flex justify-center">
+                {renderShape(currentQuestion.shape, currentQuestion.rotation, 200)}
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Input phase */}
+        {gameState === 'input' && (
+          <>
+            {/* Stats */}
+            <div className="bg-white rounded-2xl shadow-lg p-6 mb-6">
+              <div className="flex justify-between items-center">
+                <div>
+                  <p className="text-gray-700 text-sm font-medium">{t('rotatedShapes.question', 'Question')}</p>
+                  <p className="text-3xl font-bold text-purple-600">
+                    {currentQuestionIndex + 1}/{questions.length}
+                  </p>
+                </div>
+                <div>
+                  <p className="text-gray-700 text-sm font-medium">{t('rotatedShapes.score', 'Score')}</p>
+                  <p className="text-3xl font-bold text-violet-600">{totalScore}</p>
+                </div>
+                <div>
+                  <p className="text-gray-700 text-sm font-medium">{t('rotatedShapes.timeLeft', 'Time Left')}</p>
+                  <p className={`text-4xl font-bold ${timeLeft <= 10 ? 'text-red-500' : 'text-purple-600'}`}>
+                    {timeLeft}s
+                  </p>
+                </div>
+              </div>
+              {/* Progress Bar */}
+              <div className="mt-4 bg-gray-200 rounded-full h-3 overflow-hidden">
+                <motion.div
+                  initial={{ width: 0 }}
+                  animate={{ width: `${((currentQuestionIndex) / questions.length) * 100}%` }}
+                  className="bg-gradient-to-r from-purple-500 to-violet-500 h-full"
+                />
+              </div>
+            </div>
+
+            {/* Question area */}
+            <div className="bg-white rounded-2xl shadow-lg p-8 mb-6 text-center">
+              {currentQuestion && (
+                <>
+                  <div className="flex justify-center mb-6">
+                    {renderShape(currentQuestion.shape, currentQuestion.rotation, 150)}
+                  </div>
+
+                  {showAnswer ? (
+                    <div className="mb-6">
+                      <div className={`p-4 rounded-xl ${
+                        selectedAnswers[currentQuestionIndex] === currentQuestion.correctAnswer
+                          ? 'bg-green-50 border-2 border-green-500'
+                          : 'bg-red-50 border-2 border-red-500'
+                      }`}>
+                        <p className="text-lg font-bold mb-2">
+                          {selectedAnswers[currentQuestionIndex] === currentQuestion.correctAnswer
+                            ? '✅ Correct!'
+                            : '❌ Incorrect!'}
+                        </p>
+                        <p className="text-gray-700">
+                          {t('rotatedShapes.yourAnswer', 'Your Answer')}: {selectedAnswers[currentQuestionIndex]}°
+                        </p>
+                        <p className="text-gray-700">
+                          {t('rotatedShapes.correctAnswer', 'Correct Answer')}: {currentQuestion.correctAnswer}°
+                        </p>
+                      </div>
+                      <button
+                        onClick={handleNext}
+                        className="bg-gradient-to-r from-purple-500 to-violet-500 text-white text-xl font-bold py-3 px-8 rounded-xl hover:from-purple-600 hover:to-violet-600 shadow-lg transition-all"
+                      >
+                        {currentQuestionIndex < questions.length - 1
+                          ? t('rotatedShapes.nextQuestion', 'Next Question')
+                          : t('rotatedShapes.seeResults', 'See Results')}
+                      </button>
+                    </div>
+                  ) : (
+                    <>
+                      <p className="text-2xl font-bold text-gray-800 mb-6">
+                        {t('rotatedShapes.selectRotation', 'Select the rotation angle!')}
+                      </p>
+                      <div className="grid grid-cols-2 md:grid-cols-3 gap-3 max-w-md mx-auto">
+                        {currentQuestion.options.map((option, index) => (
+                          <motion.button
+                            key={index}
+                            whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
+                            onClick={() => handleAnswerSelect(option)}
+                            className="p-4 bg-purple-100 hover:bg-purple-200 rounded-xl font-bold text-purple-800 transition-colors"
+                          >
+                            {option}°
+                          </motion.button>
+                        ))}
+                      </div>
+                    </>
+                  )}
+                </>
+              )}
+            </div>
+          </>
+        )}
+
+        {/* Level Complete */}
+        {gameState === 'levelComplete' && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="bg-white rounded-2xl shadow-lg p-8 text-center"
+          >
+            <div className="text-6xl mb-4">
+              {score > 0 ? '✅' : '❌'}
+            </div>
+            <h2 className={`text-4xl font-bold mb-4 ${score > 0 ? 'text-purple-600' : 'text-red-500'}`}>
+              {score > 0 ? `Level ${level} Complete!` : 'Level Failed!'}
+            </h2>
+            {score > 0 ? (
+              <div className="bg-purple-50 rounded-xl p-6 mb-6">
+                <div className="text-center mb-4">
+                  <p className="text-6xl font-bold text-purple-600 mb-2">
+                    {selectedAnswers.filter((answer, index) => answer === questions[index]?.correctAnswer).length}/{questions.length}
+                  </p>
+                  <p className="text-xl text-gray-600">
+                    {t('rotatedShapes.correctAnswers', 'Correct Answers')}
+                  </p>
+                </div>
+                <div className="grid grid-cols-2 gap-4 mt-4">
+                  <div>
+                    <p className="text-gray-700 text-sm font-medium">{t('rotatedShapes.levelScore', 'Level Score')}</p>
+                    <p className="text-3xl font-bold text-purple-600">{score}</p>
+                  </div>
+                  <div>
+                    <p className="text-gray-700 text-sm font-medium">{t('rotatedShapes.totalScore', 'Total Score')}</p>
+                    <p className="text-3xl font-bold text-violet-600">{totalScore + score}</p>
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <div className="bg-red-50 rounded-xl p-6 mb-6">
+                <p className="text-gray-700 text-sm font-medium">{t('rotatedShapes.levelScore', 'Level Score')}</p>
+                <p className="text-3xl font-bold text-red-600">{score}</p>
+              </div>
+            )}
+            <button
+              onClick={nextLevel}
+              className="bg-gradient-to-r from-purple-500 to-violet-500 text-white text-2xl font-bold py-4 px-12 rounded-xl hover:from-purple-600 hover:to-violet-600 shadow-lg transition-all w-full mb-3"
+            >
+              {level < MAX_LEVELS ? `Next Level ${level + 1}` : 'View Final Score'}
+            </button>
+            <button
+              onClick={startGame}
+              className="text-gray-600 hover:text-gray-800 font-medium"
+            >
+              {t('rotatedShapes.restart', 'Restart from Level 1')}
+            </button>
+          </motion.div>
+        )}
+
+        {/* Victory */}
+        {gameState === 'victory' && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="bg-white rounded-2xl shadow-lg p-8 text-center"
+          >
+            <div className="text-6xl mb-4">🎉</div>
+            <h2 className="text-4xl font-bold text-purple-600 mb-4">{t('rotatedShapes.victory', 'Congratulations!')}</h2>
+            <p className="text-xl text-gray-700 font-medium mb-6">
+              {t('rotatedShapes.victoryMessage', 'You completed all {count} levels!', { count: MAX_LEVELS })}
+            </p>
+            <div className="bg-purple-50 rounded-xl p-6 mb-6">
+              <p className="text-gray-700 text-sm font-medium">{t('rotatedShapes.finalScore', 'Final Score')}</p>
+              <p className="text-5xl font-bold text-purple-600">{totalScore + score}</p>
+            </div>
+            <button
+              onClick={startGame}
+              className="bg-gradient-to-r from-purple-500 to-violet-500 text-white text-2xl font-bold py-4 px-12 rounded-xl hover:from-purple-600 hover:to-violet-600 shadow-lg transition-all w-full"
+            >
+              {t('playAgain', 'Play Again')}
+            </button>
+          </motion.div>
+        )}
+      </div>
     </div>
   )
 }

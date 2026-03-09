@@ -1,0 +1,227 @@
+'use client'
+
+import { useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
+import { motion } from 'framer-motion'
+import Link from 'next/link'
+import { useGameStore } from '@/lib/store'
+import { Difficulty } from '@/lib/types'
+
+export default function LeaderboardPage() {
+  const { t } = useTranslation()
+  const { sessions, bestScores, darkMode } = useGameStore()
+  const [selectedGame, setSelectedGame] = useState<string>('all')
+  const [selectedDifficulty, setSelectedDifficulty] = useState<Difficulty | 'all'>('all')
+
+  // Get unique game IDs from sessions
+  const gameIds = Array.from(new Set(sessions.map(s => s.gameId)))
+
+  // Format game ID for display
+  const formatGameId = (gameId: string) => {
+    return gameId.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')
+  }
+
+  // Filter and sort sessions
+  const filteredSessions = sessions
+    .filter(session => {
+      const gameMatch = selectedGame === 'all' || session.gameId === selectedGame
+      const difficultyMatch = selectedDifficulty === 'all' || session.difficulty === selectedDifficulty
+      return gameMatch && difficultyMatch
+    })
+    .sort((a, b) => b.score - a.score)
+    .slice(0, 10)
+
+  // Get best scores per game and difficulty
+  const bestScoresList = Object.entries(bestScores)
+    .flatMap(([gameId, difficulties]) => 
+      Object.entries(difficulties).map(([difficulty, score]) => ({
+        gameId,
+        difficulty: difficulty as Difficulty,
+        score
+      }))
+    )
+    .filter(item => {
+      const gameMatch = selectedGame === 'all' || item.gameId === selectedGame
+      const difficultyMatch = selectedDifficulty === 'all' || item.difficulty === selectedDifficulty
+      return gameMatch && difficultyMatch
+    })
+    .sort((a, b) => b.score - a.score)
+
+  return (
+    <div className={`min-h-screen ${darkMode ? 'bg-gradient-to-br from-slate-900 to-slate-800' : 'bg-gradient-to-br from-blue-50 to-purple-50'}`}>
+      <header className="p-6 bg-white dark:bg-gray-800 shadow-sm">
+        <div className="flex justify-between items-center max-w-4xl mx-auto">
+          <Link href="/">
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="flex items-center gap-2 text-gray-600 dark:text-gray-300 hover:text-gray-800 dark:hover:text-white"
+            >
+              <span>←</span>
+              <span>{t('back')}</span>
+            </motion.button>
+          </Link>
+          <h1 className="text-2xl font-bold text-gray-800 dark:text-white">
+            {t('leaderboardTitle')}
+          </h1>
+          <div className="w-20" />
+        </div>
+      </header>
+
+      <main className="container mx-auto px-4 py-8 max-w-4xl">
+        {/* Filters */}
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="mb-8 space-y-4"
+        >
+          <div className="flex flex-col sm:flex-row gap-4">
+            <div className="flex-1">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                {t('filterByGame')}
+              </label>
+              <select
+                value={selectedGame}
+                onChange={(e) => setSelectedGame(e.target.value)}
+                className="w-full p-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-800 dark:text-white"
+              >
+                <option value="all">{t('allGames')}</option>
+                {gameIds.map(gameId => (
+                  <option key={gameId} value={gameId}>
+                    {formatGameId(gameId)}
+                  </option>
+                ))}
+              </select>
+            </div>
+            
+            <div className="w-full sm:w-48">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                {t('difficulty')}
+              </label>
+              <select
+                value={selectedDifficulty}
+                onChange={(e) => setSelectedDifficulty(e.target.value as Difficulty | 'all')}
+                className="w-full p-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-800 dark:text-white"
+              >
+                <option value="all">{t('allGames')}</option>
+                <option value="easy">{t('easy')}</option>
+                <option value="medium">{t('medium')}</option>
+                <option value="hard">{t('hard')}</option>
+              </select>
+            </div>
+          </div>
+        </motion.div>
+
+        {/* Best Scores Section */}
+        {bestScoresList.length > 0 && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1 }}
+            className="mb-8 bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6"
+          >
+            <h2 className="text-xl font-bold text-gray-800 dark:text-white mb-4">
+              {t('bestScores')}
+            </h2>
+            <div className="space-y-3">
+              {bestScoresList.map((item, index) => (
+                <motion.div
+                  key={`${item.gameId}-${item.difficulty}`}
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.1 * (index + 1) }}
+                  className={`flex items-center justify-between p-4 rounded-lg ${
+                    index === 0 ? 'bg-yellow-50 dark:bg-yellow-900/20' : 
+                    index === 1 ? 'bg-gray-50 dark:bg-gray-700/50' :
+                    index === 2 ? 'bg-orange-50 dark:bg-orange-900/20' :
+                    'bg-gray-50 dark:bg-gray-700/30'
+                  }`}
+                >
+                  <div className="flex items-center gap-4">
+                    <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold ${
+                      index === 0 ? 'bg-yellow-500 text-white' :
+                      index === 1 ? 'bg-gray-400 text-white' :
+                      index === 2 ? 'bg-orange-500 text-white' :
+                      'bg-gray-300 dark:bg-gray-600 text-gray-700 dark:text-gray-300'
+                    }`}>
+                      {index + 1}
+                    </div>
+                    <div>
+                      <p className="font-semibold text-gray-800 dark:text-white">
+                        {formatGameId(item.gameId)}
+                      </p>
+                      <p className="text-sm text-gray-600 dark:text-gray-400">
+                        {t(item.difficulty)}
+                      </p>
+                    </div>
+                  </div>
+                  <span className="text-2xl font-bold text-purple-600 dark:text-purple-400">
+                    {item.score}
+                  </span>
+                </motion.div>
+              ))}
+            </div>
+          </motion.div>
+        )}
+
+        {/* Recent Sessions Section */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2 }}
+          className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6"
+        >
+          <h2 className="text-xl font-bold text-gray-800 dark:text-white mb-4">
+            {t('topScores')}
+          </h2>
+          
+          {filteredSessions.length === 0 ? (
+            <div className="text-center py-12 text-gray-500 dark:text-gray-400">
+              <p className="text-6xl mb-4">🎮</p>
+              <p>{t('noScores')}</p>
+            </div>
+          ) : (
+            <div className="space-y-3">
+              {filteredSessions.map((session, index) => (
+                <motion.div
+                  key={session.id}
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.05 * (index + 1) }}
+                  className={`flex items-center justify-between p-4 rounded-lg ${
+                    index === 0 ? 'bg-yellow-50 dark:bg-yellow-900/20' : 
+                    index === 1 ? 'bg-gray-50 dark:bg-gray-700/50' :
+                    index === 2 ? 'bg-orange-50 dark:bg-orange-900/20' :
+                    'bg-gray-50 dark:bg-gray-700/30'
+                  }`}
+                >
+                  <div className="flex items-center gap-4">
+                    <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold ${
+                      index === 0 ? 'bg-yellow-500 text-white' :
+                      index === 1 ? 'bg-gray-400 text-white' :
+                      index === 2 ? 'bg-orange-500 text-white' :
+                      'bg-gray-300 dark:bg-gray-600 text-gray-700 dark:text-gray-300'
+                    }`}>
+                      {index + 1}
+                    </div>
+                    <div>
+                      <p className="font-semibold text-gray-800 dark:text-white">
+                        {formatGameId(session.gameId)}
+                      </p>
+                      <p className="text-sm text-gray-600 dark:text-gray-400">
+                        {t(session.difficulty)} • {new Date(session.completedAt).toLocaleDateString()}
+                      </p>
+                    </div>
+                  </div>
+                  <span className="text-2xl font-bold text-purple-600 dark:text-purple-400">
+                    {session.score}
+                  </span>
+                </motion.div>
+              ))}
+            </div>
+          )}
+        </motion.div>
+      </main>
+    </div>
+  )
+}

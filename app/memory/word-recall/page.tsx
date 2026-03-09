@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { motion, AnimatePresence } from 'framer-motion'
 import Link from 'next/link'
@@ -86,27 +86,27 @@ export default function WordRecallPage() {
   const [score, setScore] = useState(0)
   const [totalScore, setTotalScore] = useState(0)
 
-  const settings = LEVEL_SETTINGS[Math.min(level - 1, LEVEL_SETTINGS.length - 1)]
+  const settings = useMemo(() => LEVEL_SETTINGS[Math.min(level - 1, LEVEL_SETTINGS.length - 1)], [level])
 
-  const filterByLanguage = (list: string[]) => {
+  const filterByLanguage = useCallback((list: string[]) => {
     const isKorean = i18n.language === 'ko'
     return list.filter(word => (isKorean ? /[\uAC00-\uD7A3]/.test(word) : /[a-zA-Z]/.test(word)))
-  }
+  }, [i18n.language])
 
-  const getLevelScore = (correct: number) => {
+  const getLevelScore = useCallback((correct: number) => {
     const baseScore = correct * 50
     const timeBonus = timeLeft * 2
     return baseScore + timeBonus
-  }
+  }, [timeLeft])
 
-  const startGame = () => {
+  const startGame = useCallback(() => {
     setScore(0)
     setTotalScore(0)
     setLevel(1)
     startLevel()
-  }
+  }, [startLevel])
 
-  const startLevel = () => {
+  const startLevel = useCallback(() => {
     const wordList = WORDS[settings.difficulty as keyof typeof WORDS]
     const languageFilteredWords = filterByLanguage(wordList)
     const shuffled = [...languageFilteredWords].sort(() => Math.random() - 0.5)
@@ -133,9 +133,9 @@ export default function WordRecallPage() {
         }, 500)
       }
     }, settings.duration)
-  }
+  }, [settings.difficulty, settings.wordCount, settings.inputTime, settings.duration, filterByLanguage, words.length])
 
-  const handleSubmit = () => {
+  const handleSubmit = useCallback(() => {
     if (!userInput.trim()) return
 
     const inputWords = userInput.split(/[\s,]+/).filter(word => word.trim())
@@ -161,9 +161,9 @@ export default function WordRecallPage() {
     const levelScore = Math.round(getLevelScore(correct.length))
     setScore(levelScore)
     setGameState('levelComplete')
-  }
+  }, [userInput, words, getLevelScore])
 
-  const nextLevel = () => {
+  const nextLevel = useCallback(() => {
     const levelScore = score
     setTotalScore(prev => prev + levelScore)
 
@@ -182,7 +182,7 @@ export default function WordRecallPage() {
       setGameState('menu')
       setTimeout(() => startLevel(), 100)
     }
-  }
+  }, [score, level, totalScore, addSession, startLevel])
 
   useEffect(() => {
     let timer: NodeJS.Timeout | null = null

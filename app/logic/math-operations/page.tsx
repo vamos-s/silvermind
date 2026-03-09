@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
@@ -19,7 +19,7 @@ export default function MathOperationsPage() {
   const [timeLeft, setTimeLeft] = useState(30)
   const [gameOver, setGameOver] = useState(false)
 
-  const generateProblem = () => {
+  const generateProblem = useCallback(() => {
     let a: number, b: number, op: Operation, answer: number
 
     switch (currentDifficulty) {
@@ -68,9 +68,9 @@ export default function MathOperationsPage() {
     setProblem({ a, b, op, answer })
     setUserAnswer('')
     setTimeLeft(Math.max(10, 30 - Math.floor(score / 100)))
-  }
+  }, [currentDifficulty, score])
 
-  const handleSubmit = () => {
+  const handleSubmit = useCallback(() => {
     const numAnswer = parseInt(userAnswer)
     if (numAnswer === problem.answer) {
       const streakBonus = streak * 5
@@ -90,7 +90,7 @@ export default function MathOperationsPage() {
         durationSeconds: 30 * Math.floor(score / 100 + 1)
       })
     }
-  }
+  }, [userAnswer, problem.answer, streak, timeLeft, score, generateProblem, addSession, currentDifficulty])
 
   useEffect(() => {
     generateProblem()
