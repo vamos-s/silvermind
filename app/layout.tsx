@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import './globals.css'
 import Script from 'next/script'
-import { ThemeProvider } from '@/components/ThemeProvider'
+import { LayoutClient } from './layout-client'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -19,7 +19,7 @@ export default function RootLayout({
   const GA_ID = process.env.NEXT_PUBLIC_GA_ID
 
   return (
-    <html lang="en">
+    <html suppressHydrationWarning>
       <body className={inter.className}>
         {GA_ID && (
           <>
@@ -37,7 +37,7 @@ export default function RootLayout({
             </Script>
           </>
         )}
-        <ThemeProvider>{children}</ThemeProvider>
+        <LayoutClient>{children}</LayoutClient>
       </body>
     </html>
   )
