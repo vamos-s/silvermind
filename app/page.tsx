@@ -40,7 +40,7 @@ export default function Home() {
                   darkMode ? 'bg-gray-700 text-gray-200' : 'bg-white text-gray-800 shadow-sm'
                 }`}
               >
-                🏆 Leaderboard
+                🏆 {t('leaderboard')}
               </motion.button>
             </Link>
             <Link href="/achievements">
@@ -51,7 +51,7 @@ export default function Home() {
                   darkMode ? 'bg-gray-700 text-gray-200' : 'bg-white text-gray-800 shadow-sm'
                 }`}
               >
-                ⭐ Achievements
+                ⭐ {t('achievements')}
               </motion.button>
             </Link>
             <Link href="/challenges">
@@ -62,7 +62,7 @@ export default function Home() {
                   darkMode ? 'bg-gray-700 text-gray-200' : 'bg-white text-gray-800 shadow-sm'
                 }`}
               >
-                📅 Challenges
+                📅 {t('challenges')}
               </motion.button>
             </Link>
           </div>
@@ -86,7 +86,7 @@ export default function Home() {
               >
                 <span className="text-6xl mb-4">{cat.icon}</span>
                 <h2 className="text-3xl font-bold mb-2 capitalize">{t(cat.id)}</h2>
-                <p className="text-lg opacity-90">{cat.games} Games</p>
+                <p className="text-lg opacity-90">{cat.games} {t('games')}</p>
               </motion.div>
             </Link>
           ))}
