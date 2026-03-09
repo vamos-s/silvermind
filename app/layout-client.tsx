@@ -1,27 +1,44 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { I18nProvider } from '@/components/I18nProvider'
 import { ThemeProvider } from '@/components/ThemeProvider'
 
 export function LayoutClient({ children }: { children: React.ReactNode }) {
-  const [lang, setLang] = useState('en')
+  const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
-    // Detect browser language and set html lang attribute
-    const browserLang = navigator.language.split('-')[0]
-    const supportedLanguages = ['en', 'ko', 'ja', 'zh', 'es', 'fr', 'de', 'pt', 'ru', 'ar']
+    setMounted(true)
 
-    const detectedLang = supportedLanguages.includes(browserLang) ? browserLang : 'en'
-    setLang(detectedLang)
+    // Import and initialize i18n on client side
+    const initI18n = async () => {
+      try {
+        const i18n = (await import('@/lib/i18n')).default
 
-    // Set html lang attribute
-    document.documentElement.lang = detectedLang
+        // Detect browser language and set html lang attribute
+        const browserLang = navigator.language.split('-')[0]
+        const supportedLanguages = ['en', 'ko', 'ja', 'zh', 'es', 'fr', 'de', 'pt', 'ru', 'ar']
+
+        const detectedLang = supportedLanguages.includes(browserLang) ? browserLang : 'en'
+
+        // Set html lang attribute
+        document.documentElement.lang = detectedLang
+
+        // Sync i18n language with detected language
+        if (i18n.language !== detectedLang) {
+          await i18n.changeLanguage(detectedLang)
+        }
+      } catch (error) {
+        console.error('Failed to initialize i18n:', error)
+      }
+    }
+
+    initI18n()
   }, [])
 
-  return (
-    <I18nProvider>
-      <ThemeProvider>{children}</ThemeProvider>
-    </I18nProvider>
-  )
+  // Prevent hydration mismatch
+  if (!mounted) {
+    return <ThemeProvider>{children}</ThemeProvider>
+  }
+
+  return <ThemeProvider>{children}</ThemeProvider>
 }

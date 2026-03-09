@@ -19,7 +19,7 @@ export default function RootLayout({
   const GA_ID = process.env.NEXT_PUBLIC_GA_ID
 
   return (
-    <html suppressHydrationWarning>
+    <html lang="en" suppressHydrationWarning>
       <body className={inter.className}>
         {GA_ID && (
           <>
