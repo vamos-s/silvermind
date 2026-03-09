@@ -10,9 +10,11 @@ import { ThemeToggle } from '@/components/ThemeToggle'
 
 export default function LeaderboardPage() {
   const { t } = useTranslation()
-  const { sessions, bestScores, darkMode } = useGameStore()
+  const { sessions, bestScores, darkMode, updateSessionPlayerName } = useGameStore()
   const [selectedGame, setSelectedGame] = useState<string>('all')
   const [selectedDifficulty, setSelectedDifficulty] = useState<Difficulty | 'all'>('all')
+  const [editingSessionId, setEditingSessionId] = useState<string | null>(null)
+  const [editingPlayerName, setEditingPlayerName] = useState<string>('')
 
   // Get unique game IDs from sessions
   const gameIds = Array.from(new Set(sessions.map(s => s.gameId)))
@@ -107,7 +109,7 @@ export default function LeaderboardPage() {
                 onChange={(e) => setSelectedDifficulty(e.target.value as Difficulty | 'all')}
                 className={`w-full p-3 rounded-lg border ${darkMode ? 'bg-gray-800 border-gray-700 text-white' : 'bg-white border-gray-300 text-gray-800'}`}
               >
-                <option value="all">{t('allGames')}</option>
+                <option value="all">{t('allDifficulties')}</option>
                 <option value="easy">{t('easy')}</option>
                 <option value="medium">{t('medium')}</option>
                 <option value="hard">{t('hard')}</option>
@@ -209,9 +211,39 @@ export default function LeaderboardPage() {
                       {index + 1}
                     </div>
                     <div>
-                      <p className={`font-semibold ${darkMode ? 'text-white' : 'text-gray-800'}`}>
-                        {formatGameId(session.gameId)}
-                      </p>
+                      {editingSessionId === session.id ? (
+                        <input
+                          type="text"
+                          value={editingPlayerName}
+                          onChange={(e) => setEditingPlayerName(e.target.value)}
+                          onKeyDown={(e) => {
+                            if (e.key === 'Enter' && editingPlayerName.trim()) {
+                              updateSessionPlayerName(session.id, editingPlayerName.trim())
+                              setEditingSessionId(null)
+                            } else if (e.key === 'Escape') {
+                              setEditingSessionId(null)
+                            }
+                          }}
+                          onBlur={() => {
+                            if (editingPlayerName.trim()) {
+                              updateSessionPlayerName(session.id, editingPlayerName.trim())
+                            }
+                            setEditingSessionId(null)
+                          }}
+                          autoFocus
+                          className={`w-32 p-1 rounded text-sm ${darkMode ? 'bg-gray-700 text-white' : 'bg-white text-gray-800'} border ${darkMode ? 'border-gray-600' : 'border-gray-300'}`}
+                        />
+                      ) : (
+                        <p
+                          onClick={() => {
+                            setEditingSessionId(session.id)
+                            setEditingPlayerName(session.playerName || '')
+                          }}
+                          className={`font-semibold cursor-pointer hover:underline ${darkMode ? 'text-white' : 'text-gray-800'}`}
+                        >
+                          {session.playerName || t('anonymous', 'Anonymous')}
+                        </p>
+                      )}
                       <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                         {t(session.difficulty)} • {new Date(session.completedAt).toLocaleDateString()}
                       </p>

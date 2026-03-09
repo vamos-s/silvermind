@@ -112,6 +112,7 @@ interface GameStore {
   generateDailyChallenges: () => void
   completeChallenge: (challengeId: string) => void
   resetAllData: () => void
+  updateSessionPlayerName: (sessionId: string, playerName: string) => void
 }
 
 const initialData = loadLocalStorageData()
@@ -411,7 +412,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
       localStorage.removeItem(STORAGE_KEY)
       localStorage.removeItem('silvermind_anonymous_id')
     }
-    
+
     const newData = loadLocalStorageData()
     return {
       anonymousId: newData.anonymousId,
@@ -423,5 +424,24 @@ export const useGameStore = create<GameStore>((set, get) => ({
       playDates: newData.playDates,
       gamesPlayed: newData.gamesPlayed
     }
-  }
+  },
+
+  updateSessionPlayerName: (sessionId: string, playerName: string) => set((state) => {
+    const updatedSessions = state.sessions.map(session =>
+      session.id === sessionId ? { ...session, playerName } : session
+    )
+
+    saveLocalStorageData({
+      anonymousId: state.anonymousId,
+      sessions: updatedSessions,
+      bestScores: state.bestScores,
+      achievements: state.achievements,
+      achievementProgress: state.achievementProgress,
+      dailyChallenges: state.dailyChallenges,
+      playDates: state.playDates,
+      gamesPlayed: state.gamesPlayed
+    })
+
+    return { sessions: updatedSessions }
+  })
 }))

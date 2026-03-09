@@ -16,6 +16,7 @@ export interface Game {
 export interface GameSession {
   id: string
   userId?: string
+  playerName?: string
   gameId: string
   difficulty: Difficulty
   score: number
