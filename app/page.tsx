@@ -4,15 +4,16 @@ import { useTranslation } from 'react-i18next'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
 import { useGameStore } from '@/lib/store'
+import { ThemeToggle } from '@/components/ThemeToggle'
 
 const categories = [
-  { id: 'memory', icon: '🧠', color: 'bg-indigo-500', games: 7 },
-  { id: 'pattern', icon: '🔮', color: 'bg-amber-500', games: 4 },
-  { id: 'logic', icon: '🧩', color: 'bg-emerald-500', games: 5 },
-  { id: 'reaction', icon: '⚡', color: 'bg-rose-500', games: 4 },
-  { id: 'spatial', icon: '🎯', color: 'bg-cyan-500', games: 7 },
-  { id: 'attention', icon: '👁️', color: 'bg-violet-500', games: 5 },
-  { id: 'language', icon: '📝', color: 'bg-orange-500', games: 5 },
+  { id: 'memory', icon: '🧠', color: 'bg-indigo-600', hoverColor: 'hover:bg-indigo-700', games: 7 },
+  { id: 'pattern', icon: '🔮', color: 'bg-amber-600', hoverColor: 'hover:bg-amber-700', games: 4 },
+  { id: 'logic', icon: '🧩', color: 'bg-emerald-600', hoverColor: 'hover:bg-emerald-700', games: 5 },
+  { id: 'reaction', icon: '⚡', color: 'bg-rose-600', hoverColor: 'hover:bg-rose-700', games: 4 },
+  { id: 'spatial', icon: '🎯', color: 'bg-cyan-600', hoverColor: 'hover:bg-cyan-700', games: 7 },
+  { id: 'attention', icon: '👁️', color: 'bg-violet-600', hoverColor: 'hover:bg-violet-700', games: 5 },
+  { id: 'language', icon: '📝', color: 'bg-orange-600', hoverColor: 'hover:bg-orange-700', games: 5 },
 ]
 
 export default function Home() {
@@ -21,12 +22,12 @@ export default function Home() {
 
   return (
     <div className={`min-h-screen ${darkMode ? 'bg-gradient-to-br from-slate-900 to-slate-800' : 'bg-gradient-to-br from-blue-50 to-purple-50'}`}>
-      <header className="p-6 bg-white dark:bg-gray-800 shadow-sm">
+      <header className={`p-6 shadow-sm transition-colors duration-300 ${darkMode ? 'bg-slate-900' : 'bg-white'}`}>
         <div className="flex justify-between items-center max-w-6xl mx-auto">
           <motion.h1
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="text-4xl font-bold text-gray-800 dark:text-white"
+            className={`text-4xl font-bold ${darkMode ? 'text-white' : 'text-gray-800'}`}
           >
             🧠 SilverMind
           </motion.h1>
@@ -35,7 +36,9 @@ export default function Home() {
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                className={`px-4 py-2 rounded-lg transition-colors ${darkMode ? 'bg-gray-700 text-gray-200' : 'bg-gray-200 text-gray-700'}`}
+                className={`px-4 py-2 rounded-lg transition-colors ${
+                  darkMode ? 'bg-gray-700 text-gray-200' : 'bg-white text-gray-800 shadow-sm'
+                }`}
               >
                 🏆 Leaderboard
               </motion.button>
@@ -44,7 +47,9 @@ export default function Home() {
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                className={`px-4 py-2 rounded-lg transition-colors ${darkMode ? 'bg-gray-700 text-gray-200' : 'bg-gray-200 text-gray-700'}`}
+                className={`px-4 py-2 rounded-lg transition-colors ${
+                  darkMode ? 'bg-gray-700 text-gray-200' : 'bg-white text-gray-800 shadow-sm'
+                }`}
               >
                 ⭐ Achievements
               </motion.button>
@@ -53,29 +58,26 @@ export default function Home() {
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                className={`px-4 py-2 rounded-lg transition-colors ${darkMode ? 'bg-gray-700 text-gray-200' : 'bg-gray-200 text-gray-700'}`}
+                className={`px-4 py-2 rounded-lg transition-colors ${
+                  darkMode ? 'bg-gray-700 text-gray-200' : 'bg-white text-gray-800 shadow-sm'
+                }`}
               >
                 📅 Challenges
               </motion.button>
             </Link>
-            <motion.button
-              onClick={toggleDarkMode}
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.9 }}
-              className={`p-3 rounded-full transition-colors ${darkMode ? 'bg-gray-700 text-yellow-400' : 'bg-gray-200 text-gray-700'}`}
-            >
-              {darkMode ? '☀️' : '🌙'}
-            </motion.button>
           </div>
         </div>
       </header>
+
+      {/* Theme Toggle - Fixed Position */}
+      <ThemeToggle />
 
       <main className="container mx-auto px-4 py-8">
         <motion.p
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.2 }}
-          className="text-center text-xl text-gray-600 mb-12"
+          className={`text-center text-xl mb-12 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}
         >
           {t('welcome')}
         </motion.p>
@@ -89,7 +91,7 @@ export default function Home() {
                 transition={{ delay: 0.1 * (i + 1) }}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                className={`${cat.color} rounded-2xl p-8 text-white shadow-lg cursor-pointer min-h-[200px] flex flex-col items-center justify-center`}
+                className={`${cat.color} ${cat.hoverColor} rounded-2xl p-8 text-white shadow-lg cursor-pointer min-h-[200px] flex flex-col items-center justify-center transition-colors duration-300`}
               >
                 <span className="text-6xl mb-4">{cat.icon}</span>
                 <h2 className="text-3xl font-bold mb-2 capitalize">{t(cat.id)}</h2>

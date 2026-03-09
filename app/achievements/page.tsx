@@ -7,6 +7,7 @@ import Link from 'next/link'
 import { useGameStore } from '@/lib/store'
 import { achievements as achievementData } from '@/lib/achievements'
 import { AchievementType } from '@/lib/types'
+import { ThemeToggle } from '@/components/ThemeToggle'
 
 export default function AchievementsPage() {
   const { t } = useTranslation()
@@ -78,42 +79,45 @@ export default function AchievementsPage() {
 
   return (
     <div className={`min-h-screen ${darkMode ? 'bg-gradient-to-br from-slate-900 to-slate-800' : 'bg-gradient-to-br from-blue-50 to-purple-50'}`}>
-      <header className="p-6 bg-white dark:bg-gray-800 shadow-sm">
+      <header className={`p-6 shadow-sm ${darkMode ? 'bg-slate-900' : 'bg-white'}`}>
         <div className="flex justify-between items-center max-w-4xl mx-auto">
           <Link href="/">
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              className="flex items-center gap-2 text-gray-600 dark:text-gray-300 hover:text-gray-800 dark:hover:text-white"
+              className={`flex items-center gap-2 ${darkMode ? 'text-gray-300 hover:text-white' : 'text-gray-600 hover:text-gray-800'}`}
             >
               <span>←</span>
               <span>{t('back')}</span>
             </motion.button>
           </Link>
-          <h1 className="text-2xl font-bold text-gray-800 dark:text-white">
+          <h1 className={`text-2xl font-bold ${darkMode ? 'text-white' : 'text-gray-800'}`}>
             {t('achievementsTitle')}
           </h1>
           <div className="w-20" />
         </div>
       </header>
 
+      {/* Theme Toggle - Fixed Position */}
+      <ThemeToggle />
+
       <main className="container mx-auto px-4 py-8 max-w-4xl">
         {/* Progress Overview */}
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="mb-8 bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6"
+          className={`mb-8 rounded-2xl shadow-lg p-6 ${darkMode ? 'bg-gray-800' : 'bg-white'}`}
         >
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-xl font-bold text-gray-800 dark:text-white">
+            <h2 className={`text-xl font-bold ${darkMode ? 'text-white' : 'text-gray-800'}`}>
               {t('totalAchievements')}
             </h2>
             <span className="text-2xl font-bold text-purple-600 dark:text-purple-400">
               {unlockedCount}/{totalAchievements}
             </span>
           </div>
-          
-          <div className="relative h-4 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+
+          <div className={`relative h-4 rounded-full overflow-hidden ${darkMode ? 'bg-gray-700' : 'bg-purple-100'}`}>
             <motion.div
               initial={{ width: 0 }}
               animate={{ width: `${progressPercentage}%` }}
@@ -121,8 +125,8 @@ export default function AchievementsPage() {
               className="absolute h-full bg-gradient-to-r from-purple-500 to-pink-500 rounded-full"
             />
           </div>
-          
-          <p className="text-sm text-gray-600 dark:text-gray-400 mt-2">
+
+          <p className={`text-sm mt-2 ${darkMode ? 'text-gray-400' : 'text-gray-700'}`}>
             {progressPercentage.toFixed(0)}% {t('progress')}
           </p>
         </motion.div>
@@ -135,7 +139,7 @@ export default function AchievementsPage() {
             transition={{ delay: 0.1 }}
             className="mb-8"
           >
-            <h3 className="text-lg font-semibold text-gray-800 dark:text-white mb-4">
+            <h3 className={`text-lg font-semibold mb-4 ${darkMode ? 'text-white' : 'text-gray-800'}`}>
               {t('unlocked')} ({achievements.length})
             </h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -173,7 +177,7 @@ export default function AchievementsPage() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
         >
-          <h3 className="text-lg font-semibold text-gray-800 dark:text-white mb-4">
+          <h3 className={`text-lg font-semibold mb-4 ${darkMode ? 'text-white' : 'text-gray-800'}`}>
             {t('locked')} ({totalAchievements - achievements.length})
           </h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -188,24 +192,30 @@ export default function AchievementsPage() {
                     initial={{ opacity: 0, scale: 0.9 }}
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ delay: 0.05 * (index + 1) }}
-                    className={`bg-white dark:bg-gray-700 rounded-xl p-4 border-2 ${
-                      progress === 0 
-                        ? 'border-gray-200 dark:border-gray-600 opacity-60' 
-                        : 'border-purple-200 dark:border-purple-600'
+                    className={`rounded-xl p-4 border-2 ${
+                      darkMode
+                        ? 'bg-gray-800'
+                        : 'bg-white'
+                    } ${
+                      progress === 0
+                        ? 'border-gray-300 opacity-60'
+                        : 'border-purple-400'
                     }`}
                   >
                     <div className="flex items-start gap-4">
                       <span className="text-4xl grayscale opacity-50">{achievement.icon}</span>
                       <div className="flex-1">
-                        <h4 className="font-bold text-gray-800 dark:text-white">
+                        <h4 className={`font-bold ${darkMode ? 'text-white' : 'text-gray-800'}`}>
                           {achievement.title.en}
                         </h4>
-                        <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">
+                        <p className={`text-sm mb-2 ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                           {achievement.description.en}
                         </p>
-                        
+
                         {/* Progress Bar */}
-                        <div className="relative h-2 bg-gray-200 dark:bg-gray-600 rounded-full overflow-hidden">
+                        <div className={`relative h-2 rounded-full overflow-hidden ${
+                          darkMode ? 'bg-gray-700' : 'bg-purple-100'
+                        }`}>
                           <motion.div
                             initial={{ width: 0 }}
                             animate={{ width: `${progress}%` }}
@@ -213,7 +223,7 @@ export default function AchievementsPage() {
                             className="absolute h-full bg-gradient-to-r from-purple-500 to-pink-500 rounded-full"
                           />
                         </div>
-                        <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                        <p className={`text-xs mt-1 ${darkMode ? 'text-gray-500' : 'text-gray-600'}`}>
                           {progressText}
                         </p>
                       </div>
