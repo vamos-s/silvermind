@@ -54,9 +54,9 @@ export default function AttentionPage() {
                   darkMode ? 'bg-gray-800 hover:bg-gray-750' : 'bg-white hover:bg-gray-50'
                 }`}>
                   <div className="text-5xl mb-4">{game.icon}</div>
-                  <h2 className={`text-xl font-bold mb-2 ${darkMode ? 'text-white' : 'text-gray-800'}`}>{t(`games.${game.id}.title`)}</h2>
+                  <h2 className={`text-xl font-bold mb-2 ${darkMode ? 'text-white' : 'text-gray-800'}`}>{t(`gameInfo.${game.id}.title`)}</h2>
                   <p className={`text-sm ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
-                    {t(`games.${game.id}.description`)}
+                    {t(`gameInfo.${game.id}.description`)}
                   </p>
                 </div>
               </Link>

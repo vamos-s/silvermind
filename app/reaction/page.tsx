@@ -53,10 +53,10 @@ export default function ReactionPage() {
               >
                 <span className="text-5xl block mb-4">{game.icon}</span>
                 <h2 className={`text-2xl font-bold mb-2 ${darkMode ? 'text-white' : 'text-gray-800'}`}>
-                  {t(`games.${game.id}.title`)}
+                  {t(`gameInfo.${game.id}.title`)}
                 </h2>
                 <p className={darkMode ? 'text-gray-300' : 'text-gray-600'}>
-                  {t(`games.${game.id}.description`)}
+                  {t(`gameInfo.${game.id}.description`)}
                 </p>
               </motion.div>
             </Link>
