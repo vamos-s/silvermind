@@ -697,7 +697,7 @@ const resources = {
       attention: '注意力/集中力',
       language: '言語/言語能力',
 
-      games: {
+      gameInfo: {
         'pattern-matching': { title: 'パターンマッチング', description: 'パターンを記憶して再現する' },
         'word-association': { title: '単語連想', description: '同じカテゴリの単語を見つける' },
         'number-recall': { title: '数字の記憶', description: '数字の順序を記憶する' },
@@ -815,7 +815,7 @@ const resources = {
       attention: '注意力/专注力',
       language: '语言/语言能力',
 
-      games: {
+      gameInfo: {
         'pattern-matching': { title: '图案匹配', description: '记住并重现图案' },
         'word-association': { title: '词语联想', description: '找出同类词语' },
         'number-recall': { title: '数字记忆', description: '记住数字顺序' },
@@ -933,7 +933,7 @@ const resources = {
       attention: 'Atención y Concentración',
       language: 'Lenguaje y Verbal',
 
-      games: {
+      gameInfo: {
         'pattern-matching': { title: 'Coincidencia de Patrones', description: 'Recuerda y reproduce patrones' },
         'word-association': { title: 'Asociación de Palabras', description: 'Encuentra palabras en la misma categoría' },
         'number-recall': { title: 'Recordar Números', description: 'Recuerda secuencias de números' },
@@ -1051,7 +1051,7 @@ const resources = {
       attention: 'Attention et concentration',
       language: 'Langage et verbal',
 
-      games: {
+      gameInfo: {
         'pattern-matching': { title: 'Correspondance de Motifs', description: 'Mémorisez et reproduisez les motifs' },
         'word-association': { title: 'Association de Mots', description: 'Trouvez des mots dans la même catégorie' },
         'number-recall': { title: 'Mémorisation de Nombres', description: 'Mémorisez des séquences de nombres' },
@@ -1157,7 +1157,7 @@ const resources = {
       attention: 'Aufmerksamkeit und Konzentration',
       language: 'Sprache und verbal',
 
-      games: {
+      gameInfo: {
         'pattern-matching': { title: 'Mustererkennung', description: 'Muster merken und reproduzieren' },
         'word-association': { title: 'Wortassoziation', description: 'Wörter gleicher Kategorie finden' },
         'number-recall': { title: 'Zahlenmerken', description: 'Zahlenfolgen merken' },
@@ -1263,7 +1263,7 @@ const resources = {
       attention: 'Atenção e Concentração',
       language: 'Linguagem e Verbal',
 
-      games: {
+      gameInfo: {
         'pattern-matching': { title: 'Correspondência de Padrões', description: 'Lembre e reproduza padrões' },
         'word-association': { title: 'Associação de Palavras', description: 'Encontre palavras na mesma categoria' },
         'number-recall': { title: 'Memorizar Números', description: 'Lembre de sequências de números' },
@@ -1369,7 +1369,7 @@ const resources = {
       attention: 'Внимание и концентрация',
       language: 'Язык и вербальный',
 
-      games: {
+      gameInfo: {
         'pattern-matching': { title: 'Соответствие шаблонов', description: 'Запомните и воспроизведите шаблоны' },
         'word-association': { title: 'Ассоциация слов', description: 'Найдите слова в той же категории' },
         'number-recall': { title: 'Запоминание чисел', description: 'Запоминайте последовательности чисел' },
@@ -1475,7 +1475,7 @@ const resources = {
       attention: 'التركيز والانتباه',
       language: 'اللغة والتعبير',
 
-      games: {
+      gameInfo: {
         'pattern-matching': { title: 'مطابقة الأنماط', description: 'تذكر وأعد إنتاج الأنماط' },
         'word-association': { title: 'ارتباط الكلمات', description: 'ابحث عن كلمات في نفس الفئة' },
         'number-recall': { title: 'تذكر الأرقام', description: 'تذكر تسلسلات الأرقام' },
