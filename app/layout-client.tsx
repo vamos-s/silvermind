@@ -7,10 +7,7 @@ export function LayoutClient({ children }: { children: React.ReactNode }) {
   const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
-    // Immediately set mounted to allow rendering
-    setMounted(true)
-
-    // Import and initialize i18n synchronously if possible
+    // Import and initialize i18n FIRST before setting mounted
     const initI18n = async () => {
       try {
         const i18n = (await import('@/lib/i18n')).default
@@ -28,18 +25,27 @@ export function LayoutClient({ children }: { children: React.ReactNode }) {
         // Set html lang attribute
         document.documentElement.lang = targetLang
 
-        // Sync i18n language with target language
+        // Sync i18n language with target language BEFORE rendering
         if (i18n.language !== targetLang) {
           await i18n.changeLanguage(targetLang)
         }
+
+        // Only set mounted after i18n is fully initialized
+        setMounted(true)
       } catch (error) {
         console.error('Failed to initialize i18n:', error)
+        // Still set mounted to allow rendering even if i18n fails
+        setMounted(true)
       }
     }
 
     initI18n()
   }, [])
 
-  // Render immediately after mount - children will re-render when language changes
+  // Don't render anything until i18n is initialized to prevent hydration error
+  if (!mounted) {
+    return <ThemeProvider><div className="min-h-screen bg-white dark:bg-gray-900"></div></ThemeProvider>
+  }
+
   return <ThemeProvider>{children}</ThemeProvider>
 }
