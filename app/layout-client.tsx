@@ -5,6 +5,7 @@ import { ThemeProvider } from '@/components/ThemeProvider'
 
 export function LayoutClient({ children }: { children: React.ReactNode }) {
   const [mounted, setMounted] = useState(false)
+  const [i18nReady, setI18nReady] = useState(false)
 
   useEffect(() => {
     // Import and initialize i18n FIRST before setting mounted
@@ -30,11 +31,13 @@ export function LayoutClient({ children }: { children: React.ReactNode }) {
           await i18n.changeLanguage(targetLang)
         }
 
-        // Only set mounted after i18n is fully initialized
+        // Mark i18n as ready and then allow rendering
+        setI18nReady(true)
         setMounted(true)
       } catch (error) {
         console.error('Failed to initialize i18n:', error)
-        // Still set mounted to allow rendering even if i18n fails
+        // Still allow rendering even if i18n fails
+        setI18nReady(true)
         setMounted(true)
       }
     }
@@ -43,7 +46,7 @@ export function LayoutClient({ children }: { children: React.ReactNode }) {
   }, [])
 
   // Don't render anything until i18n is initialized to prevent hydration error
-  if (!mounted) {
+  if (!mounted || !i18nReady) {
     return null
   }
 

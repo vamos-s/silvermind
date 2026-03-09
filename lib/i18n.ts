@@ -1541,7 +1541,10 @@ i18n
     resources,
     lng: 'ko', // Default to Korean for this Korean service
     fallbackLng: 'en',
-    interpolation: { escapeValue: false }
+    interpolation: { escapeValue: false },
+    react: {
+      useSuspense: false, // Disable suspense to avoid hydration issues
+    }
   })
 
 export default i18n
