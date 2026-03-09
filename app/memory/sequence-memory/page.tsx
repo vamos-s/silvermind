@@ -184,18 +184,18 @@ export default function SequenceMemoryPage() {
   }, [gridSize])
 
   return (
-    <div className="min-h-screen p-4 md:p-8 transition-colors duration-300 {darkMode ? "bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white" : "bg-gradient-to-br from-indigo-50 via-white to-purple-50 p-4 md:p-8"}">
+    <div className="min-h-screen p-3 md:p-4 lg:p-8 transition-colors duration-300 {darkMode ? "bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white" : "bg-gradient-to-br from-indigo-50 via-white to-purple-50 p-4 md:p-8"}">
       <SettingsPanel />
       <div className="max-w-2xl mx-auto">
         {/* Header */}
         <Link
           href="/memory"
-          className="inline-flex items-center text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white font-medium mb-6 text-lg"
+          className="inline-flex items-center text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white font-medium mb-6 text-sm md:text-base lg:text-lg"
         >
           <span className="mr-2">←</span> {t('back', 'Back')}
         </Link>
 
-        <h1 className="text-3xl md:text-4xl font-bold text-gray-800 dark:text-white mb-2">
+        <h1 className="text-3xl md:text-2xl md:text-3xl lg:text-4xl font-bold text-gray-800 dark:text-white mb-2">
           {t('sequenceMemory.title', 'Sequence Memory')}
         </h1>
         <p className="text-lg text-gray-700 dark:text-gray-300 font-medium mb-8">
@@ -209,7 +209,7 @@ export default function SequenceMemoryPage() {
             animate={{ opacity: 1, y: 0 }}
             className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-8 text-center"
           >
-            <h2 className="text-3xl font-bold text-gray-800 dark:text-white mb-2">
+            <h2 className="text-xl md:text-2xl lg:text-3xl font-bold text-gray-800 dark:text-white mb-2">
               Level {level}
             </h2>
             {level > 1 && (
@@ -226,7 +226,7 @@ export default function SequenceMemoryPage() {
             </div>
             <button
               onClick={startLevel}
-              className="bg-gradient-to-r from-indigo-500 to-purple-500 text-white text-2xl font-bold py-4 px-12 rounded-xl hover:from-indigo-600 hover:to-purple-600 shadow-lg transition-all w-full"
+              className="bg-gradient-to-r from-indigo-500 to-purple-500 text-white text-lg md:text-xl lg:text-2xl font-bold py-4 px-12 rounded-xl hover:from-indigo-600 hover:to-purple-600 shadow-lg transition-all w-full"
             >
               {t('start', 'Start')}
             </button>
@@ -241,11 +241,11 @@ export default function SequenceMemoryPage() {
               <div className="flex justify-around text-center">
                 <div>
                   <p className="text-gray-700 dark:text-gray-300 text-sm font-medium">{t('sequenceMemory.level', 'Level')}</p>
-                  <p className="text-3xl font-bold text-indigo-600">{level}/{MAX_LEVELS}</p>
+                  <p className="text-xl md:text-2xl lg:text-3xl font-bold text-indigo-600">{level}/{MAX_LEVELS}</p>
                 </div>
                 <div>
                   <p className="text-gray-700 dark:text-gray-300 text-sm font-medium">{t('sequenceMemory.score', 'Score')}</p>
-                  <p className="text-3xl font-bold text-purple-600">{totalScore}</p>
+                  <p className="text-xl md:text-2xl lg:text-3xl font-bold text-purple-600">{totalScore}</p>
                 </div>
               </div>
               {/* Progress Bar */}
@@ -329,22 +329,22 @@ export default function SequenceMemoryPage() {
             className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-8 text-center"
           >
             <div className="text-6xl mb-4">✅</div>
-            <h2 className="text-4xl font-bold text-indigo-600 mb-4">Level {level} Complete!</h2>
+            <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-indigo-600 mb-4">Level {level} Complete!</h2>
             <div className="bg-indigo-50 dark:bg-slate-800 rounded-xl p-6 mb-6">
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <p className="text-gray-700 dark:text-gray-300 text-sm font-medium">{t('sequenceMemory.levelScore', 'Level Score')}</p>
-                  <p className="text-3xl font-bold text-indigo-600">{Math.round(score)}</p>
+                  <p className="text-xl md:text-2xl lg:text-3xl font-bold text-indigo-600">{Math.round(score)}</p>
                 </div>
                 <div>
                   <p className="text-gray-700 dark:text-gray-300 text-sm font-medium">{t('sequenceMemory.totalScore', 'Total Score')}</p>
-                  <p className="text-3xl font-bold text-purple-600">{totalScore + Math.round(score)}</p>
+                  <p className="text-xl md:text-2xl lg:text-3xl font-bold text-purple-600">{totalScore + Math.round(score)}</p>
                 </div>
               </div>
             </div>
             <button
               onClick={nextLevel}
-              className="bg-gradient-to-r from-indigo-500 to-purple-500 text-white text-2xl font-bold py-4 px-12 rounded-xl hover:from-indigo-600 hover:to-purple-600 shadow-lg transition-all w-full mb-3"
+              className="bg-gradient-to-r from-indigo-500 to-purple-500 text-white text-lg md:text-xl lg:text-2xl font-bold py-4 px-12 rounded-xl hover:from-indigo-600 hover:to-purple-600 shadow-lg transition-all w-full mb-3"
             >
               {level < MAX_LEVELS ? `Next Level ${level + 1}` : 'View Final Score'}
             </button>
@@ -365,14 +365,14 @@ export default function SequenceMemoryPage() {
             className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-8 text-center"
           >
             <div className="text-6xl mb-4">❌</div>
-            <h2 className="text-4xl font-bold text-gray-800 dark:text-white mb-4">{t('sequenceMemory.gameOver', 'Game Over!')}</h2>
+            <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-800 dark:text-white mb-4">{t('sequenceMemory.gameOver', 'Game Over!')}</h2>
             <div className="bg-orange-50 dark:bg-slate-800 rounded-xl p-6 mb-6">
               <p className="text-gray-700 dark:text-gray-300 text-sm font-medium">{t('sequenceMemory.finalScore', 'Final Score')}</p>
-              <p className="text-3xl font-bold text-orange-600">{totalScore}</p>
+              <p className="text-xl md:text-2xl lg:text-3xl font-bold text-orange-600">{totalScore}</p>
             </div>
             <button
               onClick={startGame}
-              className="bg-gradient-to-r from-orange-500 to-red-500 text-white text-2xl font-bold py-4 px-12 rounded-xl hover:from-orange-600 hover:to-red-600 shadow-lg transition-all w-full mb-3"
+              className="bg-gradient-to-r from-orange-500 to-red-500 text-white text-lg md:text-xl lg:text-2xl font-bold py-4 px-12 rounded-xl hover:from-orange-600 hover:to-red-600 shadow-lg transition-all w-full mb-3"
             >
               {t('tryAgain', 'Try Again')}
             </button>
@@ -393,7 +393,7 @@ export default function SequenceMemoryPage() {
             className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-8 text-center"
           >
             <div className="text-6xl mb-4">🎉</div>
-            <h2 className="text-4xl font-bold text-indigo-600 mb-4">{t('sequenceMemory.victory', 'Congratulations!')}</h2>
+            <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-indigo-600 mb-4">{t('sequenceMemory.victory', 'Congratulations!')}</h2>
             <p className="text-xl text-gray-700 dark:text-gray-300 font-medium mb-6">
               {t('sequenceMemory.victoryMessage', 'You completed all {count} levels!', { count: MAX_LEVELS })}
             </p>
@@ -403,7 +403,7 @@ export default function SequenceMemoryPage() {
             </div>
             <button
               onClick={startGame}
-              className="bg-gradient-to-r from-indigo-500 to-purple-500 text-white text-2xl font-bold py-4 px-12 rounded-xl hover:from-indigo-600 hover:to-purple-600 shadow-lg transition-all w-full"
+              className="bg-gradient-to-r from-indigo-500 to-purple-500 text-white text-lg md:text-xl lg:text-2xl font-bold py-4 px-12 rounded-xl hover:from-indigo-600 hover:to-purple-600 shadow-lg transition-all w-full"
             >
               {t('playAgain', 'Play Again')}
             </button>

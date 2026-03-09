@@ -139,14 +139,14 @@ export default function PatternMatchingPage() {
         {/* Header */}
         <Link
           href="/memory"
-          className={`inline-flex items-center font-medium mb-6 text-lg ${
+          className={`inline-flex items-center font-medium mb-6 text-sm md:text-base lg:text-lg ${
             darkMode ? 'text-gray-300 hover:text-white' : 'text-gray-700 hover:text-gray-900'
           }`}
         >
           <span className="mr-2">←</span> {t('back', 'Back')}
         </Link>
 
-        <h1 className={`text-3xl md:text-4xl font-bold mb-2 ${
+        <h1 className={`text-3xl md:text-2xl md:text-3xl lg:text-4xl font-bold mb-2 ${
           darkMode ? 'text-white' : 'text-gray-800'
         }`}>
           {t('patternMatching.title', 'Pattern Matching')}
@@ -166,7 +166,7 @@ export default function PatternMatchingPage() {
               darkMode ? 'bg-gray-800' : 'bg-white'
             }`}
           >
-            <h2 className={`text-3xl font-bold mb-2 ${
+            <h2 className={`text-xl md:text-2xl lg:text-3xl font-bold mb-2 ${
               darkMode ? 'text-white' : 'text-gray-800'
             }`}>
               Level {level}
@@ -194,7 +194,7 @@ export default function PatternMatchingPage() {
             </div>
             <button
               onClick={startLevel}
-              className="bg-gradient-to-r from-indigo-500 to-purple-500 text-white text-2xl font-bold py-4 px-12 rounded-xl hover:from-indigo-600 hover:to-purple-600 shadow-lg transition-all w-full"
+              className="bg-gradient-to-r from-indigo-500 to-purple-500 text-white text-lg md:text-xl lg:text-2xl font-bold py-4 px-12 rounded-xl hover:from-indigo-600 hover:to-purple-600 shadow-lg transition-all w-full"
             >
               {t('start', 'Start')}
             </button>
@@ -237,19 +237,19 @@ export default function PatternMatchingPage() {
                   <p className={`text-sm font-medium ${
                     darkMode ? 'text-gray-400' : 'text-gray-700'
                   }`}>{t('patternMatching.level', 'Level')}</p>
-                  <p className="text-3xl font-bold text-indigo-600">{level}/{MAX_LEVELS}</p>
+                  <p className="text-xl md:text-2xl lg:text-3xl font-bold text-indigo-600">{level}/{MAX_LEVELS}</p>
                 </div>
                 <div>
                   <p className={`text-sm font-medium ${
                     darkMode ? 'text-gray-400' : 'text-gray-700'
                   }`}>{t('patternMatching.score', 'Score')}</p>
-                  <p className="text-3xl font-bold text-purple-600">{totalScore}</p>
+                  <p className="text-xl md:text-2xl lg:text-3xl font-bold text-purple-600">{totalScore}</p>
                 </div>
                 <div>
                   <p className={`text-sm font-medium ${
                     darkMode ? 'text-gray-400' : 'text-gray-700'
                   }`}>{t('patternMatching.timeLeft', 'Time Left')}</p>
-                  <p className={`text-4xl font-bold ${timeLeft <= 10 ? 'text-red-500' : 'text-indigo-600'}`}>
+                  <p className={`text-2xl md:text-3xl lg:text-4xl font-bold ${timeLeft <= 10 ? 'text-red-500' : 'text-indigo-600'}`}>
                     {timeLeft}s
                   </p>
                 </div>
@@ -292,7 +292,7 @@ export default function PatternMatchingPage() {
               </div>
               <button
                 onClick={handleSubmit}
-                className="w-full bg-gradient-to-r from-indigo-500 to-purple-500 text-white text-2xl font-bold py-4 rounded-xl hover:from-indigo-600 hover:to-purple-600 shadow-lg transition-all"
+                className="w-full bg-gradient-to-r from-indigo-500 to-purple-500 text-white text-lg md:text-xl lg:text-2xl font-bold py-4 rounded-xl hover:from-indigo-600 hover:to-purple-600 shadow-lg transition-all"
               >
                 {t('patternMatching.submit', 'Submit')}
               </button>
@@ -310,7 +310,7 @@ export default function PatternMatchingPage() {
             }`}
           >
             <div className="text-6xl mb-4">✅</div>
-            <h2 className="text-4xl font-bold text-indigo-600 mb-4">Level {level} Complete!</h2>
+            <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-indigo-600 mb-4">Level {level} Complete!</h2>
             <div className={`rounded-xl p-6 mb-6 ${
               darkMode ? 'bg-indigo-900/30' : 'bg-indigo-50'
             }`}>
@@ -329,19 +329,19 @@ export default function PatternMatchingPage() {
                   <p className={`text-sm font-medium ${
                     darkMode ? 'text-gray-400' : 'text-gray-700'
                   }`}>{t('patternMatching.levelScore', 'Level Score')}</p>
-                  <p className="text-3xl font-bold text-indigo-600">{score}</p>
+                  <p className="text-xl md:text-2xl lg:text-3xl font-bold text-indigo-600">{score}</p>
                 </div>
                 <div>
                   <p className={`text-sm font-medium ${
                     darkMode ? 'text-gray-400' : 'text-gray-700'
                   }`}>{t('patternMatching.totalScore', 'Total Score')}</p>
-                  <p className="text-3xl font-bold text-purple-600">{totalScore + score}</p>
+                  <p className="text-xl md:text-2xl lg:text-3xl font-bold text-purple-600">{totalScore + score}</p>
                 </div>
               </div>
             </div>
             <button
               onClick={nextLevel}
-              className="bg-gradient-to-r from-indigo-500 to-purple-500 text-white text-2xl font-bold py-4 px-12 rounded-xl hover:from-indigo-600 hover:to-purple-600 shadow-lg transition-all w-full mb-3"
+              className="bg-gradient-to-r from-indigo-500 to-purple-500 text-white text-lg md:text-xl lg:text-2xl font-bold py-4 px-12 rounded-xl hover:from-indigo-600 hover:to-purple-600 shadow-lg transition-all w-full mb-3"
             >
               {level < MAX_LEVELS ? `Next Level ${level + 1}` : 'View Final Score'}
             </button>
@@ -366,7 +366,7 @@ export default function PatternMatchingPage() {
             }`}
           >
             <div className="text-6xl mb-4">🎉</div>
-            <h2 className="text-4xl font-bold text-indigo-600 mb-4">{t('patternMatching.victory', 'Congratulations!')}</h2>
+            <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-indigo-600 mb-4">{t('patternMatching.victory', 'Congratulations!')}</h2>
             <p className={`text-xl font-medium mb-6 ${
               darkMode ? 'text-gray-300' : 'text-gray-700'
             }`}>
@@ -382,7 +382,7 @@ export default function PatternMatchingPage() {
             </div>
             <button
               onClick={startGame}
-              className="bg-gradient-to-r from-indigo-500 to-purple-500 text-white text-2xl font-bold py-4 px-12 rounded-xl hover:from-indigo-600 hover:to-purple-600 shadow-lg transition-all w-full"
+              className="bg-gradient-to-r from-indigo-500 to-purple-500 text-white text-lg md:text-xl lg:text-2xl font-bold py-4 px-12 rounded-xl hover:from-indigo-600 hover:to-purple-600 shadow-lg transition-all w-full"
             >
               {t('playAgain', 'Play Again')}
             </button>

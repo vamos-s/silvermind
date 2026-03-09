@@ -313,7 +313,7 @@ export default function CardFlipPage() {
   }
 
   return (
-    <div className="min-h-screen p-4 md:p-8 transition-colors duration-300 {darkMode ? "bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white" : "bg-gradient-to-br from-purple-50 via-white to-pink-50 p-4 md:p-8"}">
+    <div className="min-h-screen p-3 md:p-4 lg:p-8 transition-colors duration-300 {darkMode ? "bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white" : "bg-gradient-to-br from-purple-50 via-white to-pink-50 p-4 md:p-8"}">
       <SettingsPanel />
       <div className="max-w-4xl mx-auto">
         {/* Header */}
@@ -324,7 +324,7 @@ export default function CardFlipPage() {
           >
             <span className="mr-2">←</span> {t('back', 'Back')}
           </Link>
-          <h1 className="text-3xl md:text-4xl font-bold text-gray-800 dark:text-white mt-4">
+          <h1 className="text-3xl md:text-2xl md:text-3xl lg:text-4xl font-bold text-gray-800 dark:text-white mt-4">
             {t('cardFlip.title', 'Card Flip')}
           </h1>
           <p className="text-lg text-gray-700 dark:text-gray-300 font-medium">
@@ -339,7 +339,7 @@ export default function CardFlipPage() {
             animate={{ opacity: 1, y: 0 }}
             className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-8 text-center"
           >
-            <h2 className="text-3xl font-bold text-gray-800 dark:text-white mb-2">
+            <h2 className="text-xl md:text-2xl lg:text-3xl font-bold text-gray-800 dark:text-white mb-2">
               {currentLevel > 1 ? `Level ${currentLevel}` : t('cardFlip.ready', 'Ready to test your memory?')}
             </h2>
             {currentLevel > 1 && (
@@ -361,7 +361,7 @@ export default function CardFlipPage() {
             </div>
             <button
               onClick={startGame}
-              className="bg-gradient-to-r from-purple-500 to-pink-500 text-white text-2xl font-bold py-4 px-12 rounded-xl hover:from-purple-600 hover:to-pink-600 shadow-lg transition-all w-full"
+              className="bg-gradient-to-r from-purple-500 to-pink-500 text-white text-lg md:text-xl lg:text-2xl font-bold py-4 px-12 rounded-xl hover:from-purple-600 hover:to-pink-600 shadow-lg transition-all w-full"
             >
               {t('start', 'Start')}
             </button>
@@ -375,7 +375,7 @@ export default function CardFlipPage() {
             animate={{ opacity: 1, y: 0 }}
             className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-8 text-center"
           >
-            <h2 className="text-3xl font-bold text-purple-600 mb-4">
+            <h2 className="text-xl md:text-2xl lg:text-3xl font-bold text-purple-600 mb-4">
               {t('cardFlip.memorize', 'Memorize!')}
             </h2>
             <p className="text-lg text-gray-700 dark:text-gray-300 mb-6 font-medium">
@@ -413,25 +413,25 @@ export default function CardFlipPage() {
               <div className="grid grid-cols-5 gap-4 text-center">
                 <div>
                   <p className="text-gray-700 dark:text-gray-300 text-sm font-medium">{t('cardFlip.level', 'Level')}</p>
-                  <p className="text-2xl font-bold text-purple-600">{currentLevel}/{totalLevels}</p>
+                  <p className="text-lg md:text-xl lg:text-2xl font-bold text-purple-600">{currentLevel}/{totalLevels}</p>
                 </div>
                 <div>
                   <p className="text-gray-700 dark:text-gray-300 text-sm font-medium">{t('cardFlip.moves', 'Moves')}</p>
-                  <p className="text-2xl font-bold text-purple-600">{moves}</p>
+                  <p className="text-lg md:text-xl lg:text-2xl font-bold text-purple-600">{moves}</p>
                 </div>
                 <div>
                   <p className="text-gray-700 dark:text-gray-300 text-sm font-medium">{t('cardFlip.time', 'Time')}</p>
-                  <p className={`text-2xl font-bold ${timeLeft <= 30 ? 'text-red-500' : 'text-purple-600'}`}>
+                  <p className={`text-lg md:text-xl lg:text-2xl font-bold ${timeLeft <= 30 ? 'text-red-500' : 'text-purple-600'}`}>
                     {Math.floor(timeLeft / 60)}:{(timeLeft % 60).toString().padStart(2, '0')}
                   </p>
                 </div>
                 <div>
                   <p className="text-gray-700 dark:text-gray-300 text-sm font-medium">{t('cardFlip.pairs', 'Pairs')}</p>
-                  <p className="text-2xl font-bold text-purple-600">{matchedPairs}/{totalPairs}</p>
+                  <p className="text-lg md:text-xl lg:text-2xl font-bold text-purple-600">{matchedPairs}/{totalPairs}</p>
                 </div>
                 <div>
                   <p className="text-gray-700 dark:text-gray-300 text-sm font-medium">{t('cardFlip.hints', 'Hints')}</p>
-                  <p className="text-2xl font-bold text-purple-600">{hintsRemaining}</p>
+                  <p className="text-lg md:text-xl lg:text-2xl font-bold text-purple-600">{hintsRemaining}</p>
                 </div>
               </div>
               {/* Progress Bar */}
@@ -450,7 +450,7 @@ export default function CardFlipPage() {
               <button
                 onClick={useHint}
                 disabled={hintsRemaining === 0 || isShowingHint}
-                className={`px-6 py-3 rounded-xl font-bold text-lg transition-all ${
+                className={`px-6 py-3 rounded-xl font-bold text-sm md:text-base lg:text-lg transition-all ${
                   hintsRemaining > 0 && !isShowingHint
                     ? 'bg-gradient-to-r from-amber-400 to-orange-400 text-white hover:from-amber-500 hover:to-orange-500 shadow-lg'
                     : 'bg-gray-300 text-gray-500 cursor-not-allowed'
@@ -542,7 +542,7 @@ export default function CardFlipPage() {
             className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-8 text-center"
           >
             <div className="text-6xl mb-4">⭐</div>
-            <h2 className="text-4xl font-bold text-purple-600 mb-4">
+            <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-purple-600 mb-4">
               Level {currentLevel} Complete!
             </h2>
             <p className="text-xl text-gray-700 dark:text-gray-300 font-medium mb-6">
@@ -552,17 +552,17 @@ export default function CardFlipPage() {
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <p className="text-gray-700 dark:text-gray-300 text-sm font-medium">{t('cardFlip.levelScore', 'Level Score')}</p>
-                  <p className="text-3xl font-bold text-purple-600">{score}</p>
+                  <p className="text-xl md:text-2xl lg:text-3xl font-bold text-purple-600">{score}</p>
                 </div>
                 <div>
                   <p className="text-gray-700 dark:text-gray-300 text-sm font-medium">{t('cardFlip.totalScore', 'Total Score')}</p>
-                  <p className="text-3xl font-bold text-purple-600">{totalScore + score}</p>
+                  <p className="text-xl md:text-2xl lg:text-3xl font-bold text-purple-600">{totalScore + score}</p>
                 </div>
               </div>
             </div>
             <button
               onClick={nextLevel}
-              className="bg-gradient-to-r from-purple-500 to-pink-500 text-white text-2xl font-bold py-4 px-12 rounded-xl hover:from-purple-600 hover:to-pink-600 shadow-lg transition-all w-full mb-3"
+              className="bg-gradient-to-r from-purple-500 to-pink-500 text-white text-lg md:text-xl lg:text-2xl font-bold py-4 px-12 rounded-xl hover:from-purple-600 hover:to-pink-600 shadow-lg transition-all w-full mb-3"
             >
               {currentLevel < totalLevels ? `Next Level ${currentLevel + 1}` : 'View Final Score'}
             </button>
@@ -587,7 +587,7 @@ export default function CardFlipPage() {
             className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-8 text-center"
           >
             <div className="text-6xl mb-4">🎉</div>
-            <h2 className="text-4xl font-bold text-purple-600 mb-4">
+            <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-purple-600 mb-4">
               {t('cardFlip.victory', 'Congratulations!')}
             </h2>
             <p className="text-xl text-gray-700 dark:text-gray-300 font-medium mb-6">
@@ -603,7 +603,7 @@ export default function CardFlipPage() {
                 setTotalScore(0)
                 setGameState('menu')
               }}
-              className="bg-gradient-to-r from-purple-500 to-pink-500 text-white text-2xl font-bold py-4 px-12 rounded-xl hover:from-purple-600 hover:to-pink-600 shadow-lg transition-all w-full"
+              className="bg-gradient-to-r from-purple-500 to-pink-500 text-white text-lg md:text-xl lg:text-2xl font-bold py-4 px-12 rounded-xl hover:from-purple-600 hover:to-pink-600 shadow-lg transition-all w-full"
             >
               {t('playAgain', 'Play Again')}
             </button>
@@ -618,7 +618,7 @@ export default function CardFlipPage() {
             className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-8 text-center"
           >
             <div className="text-6xl mb-4">⏰</div>
-            <h2 className="text-4xl font-bold text-gray-800 dark:text-white mb-4">
+            <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-800 dark:text-white mb-4">
               {t('cardFlip.gameOver', 'Time\'s Up!')}
             </h2>
             <p className="text-xl text-gray-700 dark:text-gray-300 font-medium mb-6">
@@ -626,11 +626,11 @@ export default function CardFlipPage() {
             </p>
             <div className="bg-orange-50 dark:bg-slate-800 rounded-xl p-6 mb-6">
               <p className="text-gray-700 dark:text-gray-300 text-sm font-medium">{t('cardFlip.currentScore', 'Current Score')}</p>
-              <p className="text-3xl font-bold text-orange-600">{totalScore}</p>
+              <p className="text-xl md:text-2xl lg:text-3xl font-bold text-orange-600">{totalScore}</p>
             </div>
             <button
               onClick={startGame}
-              className="bg-gradient-to-r from-orange-500 to-red-500 text-white text-2xl font-bold py-4 px-12 rounded-xl hover:from-orange-600 hover:to-red-600 shadow-lg transition-all w-full mb-3"
+              className="bg-gradient-to-r from-orange-500 to-red-500 text-white text-lg md:text-xl lg:text-2xl font-bold py-4 px-12 rounded-xl hover:from-orange-600 hover:to-red-600 shadow-lg transition-all w-full mb-3"
             >
               {t('tryAgain', 'Try Again')}
             </button>

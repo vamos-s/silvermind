@@ -197,17 +197,17 @@ export default function QuickReactionPage() {
   const rating = getRating(averageTime)
 
   return (
-    <div className="min-h-screen p-4 md:p-8 transition-colors duration-300 {darkMode ? "bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white" : "flex flex-col"}">
+    <div className="min-h-screen p-3 md:p-4 lg:p-8 transition-colors duration-300 {darkMode ? "bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white" : "flex flex-col"}">
       <SettingsPanel />
       {/* Header */}
       <header className="bg-white dark:bg-slate-800 shadow-sm p-6">
         <Link
           href="/reaction"
-          className="inline-flex items-center text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white font-medium mb-4 text-lg"
+          className="inline-flex items-center text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white font-medium mb-4 text-sm md:text-base lg:text-lg"
         >
           <span className="mr-2">←</span> {t('back', 'Back')}
         </Link>
-        <h1 className="text-3xl font-bold text-gray-800 dark:text-white">
+        <h1 className="text-xl md:text-2xl lg:text-3xl font-bold text-gray-800 dark:text-white">
           {t('quickReaction.title', 'Quick Reaction')}
         </h1>
       </header>
@@ -222,7 +222,7 @@ export default function QuickReactionPage() {
               animate={{ opacity: 1, y: 0 }}
               className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-8 text-center"
             >
-              <h2 className="text-3xl font-bold text-gray-800 dark:text-white mb-2">
+              <h2 className="text-xl md:text-2xl lg:text-3xl font-bold text-gray-800 dark:text-white mb-2">
                 Level {level}
               </h2>
               {level > 1 && (
@@ -243,7 +243,7 @@ export default function QuickReactionPage() {
               </div>
               <button
                 onClick={startLevel}
-                className="bg-gradient-to-r from-green-500 to-blue-500 text-white text-2xl font-bold py-4 px-12 rounded-xl hover:from-green-600 hover:to-blue-600 shadow-lg transition-all w-full"
+                className="bg-gradient-to-r from-green-500 to-blue-500 text-white text-lg md:text-xl lg:text-2xl font-bold py-4 px-12 rounded-xl hover:from-green-600 hover:to-blue-600 shadow-lg transition-all w-full"
               >
                 {t('start', 'Start')}
               </button>
@@ -257,9 +257,9 @@ export default function QuickReactionPage() {
               <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-4 mb-6">
                 <div className="flex justify-between items-center">
                   <p className="text-gray-700 dark:text-gray-300 text-sm font-medium">{t('quickReaction.level', 'Level')}</p>
-                  <p className="text-3xl font-bold text-green-600">{level}/{MAX_LEVELS}</p>
+                  <p className="text-xl md:text-2xl lg:text-3xl font-bold text-green-600">{level}/{MAX_LEVELS}</p>
                   <p className="text-gray-700 dark:text-gray-300 text-sm font-medium">{t('quickReaction.round', 'Round')}</p>
-                  <p className="text-3xl font-bold text-blue-600">{currentRound}/{settings.rounds}</p>
+                  <p className="text-xl md:text-2xl lg:text-3xl font-bold text-blue-600">{currentRound}/{settings.rounds}</p>
                 </div>
                 {/* Progress Bar */}
                 <div className="mt-4 bg-gray-200 dark:bg-slate-700 rounded-full h-3 overflow-hidden">
@@ -295,7 +295,7 @@ export default function QuickReactionPage() {
                         className="text-center"
                       >
                         <p className="text-6xl mb-4">⏳</p>
-                        <p className="text-4xl font-bold">{t('quickReaction.waitForGreen', 'Wait for green...')}</p>
+                        <p className="text-2xl md:text-3xl lg:text-4xl font-bold">{t('quickReaction.waitForGreen', 'Wait for green...')}</p>
                       </motion.div>
                     )}
 
@@ -321,7 +321,7 @@ export default function QuickReactionPage() {
                         className="text-center"
                       >
                         <p className="text-6xl mb-4">⚠️</p>
-                        <p className="text-4xl font-bold mb-4">{t('quickReaction.tooEarly', 'Too Early!')}</p>
+                        <p className="text-2xl md:text-3xl lg:text-4xl font-bold mb-4">{t('quickReaction.tooEarly', 'Too Early!')}</p>
                         <p className="text-xl">{t('quickReaction.clickToRetry', 'Click to retry')}</p>
                       </motion.div>
                     )}
@@ -347,13 +347,13 @@ export default function QuickReactionPage() {
               className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-8 text-center"
             >
               <div className="text-6xl mb-4">✅</div>
-              <h2 className="text-4xl font-bold text-green-600 mb-4">Level {level} Complete!</h2>
+              <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-green-600 mb-4">Level {level} Complete!</h2>
 
               {/* Rating */}
               <div className={`text-5xl mb-2 ${rating.color}`}>
                 {rating.emoji}
               </div>
-              <p className={`text-2xl font-bold mb-6 ${rating.color}`}>
+              <p className={`text-lg md:text-xl lg:text-2xl font-bold mb-6 ${rating.color}`}>
                 {rating.text}
               </p>
 
@@ -375,18 +375,18 @@ export default function QuickReactionPage() {
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <p className="text-gray-700 dark:text-gray-300 text-sm font-medium">{t('quickReaction.levelScore', 'Level Score')}</p>
-                    <p className="text-3xl font-bold text-green-600">{levelScore}</p>
+                    <p className="text-xl md:text-2xl lg:text-3xl font-bold text-green-600">{levelScore}</p>
                   </div>
                   <div>
                     <p className="text-gray-700 dark:text-gray-300 text-sm font-medium">{t('quickReaction.totalScore', 'Total Score')}</p>
-                    <p className="text-3xl font-bold text-blue-600">{totalScore + levelScore}</p>
+                    <p className="text-xl md:text-2xl lg:text-3xl font-bold text-blue-600">{totalScore + levelScore}</p>
                   </div>
                 </div>
               </div>
 
               <button
                 onClick={nextLevel}
-                className="bg-gradient-to-r from-green-500 to-blue-500 text-white text-2xl font-bold py-4 px-12 rounded-xl hover:from-green-600 hover:to-blue-600 shadow-lg transition-all w-full mb-3"
+                className="bg-gradient-to-r from-green-500 to-blue-500 text-white text-lg md:text-xl lg:text-2xl font-bold py-4 px-12 rounded-xl hover:from-green-600 hover:to-blue-600 shadow-lg transition-all w-full mb-3"
               >
                 {level < MAX_LEVELS ? `Next Level ${level + 1}` : 'View Final Score'}
               </button>
@@ -407,14 +407,14 @@ export default function QuickReactionPage() {
               className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-8 text-center"
             >
               <div className="text-6xl mb-4">❌</div>
-              <h2 className="text-4xl font-bold text-gray-800 dark:text-white mb-4">{t('quickReaction.gameOver', 'Game Over!')}</h2>
+              <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-800 dark:text-white mb-4">{t('quickReaction.gameOver', 'Game Over!')}</h2>
               <div className="bg-orange-50 dark:bg-slate-800 rounded-xl p-6 mb-6">
                 <p className="text-gray-700 dark:text-gray-300 text-sm font-medium">{t('quickReaction.finalScore', 'Final Score')}</p>
-                <p className="text-3xl font-bold text-orange-600">{totalScore}</p>
+                <p className="text-xl md:text-2xl lg:text-3xl font-bold text-orange-600">{totalScore}</p>
               </div>
               <button
                 onClick={startGame}
-                className="bg-gradient-to-r from-orange-500 to-red-500 text-white text-2xl font-bold py-4 px-12 rounded-xl hover:from-orange-600 hover:to-red-600 shadow-lg transition-all w-full mb-3"
+                className="bg-gradient-to-r from-orange-500 to-red-500 text-white text-lg md:text-xl lg:text-2xl font-bold py-4 px-12 rounded-xl hover:from-orange-600 hover:to-red-600 shadow-lg transition-all w-full mb-3"
               >
                 {t('tryAgain', 'Try Again')}
               </button>
@@ -435,7 +435,7 @@ export default function QuickReactionPage() {
               className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-8 text-center"
             >
               <div className="text-6xl mb-4">🎉</div>
-              <h2 className="text-4xl font-bold text-green-600 mb-4">{t('quickReaction.victory', 'Congratulations!')}</h2>
+              <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-green-600 mb-4">{t('quickReaction.victory', 'Congratulations!')}</h2>
               <p className="text-xl text-gray-700 dark:text-gray-300 font-medium mb-6">
                 {t('quickReaction.victoryMessage', 'You completed all {count} levels!', { count: MAX_LEVELS })}
               </p>
@@ -445,7 +445,7 @@ export default function QuickReactionPage() {
               </div>
               <button
                 onClick={startGame}
-                className="bg-gradient-to-r from-green-500 to-blue-500 text-white text-2xl font-bold py-4 px-12 rounded-xl hover:from-green-600 hover:to-blue-600 shadow-lg transition-all w-full"
+                className="bg-gradient-to-r from-green-500 to-blue-500 text-white text-lg md:text-xl lg:text-2xl font-bold py-4 px-12 rounded-xl hover:from-green-600 hover:to-blue-600 shadow-lg transition-all w-full"
               >
                 {t('playAgain', 'Play Again')}
               </button>

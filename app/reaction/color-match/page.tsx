@@ -200,18 +200,18 @@ export default function ColorMatchPage() {
   }, [gameState, timeLeft, totalScore, settings.duration, addSession])
 
   return (
-    <div className="min-h-screen p-4 md:p-8 transition-colors duration-300 {darkMode ? "bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white" : "bg-gradient-to-br from-rose-50 via-white to-indigo-50 p-4 md:p-8"}">
+    <div className="min-h-screen p-3 md:p-4 lg:p-8 transition-colors duration-300 {darkMode ? "bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white" : "bg-gradient-to-br from-rose-50 via-white to-indigo-50 p-4 md:p-8"}">
       <SettingsPanel />
       <div className="max-w-2xl mx-auto">
         {/* Header */}
         <Link
           href="/reaction"
-          className="inline-flex items-center text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white font-medium mb-6 text-lg"
+          className="inline-flex items-center text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white font-medium mb-6 text-sm md:text-base lg:text-lg"
         >
           <span className="mr-2">←</span> {t('back', 'Back')}
         </Link>
 
-        <h1 className="text-3xl md:text-4xl font-bold text-gray-800 dark:text-white mb-2">
+        <h1 className="text-3xl md:text-2xl md:text-3xl lg:text-4xl font-bold text-gray-800 dark:text-white mb-2">
           {t('colorMatch.title', 'Color Match')}
         </h1>
         <p className="text-lg text-gray-700 dark:text-gray-300 font-medium mb-8">
@@ -225,7 +225,7 @@ export default function ColorMatchPage() {
             animate={{ opacity: 1, y: 0 }}
             className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-8 text-center"
           >
-            <h2 className="text-3xl font-bold text-gray-800 dark:text-white mb-2">
+            <h2 className="text-xl md:text-2xl lg:text-3xl font-bold text-gray-800 dark:text-white mb-2">
               Level {level}
             </h2>
             {level > 1 && (
@@ -243,7 +243,7 @@ export default function ColorMatchPage() {
             </div>
             <button
               onClick={startLevel}
-              className="bg-gradient-to-r from-rose-500 to-indigo-500 text-white text-2xl font-bold py-4 px-12 rounded-xl hover:from-rose-600 hover:to-indigo-600 shadow-lg transition-all w-full"
+              className="bg-gradient-to-r from-rose-500 to-indigo-500 text-white text-lg md:text-xl lg:text-2xl font-bold py-4 px-12 rounded-xl hover:from-rose-600 hover:to-indigo-600 shadow-lg transition-all w-full"
             >
               {t('start', 'Start')}
             </button>
@@ -258,15 +258,15 @@ export default function ColorMatchPage() {
               <div className="flex justify-around text-center">
                 <div>
                   <p className="text-gray-700 dark:text-gray-300 text-sm font-medium">{t('colorMatch.level', 'Level')}</p>
-                  <p className="text-3xl font-bold text-rose-600">{level}/{MAX_LEVELS}</p>
+                  <p className="text-xl md:text-2xl lg:text-3xl font-bold text-rose-600">{level}/{MAX_LEVELS}</p>
                 </div>
                 <div>
                   <p className="text-gray-700 dark:text-gray-300 text-sm font-medium">{t('colorMatch.score', 'Score')}</p>
-                  <p className="text-3xl font-bold text-indigo-600">{score}/{settings.targetScore}</p>
+                  <p className="text-xl md:text-2xl lg:text-3xl font-bold text-indigo-600">{score}/{settings.targetScore}</p>
                 </div>
                 <div>
                   <p className="text-gray-700 dark:text-gray-300 text-sm font-medium">{t('colorMatch.timeLeft', 'Time')}</p>
-                  <p className={`text-3xl font-bold ${timeLeft <= 10 ? 'text-red-500' : 'text-rose-600'}`}>
+                  <p className={`text-xl md:text-2xl lg:text-3xl font-bold ${timeLeft <= 10 ? 'text-red-500' : 'text-rose-600'}`}>
                     {timeLeft}s
                   </p>
                 </div>
@@ -311,7 +311,7 @@ export default function ColorMatchPage() {
                   className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-4 md:p-6 flex flex-col items-center justify-center h-32 md:h-40 border-4 border-gray-200 hover:border-rose-300 transition-all"
                 >
                   <div className="w-16 h-16 md:w-20 md:h-20 rounded-full mb-3" style={{ backgroundColor: color.hex }}></div>
-                  <span className={`text-xl md:text-2xl font-bold ${color.color}`}>
+                  <span className={`text-xl md:text-lg md:text-xl lg:text-2xl font-bold ${color.color}`}>
                     {color.name.toUpperCase()}
                   </span>
                 </motion.button>
@@ -328,22 +328,22 @@ export default function ColorMatchPage() {
             className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-8 text-center"
           >
             <div className="text-6xl mb-4">✅</div>
-            <h2 className="text-4xl font-bold text-rose-600 mb-4">Level {level} Complete!</h2>
+            <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-rose-600 mb-4">Level {level} Complete!</h2>
             <div className="bg-rose-50 rounded-xl p-6 mb-6">
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <p className="text-gray-700 dark:text-gray-300 text-sm font-medium">{t('colorMatch.levelScore', 'Level Score')}</p>
-                  <p className="text-3xl font-bold text-rose-600">{score}</p>
+                  <p className="text-xl md:text-2xl lg:text-3xl font-bold text-rose-600">{score}</p>
                 </div>
                 <div>
                   <p className="text-gray-700 dark:text-gray-300 text-sm font-medium">{t('colorMatch.totalScore', 'Total Score')}</p>
-                  <p className="text-3xl font-bold text-indigo-600">{totalScore + score}</p>
+                  <p className="text-xl md:text-2xl lg:text-3xl font-bold text-indigo-600">{totalScore + score}</p>
                 </div>
               </div>
             </div>
             <button
               onClick={nextLevel}
-              className="bg-gradient-to-r from-rose-500 to-indigo-500 text-white text-2xl font-bold py-4 px-12 rounded-xl hover:from-rose-600 hover:to-indigo-600 shadow-lg transition-all w-full mb-3"
+              className="bg-gradient-to-r from-rose-500 to-indigo-500 text-white text-lg md:text-xl lg:text-2xl font-bold py-4 px-12 rounded-xl hover:from-rose-600 hover:to-indigo-600 shadow-lg transition-all w-full mb-3"
             >
               {level < MAX_LEVELS ? `Next Level ${level + 1}` : 'View Final Score'}
             </button>
@@ -364,14 +364,14 @@ export default function ColorMatchPage() {
             className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-8 text-center"
           >
             <div className="text-6xl mb-4">❌</div>
-            <h2 className="text-4xl font-bold text-gray-800 dark:text-white mb-4">{t('colorMatch.gameOver', 'Game Over!')}</h2>
+            <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-800 dark:text-white mb-4">{t('colorMatch.gameOver', 'Game Over!')}</h2>
             <div className="bg-orange-50 dark:bg-slate-800 rounded-xl p-6 mb-6">
               <p className="text-gray-700 dark:text-gray-300 text-sm font-medium">{t('colorMatch.finalScore', 'Final Score')}</p>
-              <p className="text-3xl font-bold text-orange-600">{totalScore}</p>
+              <p className="text-xl md:text-2xl lg:text-3xl font-bold text-orange-600">{totalScore}</p>
             </div>
             <button
               onClick={startGame}
-              className="bg-gradient-to-r from-orange-500 to-red-500 text-white text-2xl font-bold py-4 px-12 rounded-xl hover:from-orange-600 hover:to-red-600 shadow-lg transition-all w-full mb-3"
+              className="bg-gradient-to-r from-orange-500 to-red-500 text-white text-lg md:text-xl lg:text-2xl font-bold py-4 px-12 rounded-xl hover:from-orange-600 hover:to-red-600 shadow-lg transition-all w-full mb-3"
             >
               {t('tryAgain', 'Try Again')}
             </button>
@@ -392,7 +392,7 @@ export default function ColorMatchPage() {
             className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-8 text-center"
           >
             <div className="text-6xl mb-4">🎉</div>
-            <h2 className="text-4xl font-bold text-rose-600 mb-4">{t('colorMatch.victory', 'Congratulations!')}</h2>
+            <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-rose-600 mb-4">{t('colorMatch.victory', 'Congratulations!')}</h2>
             <p className="text-xl text-gray-700 dark:text-gray-300 font-medium mb-6">
               {t('colorMatch.victoryMessage', 'You completed all {count} levels!', { count: MAX_LEVELS })}
             </p>
@@ -402,7 +402,7 @@ export default function ColorMatchPage() {
             </div>
             <button
               onClick={startGame}
-              className="bg-gradient-to-r from-rose-500 to-indigo-500 text-white text-2xl font-bold py-4 px-12 rounded-xl hover:from-rose-600 hover:to-indigo-600 shadow-lg transition-all w-full"
+              className="bg-gradient-to-r from-rose-500 to-indigo-500 text-white text-lg md:text-xl lg:text-2xl font-bold py-4 px-12 rounded-xl hover:from-rose-600 hover:to-indigo-600 shadow-lg transition-all w-full"
             >
               {t('playAgain', 'Play Again')}
             </button>

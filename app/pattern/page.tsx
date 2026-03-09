@@ -19,18 +19,18 @@ export default function PatternPage() {
 
   return (
     <div className={`min-h-screen ${darkMode ? 'bg-gradient-to-br from-slate-900 to-slate-800' : 'bg-gradient-to-br from-blue-50 to-purple-50'}`}>
-      <header className={`p-6 shadow-sm ${darkMode ? 'bg-slate-900' : 'bg-white'}`}>
+      <header className={`p-4 md:p-6 shadow-sm ${darkMode ? 'bg-slate-900' : 'bg-white'}`}>
         <div className="max-w-6xl mx-auto">
           <Link href="/">
             <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className={`px-4 py-2 rounded-lg ${darkMode ? 'text-indigo-400 hover:text-indigo-300' : 'text-indigo-600 hover:text-indigo-700'}`}
+              whileHover={ scale: 1.05 }
+              whileTap={ scale: 0.95 }
+              className={`px-3 py-2 md:px-4 rounded-lg text-sm md:text-base ${darkMode ? 'text-indigo-400 hover:text-indigo-300' : 'text-indigo-600 hover:text-indigo-700'}`}
             >
               ← {t('back')}
             </motion.button>
           </Link>
-          <h1 className={`text-4xl font-bold mt-4 ${darkMode ? 'text-white' : 'text-gray-800'}`}>🔮 {t('pattern')}</h1>
+          <h1 className={`text-2xl md:text-4xl font-bold mt-3 md:mt-4 ${darkMode ? 'text-white' : 'text-gray-800'}`}>🔮 {t('pattern')}</h1>
         </div>
       </header>
 

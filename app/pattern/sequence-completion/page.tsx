@@ -141,18 +141,18 @@ export default function SequenceCompletionPage() {
   }, [gameState, timeLeft])
 
   return (
-    <div className="min-h-screen p-4 md:p-8 transition-colors duration-300 {darkMode ? "bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white" : "bg-gradient-to-br from-amber-50 via-white to-orange-50 p-4 md:p-8"}">
+    <div className="min-h-screen p-3 md:p-4 lg:p-8 transition-colors duration-300 {darkMode ? "bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white" : "bg-gradient-to-br from-amber-50 via-white to-orange-50 p-4 md:p-8"}">
       <SettingsPanel />
       <div className="max-w-2xl mx-auto">
         {/* Header */}
         <Link
           href="/pattern"
-          className="inline-flex items-center text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white font-medium mb-6 text-lg"
+          className="inline-flex items-center text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white font-medium mb-6 text-sm md:text-base lg:text-lg"
         >
           <span className="mr-2">←</span> {t('back', 'Back')}
         </Link>
 
-        <h1 className="text-3xl md:text-4xl font-bold text-gray-800 dark:text-white mb-2">
+        <h1 className="text-3xl md:text-2xl md:text-3xl lg:text-4xl font-bold text-gray-800 dark:text-white mb-2">
           {t('sequenceCompletion.title', 'Sequence Completion')}
         </h1>
         <p className="text-lg text-gray-700 dark:text-gray-300 font-medium mb-8">
@@ -166,7 +166,7 @@ export default function SequenceCompletionPage() {
             animate={{ opacity: 1, y: 0 }}
             className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-8 text-center"
           >
-            <h2 className="text-3xl font-bold text-gray-800 dark:text-white mb-2">
+            <h2 className="text-xl md:text-2xl lg:text-3xl font-bold text-gray-800 dark:text-white mb-2">
               Level {level}
             </h2>
             {level > 1 && (
@@ -185,7 +185,7 @@ export default function SequenceCompletionPage() {
             </div>
             <button
               onClick={startLevel}
-              className="bg-gradient-to-r from-amber-500 to-orange-500 text-white text-2xl font-bold py-4 px-12 rounded-xl hover:from-amber-600 hover:to-orange-600 shadow-lg transition-all w-full"
+              className="bg-gradient-to-r from-amber-500 to-orange-500 text-white text-lg md:text-xl lg:text-2xl font-bold py-4 px-12 rounded-xl hover:from-amber-600 hover:to-orange-600 shadow-lg transition-all w-full"
             >
               {t('start', 'Start')}
             </button>
@@ -226,15 +226,15 @@ export default function SequenceCompletionPage() {
               <div className="flex justify-between items-center">
                 <div>
                   <p className="text-gray-700 dark:text-gray-300 text-sm font-medium">{t('sequenceCompletion.level', 'Level')}</p>
-                  <p className="text-3xl font-bold text-amber-600">{level}/{MAX_LEVELS}</p>
+                  <p className="text-xl md:text-2xl lg:text-3xl font-bold text-amber-600">{level}/{MAX_LEVELS}</p>
                 </div>
                 <div>
                   <p className="text-gray-700 dark:text-gray-300 text-sm font-medium">{t('sequenceCompletion.score', 'Score')}</p>
-                  <p className="text-3xl font-bold text-orange-600">{totalScore}</p>
+                  <p className="text-xl md:text-2xl lg:text-3xl font-bold text-orange-600">{totalScore}</p>
                 </div>
                 <div>
                   <p className="text-gray-700 dark:text-gray-300 text-sm font-medium">{t('sequenceCompletion.timeLeft', 'Time Left')}</p>
-                  <p className={`text-4xl font-bold ${timeLeft <= 10 ? 'text-red-500' : 'text-amber-600'}`}>
+                  <p className={`text-2xl md:text-3xl lg:text-4xl font-bold ${timeLeft <= 10 ? 'text-red-500' : 'text-amber-600'}`}>
                     {timeLeft}s
                   </p>
                 </div>
@@ -251,7 +251,7 @@ export default function SequenceCompletionPage() {
 
             {/* Input area */}
             <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-8 mb-6 text-center">
-              <p className="text-2xl font-bold text-gray-800 dark:text-white mb-4">
+              <p className="text-lg md:text-xl lg:text-2xl font-bold text-gray-800 dark:text-white mb-4">
                 {t('sequenceCompletion.nextItem', 'What comes next?')}
               </p>
               <div className="flex flex-wrap justify-center gap-2 mb-6">
@@ -287,7 +287,7 @@ export default function SequenceCompletionPage() {
               />
               <motion.button
                 onClick={handleSubmit}
-                className="w-full bg-gradient-to-r from-amber-500 to-orange-500 text-white text-2xl font-bold py-4 rounded-xl hover:from-amber-600 hover:to-orange-600 shadow-lg transition-all"
+                className="w-full bg-gradient-to-r from-amber-500 to-orange-500 text-white text-lg md:text-xl lg:text-2xl font-bold py-4 rounded-xl hover:from-amber-600 hover:to-orange-600 shadow-lg transition-all"
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.95 }}
               >
@@ -307,35 +307,35 @@ export default function SequenceCompletionPage() {
             <div className="text-6xl mb-4">
               {score > 0 ? '✅' : '❌'}
             </div>
-            <h2 className={`text-4xl font-bold mb-4 ${score > 0 ? 'text-amber-600' : 'text-red-600'}`}>
+            <h2 className={`text-2xl md:text-3xl lg:text-4xl font-bold mb-4 ${score > 0 ? 'text-amber-600' : 'text-red-600'}`}>
               {score > 0 ? `Level ${level} Complete!` : 'Level Failed!'}
             </h2>
             {score > 0 ? (
               <div className="bg-amber-50 rounded-xl p-6 mb-6">
                 <p className="text-gray-700 dark:text-gray-300 mb-2">{t('sequenceCompletion.correctAnswer', 'Correct Answer')}:</p>
-                <p className="text-3xl font-bold text-amber-600">{correctAnswer}</p>
+                <p className="text-xl md:text-2xl lg:text-3xl font-bold text-amber-600">{correctAnswer}</p>
                 <div className="grid grid-cols-2 gap-4 mt-4">
                   <div>
                     <p className="text-gray-700 dark:text-gray-300 text-sm font-medium">{t('sequenceCompletion.levelScore', 'Level Score')}</p>
-                    <p className="text-3xl font-bold text-amber-600">{score}</p>
+                    <p className="text-xl md:text-2xl lg:text-3xl font-bold text-amber-600">{score}</p>
                   </div>
                   <div>
                     <p className="text-gray-700 dark:text-gray-300 text-sm font-medium">{t('sequenceCompletion.totalScore', 'Total Score')}</p>
-                    <p className="text-3xl font-bold text-orange-600">{totalScore + score}</p>
+                    <p className="text-xl md:text-2xl lg:text-3xl font-bold text-orange-600">{totalScore + score}</p>
                   </div>
                 </div>
               </div>
             ) : (
               <div className="bg-red-50 rounded-xl p-6 mb-6">
                 <p className="text-gray-700 dark:text-gray-300 mb-2">{t('sequenceCompletion.yourAnswer', 'Your Answer')}:</p>
-                <p className="text-2xl font-bold text-red-600">{userInput || '---'}</p>
+                <p className="text-lg md:text-xl lg:text-2xl font-bold text-red-600">{userInput || '---'}</p>
                 <p className="text-gray-700 dark:text-gray-300 mt-4">{t('sequenceCompletion.correctAnswer', 'Correct Answer')}:</p>
-                <p className="text-2xl font-bold text-green-600">{correctAnswer}</p>
+                <p className="text-lg md:text-xl lg:text-2xl font-bold text-green-600">{correctAnswer}</p>
               </div>
             )}
             <button
               onClick={nextLevel}
-              className="bg-gradient-to-r from-amber-500 to-orange-500 text-white text-2xl font-bold py-4 px-12 rounded-xl hover:from-amber-600 hover:to-orange-600 shadow-lg transition-all w-full mb-3"
+              className="bg-gradient-to-r from-amber-500 to-orange-500 text-white text-lg md:text-xl lg:text-2xl font-bold py-4 px-12 rounded-xl hover:from-amber-600 hover:to-orange-600 shadow-lg transition-all w-full mb-3"
             >
               {level < MAX_LEVELS ? `Next Level ${level + 1}` : 'View Final Score'}
             </button>
@@ -356,7 +356,7 @@ export default function SequenceCompletionPage() {
             className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-8 text-center"
           >
             <div className="text-6xl mb-4">🎉</div>
-            <h2 className="text-4xl font-bold text-amber-600 mb-4">{t('sequenceCompletion.victory', 'Congratulations!')}</h2>
+            <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-amber-600 mb-4">{t('sequenceCompletion.victory', 'Congratulations!')}</h2>
             <p className="text-xl text-gray-700 dark:text-gray-300 font-medium mb-6">
               {t('sequenceCompletion.victoryMessage', 'You completed all {count} levels!', { count: MAX_LEVELS })}
             </p>
@@ -366,7 +366,7 @@ export default function SequenceCompletionPage() {
             </div>
             <button
               onClick={startGame}
-              className="bg-gradient-to-r from-amber-500 to-orange-500 text-white text-2xl font-bold py-4 px-12 rounded-xl hover:from-amber-600 hover:to-orange-600 shadow-lg transition-all w-full"
+              className="bg-gradient-to-r from-amber-500 to-orange-500 text-white text-lg md:text-xl lg:text-2xl font-bold py-4 px-12 rounded-xl hover:from-amber-600 hover:to-orange-600 shadow-lg transition-all w-full"
             >
               {t('playAgain', 'Play Again')}
             </button>

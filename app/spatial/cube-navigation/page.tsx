@@ -336,15 +336,15 @@ export default function CubeNavigationPage() {
         {/* Header */}
         <Link
           href="/spatial"
-          className={`inline-flex items-center ${darkMode ? 'text-gray-300 hover:text-white' : 'text-gray-700 hover:text-gray-900'} font-medium mb-6 text-lg`}
+          className={`inline-flex items-center ${darkMode ? 'text-gray-300 hover:text-white' : 'text-gray-700 hover:text-gray-900'} font-medium mb-6 text-sm md:text-base lg:text-lg`}
         >
           <span className="mr-2">←</span> {t('back', 'Back')}
         </Link>
 
-        <h1 className={`text-3xl md:text-4xl font-bold ${darkMode ? 'text-slate-50' : 'text-gray-800'} mb-2`}>
+        <h1 className={`text-3xl md:text-2xl md:text-3xl lg:text-4xl font-bold ${darkMode ? 'text-slate-50' : 'text-gray-800'} mb-2`}>
           {t('cubeNavigation.title', 'Cube Navigation')}
         </h1>
-        <p className={`text-lg ${darkMode ? 'text-slate-300' : 'text-gray-700'} font-medium mb-8`}>
+        <p className={`text-sm md:text-base lg:text-lg ${darkMode ? 'text-slate-300' : 'text-gray-700'} font-medium mb-8`}>
           {t('cubeNavigation.description', 'Navigate through the 3D cube to reach the goal!')}
         </p>
 
@@ -355,11 +355,11 @@ export default function CubeNavigationPage() {
             animate={{ opacity: 1, y: 0 }}
             className={`${darkMode ? 'bg-slate-800' : 'bg-white'} rounded-2xl shadow-lg p-8 text-center`}
           >
-            <h2 className={`text-3xl font-bold ${darkMode ? 'text-slate-50' : 'text-gray-800'} mb-2`}>
+            <h2 className={`text-xl md:text-2xl lg:text-3xl font-bold ${darkMode ? 'text-slate-50' : 'text-gray-800'} mb-2`}>
               Level {level}
             </h2>
             {level > 1 && (
-              <p className={`text-lg ${darkMode ? 'text-slate-300' : 'text-gray-700'} mb-4 font-medium`}>
+              <p className={`text-sm md:text-base lg:text-lg ${darkMode ? 'text-slate-300' : 'text-gray-700'} mb-4 font-medium`}>
                 Total Score: <span className="text-orange-600 font-bold">{totalScore}</span>
               </p>
             )}
@@ -373,7 +373,7 @@ export default function CubeNavigationPage() {
             </div>
             <button
               onClick={startLevel}
-              className="bg-gradient-to-r from-orange-500 to-amber-500 text-white text-2xl font-bold py-4 px-12 rounded-xl hover:from-orange-600 hover:to-amber-600 shadow-lg transition-all w-full"
+              className="bg-gradient-to-r from-orange-500 to-amber-500 text-white text-lg md:text-xl lg:text-2xl font-bold py-4 px-12 rounded-xl hover:from-orange-600 hover:to-amber-600 shadow-lg transition-all w-full"
             >
               {t('start', 'Start')}
             </button>
@@ -388,23 +388,23 @@ export default function CubeNavigationPage() {
               <div className="flex justify-between items-center">
                 <div>
                   <p className={`text-sm font-medium ${darkMode ? 'text-slate-300' : 'text-gray-700'}`}>{t('cubeNavigation.level', 'Level')}</p>
-                  <p className="text-3xl font-bold text-orange-600">
+                  <p className="text-xl md:text-2xl lg:text-3xl font-bold text-orange-600">
                     {currentLevelIndex + 1}/{levels.length}
                   </p>
                 </div>
                 <div>
                   <p className={`text-sm font-medium ${darkMode ? 'text-slate-300' : 'text-gray-700'}`}>{t('cubeNavigation.moves', 'Moves')}</p>
-                  <p className="text-3xl font-bold text-amber-600">
+                  <p className="text-xl md:text-2xl lg:text-3xl font-bold text-amber-600">
                     {moves}/{currentCube.maxMoves}
                   </p>
                 </div>
                 <div>
                   <p className={`text-sm font-medium ${darkMode ? 'text-slate-300' : 'text-gray-700'}`}>{t('cubeNavigation.score', 'Score')}</p>
-                  <p className="text-3xl font-bold text-orange-600">{totalScore}</p>
+                  <p className="text-xl md:text-2xl lg:text-3xl font-bold text-orange-600">{totalScore}</p>
                 </div>
                 <div>
                   <p className={`text-sm font-medium ${darkMode ? 'text-slate-300' : 'text-gray-700'}`}>{t('cubeNavigation.timeLeft', 'Time Left')}</p>
-                  <p className={`text-4xl font-bold ${timeLeft <= 10 ? 'text-red-500' : 'text-orange-600'}`}>
+                  <p className={`text-2xl md:text-3xl lg:text-4xl font-bold ${timeLeft <= 10 ? 'text-red-500' : 'text-orange-600'}`}>
                     {timeLeft}s
                   </p>
                 </div>
@@ -421,7 +421,7 @@ export default function CubeNavigationPage() {
 
             {/* Cube display */}
             <div className={`${darkMode ? 'bg-slate-800' : 'bg-white'} rounded-2xl shadow-lg p-8 mb-6`}>
-              <p className={`text-2xl font-bold ${darkMode ? 'text-slate-50' : 'text-gray-800'} mb-4 text-center`}>
+              <p className={`text-lg md:text-xl lg:text-2xl font-bold ${darkMode ? 'text-slate-50' : 'text-gray-800'} mb-4 text-center`}>
                 {t('cubeNavigation.navigateToGoal', 'Navigate to the Goal (G)!')}
               </p>
               
@@ -453,7 +453,7 @@ export default function CubeNavigationPage() {
                       whileHover={{ scale: 1.1 }}
                       whileTap={{ scale: 0.9 }}
                       onClick={() => movePlayer(0, 1, 0)}
-                      className="w-16 h-16 bg-gradient-to-b from-orange-400 to-orange-600 text-white rounded-xl shadow-lg text-2xl font-bold"
+                      className="w-16 h-16 bg-gradient-to-b from-orange-400 to-orange-600 text-white rounded-xl shadow-lg text-lg md:text-xl lg:text-2xl font-bold"
                     >
                       ↑
                     </motion.button>
@@ -465,7 +465,7 @@ export default function CubeNavigationPage() {
                       whileHover={{ scale: 1.1 }}
                       whileTap={{ scale: 0.9 }}
                       onClick={() => movePlayer(-1, 0, 0)}
-                      className="w-16 h-16 bg-gradient-to-r from-orange-400 to-orange-600 text-white rounded-xl shadow-lg text-2xl font-bold"
+                      className="w-16 h-16 bg-gradient-to-r from-orange-400 to-orange-600 text-white rounded-xl shadow-lg text-lg md:text-xl lg:text-2xl font-bold"
                     >
                       ←
                     </motion.button>
@@ -473,7 +473,7 @@ export default function CubeNavigationPage() {
                       whileHover={{ scale: 1.1 }}
                       whileTap={{ scale: 0.9 }}
                       onClick={() => movePlayer(1, 0, 0)}
-                      className="w-16 h-16 bg-gradient-to-r from-orange-400 to-orange-600 text-white rounded-xl shadow-lg text-2xl font-bold"
+                      className="w-16 h-16 bg-gradient-to-r from-orange-400 to-orange-600 text-white rounded-xl shadow-lg text-lg md:text-xl lg:text-2xl font-bold"
                     >
                       →
                     </motion.button>
@@ -485,7 +485,7 @@ export default function CubeNavigationPage() {
                       whileHover={{ scale: 1.1 }}
                       whileTap={{ scale: 0.9 }}
                       onClick={() => movePlayer(0, -1, 0)}
-                      className="w-16 h-16 bg-gradient-to-t from-orange-400 to-orange-600 text-white rounded-xl shadow-lg text-2xl font-bold"
+                      className="w-16 h-16 bg-gradient-to-t from-orange-400 to-orange-600 text-white rounded-xl shadow-lg text-lg md:text-xl lg:text-2xl font-bold"
                     >
                       ↓
                     </motion.button>
@@ -520,7 +520,7 @@ export default function CubeNavigationPage() {
                 <div className="text-6xl mb-4">
                   {levelWon ? '✅' : '❌'}
                 </div>
-                <h2 className={`text-4xl font-bold mb-4 ${levelWon ? 'text-green-500' : 'text-red-500'}`}>
+                <h2 className={`text-2xl md:text-3xl lg:text-4xl font-bold mb-4 ${levelWon ? 'text-green-500' : 'text-red-500'}`}>
                   {levelWon ? t('cubeNavigation.goalReached', 'Goal Reached!') : t('cubeNavigation.failed', 'Failed!')}
                 </h2>
                 {levelWon && (
@@ -528,11 +528,11 @@ export default function CubeNavigationPage() {
                     <div className="grid grid-cols-2 gap-4">
                       <div>
                         <p className={`text-sm font-medium ${darkMode ? 'text-slate-300' : 'text-gray-700'}`}>{t('cubeNavigation.movesUsed', 'Moves Used')}</p>
-                        <p className="text-3xl font-bold text-green-600">{moves}</p>
+                        <p className="text-xl md:text-2xl lg:text-3xl font-bold text-green-600">{moves}</p>
                       </div>
                       <div>
                         <p className={`text-sm font-medium ${darkMode ? 'text-slate-300' : 'text-gray-700'}`}>{t('cubeNavigation.levelScore', 'Level Score')}</p>
-                        <p className="text-3xl font-bold text-orange-600">{score}</p>
+                        <p className="text-xl md:text-2xl lg:text-3xl font-bold text-orange-600">{score}</p>
                       </div>
                     </div>
                   </div>
@@ -577,7 +577,7 @@ export default function CubeNavigationPage() {
             <div className="text-6xl mb-4">
               {totalScore > 0 ? '✅' : '❌'}
             </div>
-            <h2 className={`text-4xl font-bold mb-4 ${totalScore > 0 ? 'text-orange-600' : 'text-red-500'}`}>
+            <h2 className={`text-2xl md:text-3xl lg:text-4xl font-bold mb-4 ${totalScore > 0 ? 'text-orange-600' : 'text-red-500'}`}>
               {totalScore > 0 ? `Level ${level} Complete!` : 'Level Failed!'}
             </h2>
             {totalScore > 0 ? (
@@ -585,23 +585,23 @@ export default function CubeNavigationPage() {
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <p className={`text-sm font-medium ${darkMode ? 'text-slate-300' : 'text-gray-700'}`}>{t('cubeNavigation.levelScore', 'Level Score')}</p>
-                    <p className="text-3xl font-bold text-orange-600">{score}</p>
+                    <p className="text-xl md:text-2xl lg:text-3xl font-bold text-orange-600">{score}</p>
                   </div>
                   <div>
                     <p className={`text-sm font-medium ${darkMode ? 'text-slate-300' : 'text-gray-700'}`}>{t('cubeNavigation.totalScore', 'Total Score')}</p>
-                    <p className="text-3xl font-bold text-amber-600">{totalScore + score}</p>
+                    <p className="text-xl md:text-2xl lg:text-3xl font-bold text-amber-600">{totalScore + score}</p>
                   </div>
                 </div>
               </div>
             ) : (
               <div className={`rounded-xl p-6 mb-6 ${darkMode ? 'bg-red-900/30' : 'bg-red-50'}`}>
                 <p className={`text-sm font-medium ${darkMode ? 'text-slate-300' : 'text-gray-700'}`}>{t('cubeNavigation.levelScore', 'Level Score')}</p>
-                <p className="text-3xl font-bold text-red-500">{score}</p>
+                <p className="text-xl md:text-2xl lg:text-3xl font-bold text-red-500">{score}</p>
               </div>
             )}
             <button
               onClick={nextLevel}
-              className="bg-gradient-to-r from-orange-500 to-amber-500 text-white text-2xl font-bold py-4 px-12 rounded-xl hover:from-orange-600 hover:to-amber-600 shadow-lg transition-all w-full mb-3"
+              className="bg-gradient-to-r from-orange-500 to-amber-500 text-white text-lg md:text-xl lg:text-2xl font-bold py-4 px-12 rounded-xl hover:from-orange-600 hover:to-amber-600 shadow-lg transition-all w-full mb-3"
             >
               {level < MAX_LEVELS ? `Next Level ${level + 1}` : 'View Final Score'}
             </button>
@@ -622,7 +622,7 @@ export default function CubeNavigationPage() {
             className={`${darkMode ? 'bg-slate-800' : 'bg-white'} rounded-2xl shadow-lg p-8 text-center`}
           >
             <div className="text-6xl mb-4">🎉</div>
-            <h2 className="text-4xl font-bold text-orange-600 mb-4">{t('cubeNavigation.victory', 'Congratulations!')}</h2>
+            <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-orange-600 mb-4">{t('cubeNavigation.victory', 'Congratulations!')}</h2>
             <p className={`text-xl ${darkMode ? 'text-slate-300' : 'text-gray-700'} font-medium mb-6`}>
               {t('cubeNavigation.victoryMessage', 'You completed all {count} levels!', { count: MAX_LEVELS })}
             </p>
@@ -632,7 +632,7 @@ export default function CubeNavigationPage() {
             </div>
             <button
               onClick={startGame}
-              className="bg-gradient-to-r from-orange-500 to-amber-500 text-white text-2xl font-bold py-4 px-12 rounded-xl hover:from-orange-600 hover:to-amber-600 shadow-lg transition-all w-full"
+              className="bg-gradient-to-r from-orange-500 to-amber-500 text-white text-lg md:text-xl lg:text-2xl font-bold py-4 px-12 rounded-xl hover:from-orange-600 hover:to-amber-600 shadow-lg transition-all w-full"
             >
               {t('playAgain', 'Play Again')}
             </button>

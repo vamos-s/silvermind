@@ -320,15 +320,15 @@ export default function PatternIn3DPage() {
         {/* Header */}
         <Link
           href="/spatial"
-          className={`inline-flex items-center ${darkMode ? 'text-gray-300 hover:text-white' : 'text-gray-700 hover:text-gray-900'} font-medium mb-6 text-lg`}
+          className={`inline-flex items-center ${darkMode ? 'text-gray-300 hover:text-white' : 'text-gray-700 hover:text-gray-900'} font-medium mb-6 text-sm md:text-base lg:text-lg`}
         >
           <span className="mr-2">←</span> {t('back', 'Back')}
         </Link>
 
-        <h1 className={`text-3xl md:text-4xl font-bold ${darkMode ? 'text-slate-50' : 'text-gray-800'} mb-2`}>
+        <h1 className={`text-3xl md:text-2xl md:text-3xl lg:text-4xl font-bold ${darkMode ? 'text-slate-50' : 'text-gray-800'} mb-2`}>
           {t('patternIn3D.title', 'Pattern in 3D')}
         </h1>
-        <p className={`text-lg ${darkMode ? 'text-slate-300' : 'text-gray-700'} font-medium mb-8`}>
+        <p className={`text-sm md:text-base lg:text-lg ${darkMode ? 'text-slate-300' : 'text-gray-700'} font-medium mb-8`}>
           {t('patternIn3D.description', 'Match the 3D pattern shown!')}
         </p>
 
@@ -339,11 +339,11 @@ export default function PatternIn3DPage() {
             animate={{ opacity: 1, y: 0 }}
             className={`${darkMode ? 'bg-slate-800' : 'bg-white'} rounded-2xl shadow-lg p-8 text-center`}
           >
-            <h2 className={`text-3xl font-bold ${darkMode ? 'text-slate-50' : 'text-gray-800'} mb-2`}>
+            <h2 className={`text-xl md:text-2xl lg:text-3xl font-bold ${darkMode ? 'text-slate-50' : 'text-gray-800'} mb-2`}>
               Level {level}
             </h2>
             {level > 1 && (
-              <p className={`text-lg ${darkMode ? 'text-slate-300' : 'text-gray-700'} mb-4 font-medium`}>
+              <p className={`text-sm md:text-base lg:text-lg ${darkMode ? 'text-slate-300' : 'text-gray-700'} mb-4 font-medium`}>
                 Total Score: <span className="text-emerald-500 font-bold">{totalScore}</span>
               </p>
             )}
@@ -357,7 +357,7 @@ export default function PatternIn3DPage() {
             </div>
             <button
               onClick={startLevel}
-              className="bg-gradient-to-r from-emerald-500 to-teal-500 text-white text-2xl font-bold py-4 px-12 rounded-xl hover:from-emerald-600 hover:to-teal-600 shadow-lg transition-all w-full"
+              className="bg-gradient-to-r from-emerald-500 to-teal-500 text-white text-lg md:text-xl lg:text-2xl font-bold py-4 px-12 rounded-xl hover:from-emerald-600 hover:to-teal-600 shadow-lg transition-all w-full"
             >
               {t('start', 'Start')}
             </button>
@@ -386,17 +386,17 @@ export default function PatternIn3DPage() {
               <div className="flex justify-between items-center">
                 <div>
                   <p className={`text-sm font-medium ${darkMode ? 'text-slate-300' : 'text-gray-700'}`}>{t('patternIn3D.question', 'Question')}</p>
-                  <p className="text-3xl font-bold text-emerald-500">
+                  <p className="text-xl md:text-2xl lg:text-3xl font-bold text-emerald-500">
                     {currentQuestionIndex + 1}/{questions.length}
                   </p>
                 </div>
                 <div>
                   <p className={`text-sm font-medium ${darkMode ? 'text-slate-300' : 'text-gray-700'}`}>{t('patternIn3D.score', 'Score')}</p>
-                  <p className="text-3xl font-bold text-teal-500">{totalScore}</p>
+                  <p className="text-xl md:text-2xl lg:text-3xl font-bold text-teal-500">{totalScore}</p>
                 </div>
                 <div>
                   <p className={`text-sm font-medium ${darkMode ? 'text-slate-300' : 'text-gray-700'}`}>{t('patternIn3D.timeLeft', 'Time Left')}</p>
-                  <p className={`text-4xl font-bold ${timeLeft <= 10 ? 'text-red-500' : 'text-emerald-500'}`}>
+                  <p className={`text-2xl md:text-3xl lg:text-4xl font-bold ${timeLeft <= 10 ? 'text-red-500' : 'text-emerald-500'}`}>
                     {timeLeft}s
                   </p>
                 </div>
@@ -415,7 +415,7 @@ export default function PatternIn3DPage() {
             <div className={`${darkMode ? 'bg-slate-800' : 'bg-white'} rounded-2xl shadow-lg p-8 mb-6 text-center`}>
               {currentQuestion && (
                 <>
-                  <p className={`text-2xl font-bold ${darkMode ? 'text-slate-50' : 'text-gray-800'} mb-6`}>
+                  <p className={`text-lg md:text-xl lg:text-2xl font-bold ${darkMode ? 'text-slate-50' : 'text-gray-800'} mb-6`}>
                     {t('patternIn3D.selectMatching', 'Select the matching pattern!')}
                   </p>
 
@@ -476,7 +476,7 @@ export default function PatternIn3DPage() {
             <div className="text-6xl mb-4">
               {score > 0 ? '✅' : '❌'}
             </div>
-            <h2 className={`text-4xl font-bold mb-4 ${score > 0 ? 'text-emerald-500' : 'text-red-500'}`}>
+            <h2 className={`text-2xl md:text-3xl lg:text-4xl font-bold mb-4 ${score > 0 ? 'text-emerald-500' : 'text-red-500'}`}>
               {score > 0 ? `Level ${level} Complete!` : 'Level Failed!'}
             </h2>
             {score > 0 ? (
@@ -492,23 +492,23 @@ export default function PatternIn3DPage() {
                 <div className="grid grid-cols-2 gap-4 mt-4">
                   <div>
                     <p className={`text-sm font-medium ${darkMode ? 'text-slate-300' : 'text-gray-700'}`}>{t('patternIn3D.levelScore', 'Level Score')}</p>
-                    <p className="text-3xl font-bold text-emerald-500">{score}</p>
+                    <p className="text-xl md:text-2xl lg:text-3xl font-bold text-emerald-500">{score}</p>
                   </div>
                   <div>
                     <p className={`text-sm font-medium ${darkMode ? 'text-slate-300' : 'text-gray-700'}`}>{t('patternIn3D.totalScore', 'Total Score')}</p>
-                    <p className="text-3xl font-bold text-teal-500">{totalScore + score}</p>
+                    <p className="text-xl md:text-2xl lg:text-3xl font-bold text-teal-500">{totalScore + score}</p>
                   </div>
                 </div>
               </div>
             ) : (
               <div className={`rounded-xl p-6 mb-6 ${darkMode ? 'bg-red-900/30' : 'bg-red-50'}`}>
                 <p className={`text-sm font-medium ${darkMode ? 'text-slate-300' : 'text-gray-700'}`}>{t('patternIn3D.levelScore', 'Level Score')}</p>
-                <p className="text-3xl font-bold text-red-500">{score}</p>
+                <p className="text-xl md:text-2xl lg:text-3xl font-bold text-red-500">{score}</p>
               </div>
             )}
             <button
               onClick={nextLevel}
-              className="bg-gradient-to-r from-emerald-500 to-teal-500 text-white text-2xl font-bold py-4 px-12 rounded-xl hover:from-emerald-600 hover:to-teal-600 shadow-lg transition-all w-full mb-3"
+              className="bg-gradient-to-r from-emerald-500 to-teal-500 text-white text-lg md:text-xl lg:text-2xl font-bold py-4 px-12 rounded-xl hover:from-emerald-600 hover:to-teal-600 shadow-lg transition-all w-full mb-3"
             >
               {level < MAX_LEVELS ? `Next Level ${level + 1}` : 'View Final Score'}
             </button>
@@ -529,7 +529,7 @@ export default function PatternIn3DPage() {
             className={`${darkMode ? 'bg-slate-800' : 'bg-white'} rounded-2xl shadow-lg p-8 text-center`}
           >
             <div className="text-6xl mb-4">🎉</div>
-            <h2 className="text-4xl font-bold text-emerald-500 mb-4">{t('patternIn3D.victory', 'Congratulations!')}</h2>
+            <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-emerald-500 mb-4">{t('patternIn3D.victory', 'Congratulations!')}</h2>
             <p className={`text-xl ${darkMode ? 'text-slate-300' : 'text-gray-700'} font-medium mb-6`}>
               {t('patternIn3D.victoryMessage', 'You completed all {count} levels!', { count: MAX_LEVELS })}
             </p>
@@ -539,7 +539,7 @@ export default function PatternIn3DPage() {
             </div>
             <button
               onClick={startGame}
-              className="bg-gradient-to-r from-emerald-500 to-teal-500 text-white text-2xl font-bold py-4 px-12 rounded-xl hover:from-emerald-600 hover:to-teal-600 shadow-lg transition-all w-full"
+              className="bg-gradient-to-r from-emerald-500 to-teal-500 text-white text-lg md:text-xl lg:text-2xl font-bold py-4 px-12 rounded-xl hover:from-emerald-600 hover:to-teal-600 shadow-lg transition-all w-full"
             >
               {t('playAgain', 'Play Again')}
             </button>

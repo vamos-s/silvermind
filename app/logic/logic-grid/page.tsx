@@ -144,14 +144,14 @@ export default function LogicGridPage() {
 
   if (gameOver && victory) {
     return (
-      <div className="min-h-screen p-4 md:p-8 transition-colors duration-300 {darkMode ? "bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white" : "bg-gradient-to-br from-green-50 to-blue-50 flex items-center justify-center"}">
+      <div className="min-h-screen p-3 md:p-4 lg:p-8 transition-colors duration-300 {darkMode ? "bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white" : "bg-gradient-to-br from-green-50 to-blue-50 flex items-center justify-center"}">
       <SettingsPanel />
         <motion.div
           initial={{ scale: 0.8, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           className="bg-white dark:bg-slate-800 rounded-2xl p-8 shadow-xl text-center max-w-md"
         >
-          <h2 className="text-3xl font-bold text-green-600 mb-4">🎉 Solved!</h2>
+          <h2 className="text-xl md:text-2xl lg:text-3xl font-bold text-green-600 mb-4">🎉 Solved!</h2>
           <p className="text-xl text-gray-600 dark:text-gray-400 mb-2">Score: {score}</p>
           <p className="text-lg text-gray-500 mb-6">Level: {level}</p>
           <button
@@ -188,19 +188,19 @@ export default function LogicGridPage() {
         <Link href="/logic" className="text-green-500 hover:underline mb-4 block">
           ← Back
         </Link>
-        <h1 className="text-3xl font-bold text-gray-800 dark:text-white">🧩 Logic Grid</h1>
+        <h1 className="text-xl md:text-2xl lg:text-3xl font-bold text-gray-800 dark:text-white">🧩 Logic Grid</h1>
       </header>
 
       <main className="container mx-auto px-4 py-8">
         <div className="max-w-4xl mx-auto text-center mb-8">
-          <div className="flex justify-center gap-8 text-2xl mb-4">
+          <div className="flex justify-center gap-4 md:gap-6 lg:gap-8 text-2xl mb-4">
             <p className="font-bold text-green-600">Score: {score}</p>
             <p className="font-bold text-blue-600">Level: {level}</p>
           </div>
           <p className="text-lg text-gray-600 dark:text-gray-400">Arrange items in order from smallest to largest value</p>
         </div>
 
-        <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto mb-8">
+        <div className="grid md:grid-cols-2 gap-4 md:gap-6 lg:gap-8 max-w-4xl mx-auto mb-8">
           <div className="bg-white dark:bg-slate-800 rounded-xl p-6 shadow-lg">
             <h2 className="text-xl font-bold mb-4 text-gray-800 dark:text-white">📝 Hints</h2>
             <ul className="space-y-3">

@@ -238,12 +238,12 @@ export default function WordScramblePage() {
         {/* Header */}
         <Link
           href="/language"
-          className="inline-flex items-center text-gray-700 hover:text-gray-900 font-medium mb-6 text-lg"
+          className="inline-flex items-center text-gray-700 hover:text-gray-900 font-medium mb-6 text-sm md:text-base lg:text-lg"
         >
           <span className="mr-2">←</span> {t('back', 'Back')}
         </Link>
 
-        <h1 className="text-3xl md:text-4xl font-bold text-gray-800 mb-2">
+        <h1 className="text-3xl md:text-2xl md:text-3xl lg:text-4xl font-bold text-gray-800 mb-2">
           {t('wordScramble.title', 'Word Scramble')}
         </h1>
         <p className="text-lg text-gray-700 font-medium mb-8">
@@ -258,7 +258,7 @@ export default function WordScramblePage() {
             className="bg-white rounded-2xl shadow-lg p-8 text-center"
           >
             <div className="text-6xl mb-4">📝</div>
-            <h2 className="text-3xl font-bold text-gray-800 mb-2">
+            <h2 className="text-xl md:text-2xl lg:text-3xl font-bold text-gray-800 mb-2">
               Level {level}
             </h2>
             <div className="bg-orange-50 rounded-xl p-4 mb-6 text-left">
@@ -271,7 +271,7 @@ export default function WordScramblePage() {
             </div>
             <button
               onClick={startGame}
-              className="bg-gradient-to-r from-orange-500 to-amber-500 text-white text-2xl font-bold py-4 px-12 rounded-xl hover:from-orange-600 hover:to-amber-600 shadow-lg transition-all w-full"
+              className="bg-gradient-to-r from-orange-500 to-amber-500 text-white text-lg md:text-xl lg:text-2xl font-bold py-4 px-12 rounded-xl hover:from-orange-600 hover:to-amber-600 shadow-lg transition-all w-full"
             >
               {t('start', 'Start')}
             </button>
@@ -286,19 +286,19 @@ export default function WordScramblePage() {
               <div className="flex justify-around text-center">
                 <div>
                   <p className="text-gray-700 text-sm font-medium">{t('wordScramble.level', 'Level')}</p>
-                  <p className="text-3xl font-bold text-orange-600">{level}/{MAX_LEVELS}</p>
+                  <p className="text-xl md:text-2xl lg:text-3xl font-bold text-orange-600">{level}/{MAX_LEVELS}</p>
                 </div>
                 <div>
                   <p className="text-gray-700 text-sm font-medium">{t('wordScramble.score', 'Score')}</p>
-                  <p className="text-3xl font-bold text-amber-600">{totalScore}</p>
+                  <p className="text-xl md:text-2xl lg:text-3xl font-bold text-amber-600">{totalScore}</p>
                 </div>
                 <div>
                   <p className="text-gray-700 text-sm font-medium">{t('wordScramble.timeLeft', 'Time')}</p>
-                  <p className={`text-3xl font-bold ${timeLeft <= 10 ? 'text-red-500' : 'text-orange-600'}`}>{timeLeft}s</p>
+                  <p className={`text-xl md:text-2xl lg:text-3xl font-bold ${timeLeft <= 10 ? 'text-red-500' : 'text-orange-600'}`}>{timeLeft}s</p>
                 </div>
                 <div>
                   <p className="text-gray-700 text-sm font-medium">{t('wordScramble.hints', 'Hints')}</p>
-                  <p className="text-3xl font-bold text-orange-600">{hintsRemaining}</p>
+                  <p className="text-xl md:text-2xl lg:text-3xl font-bold text-orange-600">{hintsRemaining}</p>
                 </div>
               </div>
               {/* Progress Bar */}
@@ -320,7 +320,7 @@ export default function WordScramblePage() {
                     key={index}
                     initial={{ scale: 0 }}
                     animate={{ scale: 1 }}
-                    className="w-12 h-12 md:w-16 md:h-16 bg-orange-100 rounded-lg flex items-center justify-center text-2xl md:text-3xl font-bold text-orange-600"
+                    className="w-12 h-12 md:w-16 md:h-16 bg-orange-100 rounded-lg flex items-center justify-center text-2xl md:text-xl md:text-2xl lg:text-3xl font-bold text-orange-600"
                   >
                     {letter.toUpperCase()}
                   </motion.div>
@@ -335,7 +335,7 @@ export default function WordScramblePage() {
                 {Array.from({ length: currentWord.length }).map((_, index) => (
                   <div
                     key={index}
-                    className={`w-10 h-10 md:w-14 md:h-14 rounded-lg flex items-center justify-center text-xl md:text-2xl font-bold transition-all ${
+                    className={`w-10 h-10 md:w-14 md:h-14 rounded-lg flex items-center justify-center text-xl md:text-lg md:text-xl lg:text-2xl font-bold transition-all ${
                       userGuess[index]
                         ? 'bg-green-500 text-white'
                         : 'bg-gray-100 text-gray-400'
@@ -354,7 +354,7 @@ export default function WordScramblePage() {
                     whileHover={{ scale: 1.1 }}
                     whileTap={{ scale: 0.9 }}
                     onClick={() => handleLetterClick(letter)}
-                    className="aspect-square bg-orange-100 hover:bg-orange-200 rounded-lg text-xl md:text-2xl font-bold text-orange-600 transition-all"
+                    className="aspect-square bg-orange-100 hover:bg-orange-200 rounded-lg text-xl md:text-lg md:text-xl lg:text-2xl font-bold text-orange-600 transition-all"
                   >
                     {letter.toUpperCase()}
                   </motion.button>
@@ -406,7 +406,7 @@ export default function WordScramblePage() {
             className="bg-white rounded-2xl shadow-lg p-8 text-center"
           >
             <div className="text-6xl mb-4">✅</div>
-            <h2 className="text-4xl font-bold text-orange-600 mb-4">{t('wordScramble.correct', 'Correct!')}</h2>
+            <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-orange-600 mb-4">{t('wordScramble.correct', 'Correct!')}</h2>
             <p className="text-2xl text-gray-700 mb-4">
               <span className="line-through text-gray-400">{scrambledWord}</span> → <span className="text-green-600 font-bold">{currentWord.toUpperCase()}</span>
             </p>
@@ -414,17 +414,17 @@ export default function WordScramblePage() {
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <p className="text-gray-700 text-sm font-medium">{t('wordScramble.levelScore', 'Level Score')}</p>
-                  <p className="text-3xl font-bold text-orange-600">{Math.round(score)}</p>
+                  <p className="text-xl md:text-2xl lg:text-3xl font-bold text-orange-600">{Math.round(score)}</p>
                 </div>
                 <div>
                   <p className="text-gray-700 text-sm font-medium">{t('wordScramble.totalScore', 'Total Score')}</p>
-                  <p className="text-3xl font-bold text-amber-600">{totalScore + Math.round(score)}</p>
+                  <p className="text-xl md:text-2xl lg:text-3xl font-bold text-amber-600">{totalScore + Math.round(score)}</p>
                 </div>
               </div>
             </div>
             <button
               onClick={nextLevel}
-              className="bg-gradient-to-r from-orange-500 to-amber-500 text-white text-2xl font-bold py-4 px-12 rounded-xl hover:from-orange-600 hover:to-amber-600 shadow-lg transition-all w-full"
+              className="bg-gradient-to-r from-orange-500 to-amber-500 text-white text-lg md:text-xl lg:text-2xl font-bold py-4 px-12 rounded-xl hover:from-orange-600 hover:to-amber-600 shadow-lg transition-all w-full"
             >
               {level < MAX_LEVELS ? `Next Level ${level + 1}` : 'View Final Score'}
             </button>
@@ -439,17 +439,17 @@ export default function WordScramblePage() {
             className="bg-white rounded-2xl shadow-lg p-8 text-center"
           >
             <div className="text-6xl mb-4">❌</div>
-            <h2 className="text-4xl font-bold text-gray-800 mb-4">{t('wordScramble.gameOver', 'Time\'s Up!')}</h2>
+            <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-800 mb-4">{t('wordScramble.gameOver', 'Time\'s Up!')}</h2>
             <p className="text-xl text-gray-700 mb-4">
               {t('wordScramble.answerWas', 'The answer was:')} <span className="text-green-600 font-bold">{currentWord.toUpperCase()}</span>
             </p>
             <div className="bg-orange-50 rounded-xl p-6 mb-6">
               <p className="text-gray-700 text-sm font-medium">{t('wordScramble.finalScore', 'Final Score')}</p>
-              <p className="text-3xl font-bold text-orange-600">{totalScore}</p>
+              <p className="text-xl md:text-2xl lg:text-3xl font-bold text-orange-600">{totalScore}</p>
             </div>
             <button
               onClick={startGame}
-              className="bg-gradient-to-r from-orange-500 to-red-500 text-white text-2xl font-bold py-4 px-12 rounded-xl hover:from-orange-600 hover:to-red-600 shadow-lg transition-all w-full"
+              className="bg-gradient-to-r from-orange-500 to-red-500 text-white text-lg md:text-xl lg:text-2xl font-bold py-4 px-12 rounded-xl hover:from-orange-600 hover:to-red-600 shadow-lg transition-all w-full"
             >
               {t('tryAgain', 'Try Again')}
             </button>
@@ -464,7 +464,7 @@ export default function WordScramblePage() {
             className="bg-white rounded-2xl shadow-lg p-8 text-center"
           >
             <div className="text-6xl mb-4">🎉</div>
-            <h2 className="text-4xl font-bold text-orange-600 mb-4">{t('wordScramble.victory', 'Congratulations!')}</h2>
+            <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-orange-600 mb-4">{t('wordScramble.victory', 'Congratulations!')}</h2>
             <p className="text-xl text-gray-700 font-medium mb-6">
               {t('wordScramble.victoryMessage', 'You completed all {count} levels!', { count: MAX_LEVELS })}
             </p>
@@ -474,7 +474,7 @@ export default function WordScramblePage() {
             </div>
             <button
               onClick={startGame}
-              className="bg-gradient-to-r from-orange-500 to-amber-500 text-white text-2xl font-bold py-4 px-12 rounded-xl hover:from-orange-600 hover:to-amber-600 shadow-lg transition-all w-full"
+              className="bg-gradient-to-r from-orange-500 to-amber-500 text-white text-lg md:text-xl lg:text-2xl font-bold py-4 px-12 rounded-xl hover:from-orange-600 hover:to-amber-600 shadow-lg transition-all w-full"
             >
               {t('playAgain', 'Play Again')}
             </button>

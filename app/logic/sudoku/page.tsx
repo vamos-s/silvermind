@@ -225,14 +225,14 @@ export default function SudokuPage() {
 
   if (gameOver && victory) {
     return (
-      <div className="min-h-screen p-4 md:p-8 transition-colors duration-300 {darkMode ? "bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white" : "bg-gradient-to-br from-green-50 to-blue-50 flex items-center justify-center"}">
+      <div className="min-h-screen p-3 md:p-4 lg:p-8 transition-colors duration-300 {darkMode ? "bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white" : "bg-gradient-to-br from-green-50 to-blue-50 flex items-center justify-center"}">
       <SettingsPanel />
         <motion.div
           initial={{ scale: 0.8, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           className="bg-white dark:bg-slate-800 rounded-2xl p-8 shadow-xl text-center max-w-md"
         >
-          <h2 className="text-3xl font-bold text-green-600 mb-4">
+          <h2 className="text-xl md:text-2xl lg:text-3xl font-bold text-green-600 mb-4">
             {level === maxLevel ? '🏆 Complete!' : '🎉 Solved!'}
           </h2>
           <p className="text-xl text-gray-600 dark:text-gray-400 mb-2">Score: {score}</p>
@@ -269,13 +269,13 @@ export default function SudokuPage() {
 
   if (gameOver) {
     return (
-      <div className="min-h-screen p-4 md:p-8 transition-colors duration-300 {darkMode ? "bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white" : "bg-gradient-to-br from-green-50 to-blue-50 flex items-center justify-center"}">
+      <div className="min-h-screen p-3 md:p-4 lg:p-8 transition-colors duration-300 {darkMode ? "bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white" : "bg-gradient-to-br from-green-50 to-blue-50 flex items-center justify-center"}">
         <motion.div
           initial={{ scale: 0.8, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           className="bg-white dark:bg-slate-800 rounded-2xl p-8 shadow-xl text-center max-w-md"
         >
-          <h2 className="text-3xl font-bold text-red-600 mb-4">Game Over!</h2>
+          <h2 className="text-xl md:text-2xl lg:text-3xl font-bold text-red-600 mb-4">Game Over!</h2>
           <p className="text-xl text-gray-600 dark:text-gray-400 mb-2">Score: {score}</p>
           <p className="text-lg text-gray-500 mb-6">Too many mistakes</p>
           <button
@@ -302,12 +302,12 @@ export default function SudokuPage() {
         <Link href="/logic" className="text-green-500 hover:underline mb-4 block">
           ← Back
         </Link>
-        <h1 className="text-3xl font-bold text-gray-800 dark:text-white">🔢 Sudoku</h1>
+        <h1 className="text-xl md:text-2xl lg:text-3xl font-bold text-gray-800 dark:text-white">🔢 Sudoku</h1>
       </header>
 
       <main className="container mx-auto px-4 py-8">
         <div className="max-w-lg mx-auto text-center mb-8">
-          <div className="flex justify-center gap-8 text-2xl mb-4">
+          <div className="flex justify-center gap-4 md:gap-6 lg:gap-8 text-2xl mb-4">
             <p className="font-bold text-green-600">Score: {score}</p>
             <p className="font-bold text-blue-600">Level: {level}</p>
           </div>
@@ -337,7 +337,7 @@ export default function SudokuPage() {
                     whileTap={{ scale: 0.95 }}
                     onClick={() => handleCellClick(r, c)}
                     disabled={cell !== null || gameOver}
-                    className={`aspect-square rounded-lg text-2xl font-bold transition-all border-2 ${
+                    className={`aspect-square rounded-lg text-lg md:text-xl lg:text-2xl font-bold transition-all border-2 ${
                       cell !== null
                         ? 'bg-gray-100 dark:bg-slate-700 border-gray-300 text-gray-800 dark:text-white'
                         : selectedCell && selectedCell[0] === r && selectedCell[1] === c
@@ -368,7 +368,7 @@ export default function SudokuPage() {
                 whileTap={{ scale: 0.95 }}
                 onClick={() => handleNumberInput(num)}
                 disabled={!selectedCell || gameOver}
-                className="bg-green-500 text-white text-2xl font-bold py-3 rounded-lg hover:bg-green-600 transition disabled:opacity-50 disabled:cursor-not-allowed"
+                className="bg-green-500 text-white text-lg md:text-xl lg:text-2xl font-bold py-3 rounded-lg hover:bg-green-600 transition disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {num}
               </motion.button>

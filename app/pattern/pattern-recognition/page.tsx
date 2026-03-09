@@ -352,18 +352,18 @@ export default function PatternRecognitionPage() {
   }
 
   return (
-    <div className="min-h-screen p-4 md:p-8 transition-colors duration-300 {darkMode ? "bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white" : "bg-gradient-to-br from-cyan-50 via-white to-amber-50 p-4 md:p-8"}">
+    <div className="min-h-screen p-3 md:p-4 lg:p-8 transition-colors duration-300 {darkMode ? "bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white" : "bg-gradient-to-br from-cyan-50 via-white to-amber-50 p-4 md:p-8"}">
       <SettingsPanel />
       <div className="max-w-4xl mx-auto">
         {/* Header */}
         <Link
           href="/pattern"
-          className="inline-flex items-center text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white font-medium mb-6 text-lg"
+          className="inline-flex items-center text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white font-medium mb-6 text-sm md:text-base lg:text-lg"
         >
           <span className="mr-2">←</span> {t('back', 'Back')}
         </Link>
 
-        <h1 className="text-3xl md:text-4xl font-bold text-gray-800 dark:text-white mb-2">
+        <h1 className="text-3xl md:text-2xl md:text-3xl lg:text-4xl font-bold text-gray-800 dark:text-white mb-2">
           {t('patternRecognition.title', 'Pattern Recognition')}
         </h1>
         <p className="text-lg text-gray-700 dark:text-gray-300 font-medium mb-8">
@@ -377,7 +377,7 @@ export default function PatternRecognitionPage() {
             animate={{ opacity: 1, y: 0 }}
             className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-8 text-center"
           >
-            <h2 className="text-3xl font-bold text-gray-800 dark:text-white mb-2">
+            <h2 className="text-xl md:text-2xl lg:text-3xl font-bold text-gray-800 dark:text-white mb-2">
               Level {level}
             </h2>
             {level > 1 && (
@@ -396,7 +396,7 @@ export default function PatternRecognitionPage() {
             </div>
             <button
               onClick={startLevel}
-              className="bg-gradient-to-r from-cyan-500 to-amber-500 text-white text-2xl font-bold py-4 px-12 rounded-xl hover:from-cyan-600 hover:to-amber-600 shadow-lg transition-all w-full"
+              className="bg-gradient-to-r from-cyan-500 to-amber-500 text-white text-lg md:text-xl lg:text-2xl font-bold py-4 px-12 rounded-xl hover:from-cyan-600 hover:to-amber-600 shadow-lg transition-all w-full"
             >
               {t('start', 'Start')}
             </button>
@@ -411,15 +411,15 @@ export default function PatternRecognitionPage() {
               <div className="flex justify-around text-center">
                 <div>
                   <p className="text-gray-700 dark:text-gray-300 text-sm font-medium">Level</p>
-                  <p className="text-3xl font-bold text-cyan-600">{level}/{MAX_LEVELS}</p>
+                  <p className="text-xl md:text-2xl lg:text-3xl font-bold text-cyan-600">{level}/{MAX_LEVELS}</p>
                 </div>
                 <div>
                   <p className="text-gray-700 dark:text-gray-300 text-sm font-medium">Question</p>
-                  <p className="text-3xl font-bold text-amber-600">{questionNumber + 1}/{settings.questions}</p>
+                  <p className="text-xl md:text-2xl lg:text-3xl font-bold text-amber-600">{questionNumber + 1}/{settings.questions}</p>
                 </div>
                 <div>
                   <p className="text-gray-700 dark:text-gray-300 text-sm font-medium">Score</p>
-                  <p className="text-3xl font-bold text-cyan-600">{score}</p>
+                  <p className="text-xl md:text-2xl lg:text-3xl font-bold text-cyan-600">{score}</p>
                 </div>
               </div>
               {/* Progress Bar */}
@@ -434,10 +434,10 @@ export default function PatternRecognitionPage() {
 
             {/* Pattern display */}
             <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-6 mb-6">
-              <h2 className="text-2xl font-bold text-gray-800 dark:text-white mb-6 text-center">
+              <h2 className="text-lg md:text-xl lg:text-2xl font-bold text-gray-800 dark:text-white mb-6 text-center">
                 Complete the pattern:
               </h2>
-              <div className="flex justify-center items-center gap-4 md:gap-8 flex-wrap">
+              <div className="flex justify-center items-center gap-4 md:gap-4 md:gap-6 lg:gap-8 flex-wrap">
                 <AnimatePresence mode="popLayout">
                   {pattern.map((item, index) => (
                     <motion.div
@@ -508,7 +508,7 @@ export default function PatternRecognitionPage() {
                 <p className="text-xl font-bold mb-2">
                   {selectedIndex === correctIndex ? 'Correct!' : 'Incorrect'}
                 </p>
-                <p className="text-lg">
+                <p className="text-sm md:text-base lg:text-lg">
                   {getPatternExplanation(patternType)}
                 </p>
               </motion.div>
@@ -524,13 +524,13 @@ export default function PatternRecognitionPage() {
             className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-8 text-center"
           >
             <div className="text-6xl mb-4">😔</div>
-            <h2 className="text-4xl font-bold text-gray-800 dark:text-white mb-4">Level {level} Failed</h2>
+            <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-800 dark:text-white mb-4">Level {level} Failed</h2>
             <p className="text-xl text-gray-700 dark:text-gray-300 font-medium mb-6">
               You got {score} out of {settings.questions * 10} points needed
             </p>
             <button
               onClick={startLevel}
-              className="bg-gradient-to-r from-orange-500 to-red-500 text-white text-2xl font-bold py-4 px-12 rounded-xl hover:from-orange-600 hover:to-red-600 shadow-lg transition-all w-full"
+              className="bg-gradient-to-r from-orange-500 to-red-500 text-white text-lg md:text-xl lg:text-2xl font-bold py-4 px-12 rounded-xl hover:from-orange-600 hover:to-red-600 shadow-lg transition-all w-full"
             >
               Try Again
             </button>
@@ -545,7 +545,7 @@ export default function PatternRecognitionPage() {
             className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-8 text-center"
           >
             <div className="text-6xl mb-4">🎉</div>
-            <h2 className="text-4xl font-bold text-cyan-600 mb-4">Congratulations!</h2>
+            <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-cyan-600 mb-4">Congratulations!</h2>
             <p className="text-xl text-gray-700 dark:text-gray-300 font-medium mb-6">
               You completed all {MAX_LEVELS} levels!
             </p>
@@ -555,7 +555,7 @@ export default function PatternRecognitionPage() {
             </div>
             <button
               onClick={startGame}
-              className="bg-gradient-to-r from-cyan-500 to-amber-500 text-white text-2xl font-bold py-4 px-12 rounded-xl hover:from-cyan-600 hover:to-amber-600 shadow-lg transition-all w-full"
+              className="bg-gradient-to-r from-cyan-500 to-amber-500 text-white text-lg md:text-xl lg:text-2xl font-bold py-4 px-12 rounded-xl hover:from-cyan-600 hover:to-amber-600 shadow-lg transition-all w-full"
             >
               Play Again
             </button>

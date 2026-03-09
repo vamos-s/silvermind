@@ -398,12 +398,12 @@ export default function AnagramsPage() {
         {/* Header */}
         <Link
           href="/language"
-          className="inline-flex items-center text-gray-700 hover:text-gray-900 font-medium mb-6 text-lg"
+          className="inline-flex items-center text-gray-700 hover:text-gray-900 font-medium mb-6 text-sm md:text-base lg:text-lg"
         >
           <span className="mr-2">←</span> {t('back', 'Back')}
         </Link>
 
-        <h1 className="text-3xl md:text-4xl font-bold text-gray-800 mb-2">
+        <h1 className="text-3xl md:text-2xl md:text-3xl lg:text-4xl font-bold text-gray-800 mb-2">
           {t('anagrams.title', 'Anagrams')}
         </h1>
         <p className="text-lg text-gray-700 font-medium mb-8">
@@ -418,7 +418,7 @@ export default function AnagramsPage() {
             className="bg-white rounded-2xl shadow-lg p-8 text-center"
           >
             <div className="text-6xl mb-4">🔄</div>
-            <h2 className="text-3xl font-bold text-gray-800 mb-2">
+            <h2 className="text-xl md:text-2xl lg:text-3xl font-bold text-gray-800 mb-2">
               Level {level}
             </h2>
             <div className="bg-orange-50 rounded-xl p-4 mb-6 text-left">
@@ -430,7 +430,7 @@ export default function AnagramsPage() {
             </div>
             <button
               onClick={startGame}
-              className="bg-gradient-to-r from-orange-500 to-amber-500 text-white text-2xl font-bold py-4 px-12 rounded-xl hover:from-orange-600 hover:to-amber-600 shadow-lg transition-all w-full"
+              className="bg-gradient-to-r from-orange-500 to-amber-500 text-white text-lg md:text-xl lg:text-2xl font-bold py-4 px-12 rounded-xl hover:from-orange-600 hover:to-amber-600 shadow-lg transition-all w-full"
             >
               {t('start', 'Start')}
             </button>
@@ -445,19 +445,19 @@ export default function AnagramsPage() {
               <div className="flex justify-around text-center">
                 <div>
                   <p className="text-gray-700 text-sm font-medium">{t('anagrams.level', 'Level')}</p>
-                  <p className="text-3xl font-bold text-orange-600">{level}/{MAX_LEVELS}</p>
+                  <p className="text-xl md:text-2xl lg:text-3xl font-bold text-orange-600">{level}/{MAX_LEVELS}</p>
                 </div>
                 <div>
                   <p className="text-gray-700 text-sm font-medium">{t('anagrams.score', 'Score')}</p>
-                  <p className="text-3xl font-bold text-amber-600">{totalScore}</p>
+                  <p className="text-xl md:text-2xl lg:text-3xl font-bold text-amber-600">{totalScore}</p>
                 </div>
                 <div>
                   <p className="text-gray-700 text-sm font-medium">{t('anagrams.timeLeft', 'Time')}</p>
-                  <p className={`text-3xl font-bold ${timeLeft <= 10 ? 'text-red-500' : 'text-orange-600'}`}>{timeLeft}s</p>
+                  <p className={`text-xl md:text-2xl lg:text-3xl font-bold ${timeLeft <= 10 ? 'text-red-500' : 'text-orange-600'}`}>{timeLeft}s</p>
                 </div>
                 <div>
                   <p className="text-gray-700 text-sm font-medium">{t('anagrams.found', 'Found')}</p>
-                  <p className="text-3xl font-bold text-orange-600">{foundSolutions.size}/{solutions.length}</p>
+                  <p className="text-xl md:text-2xl lg:text-3xl font-bold text-orange-600">{foundSolutions.size}/{solutions.length}</p>
                 </div>
               </div>
               {/* Progress Bar */}
@@ -480,7 +480,7 @@ export default function AnagramsPage() {
                     initial={{ scale: 0, rotate: -180 }}
                     animate={{ scale: 1, rotate: 0 }}
                     transition={{ delay: index * 0.1 }}
-                    className="w-14 h-14 md:w-16 md:h-16 bg-orange-100 rounded-lg flex items-center justify-center text-3xl md:text-4xl font-bold text-orange-600"
+                    className="w-14 h-14 md:w-16 md:h-16 bg-orange-100 rounded-lg flex items-center justify-center text-3xl md:text-2xl md:text-3xl lg:text-4xl font-bold text-orange-600"
                   >
                     {letter.toUpperCase()}
                   </motion.div>
@@ -515,7 +515,7 @@ export default function AnagramsPage() {
                 {userGuess.split('').map((letter, index) => (
                   <div
                     key={index}
-                    className="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center text-2xl font-bold text-orange-600"
+                    className="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center text-lg md:text-xl lg:text-2xl font-bold text-orange-600"
                   >
                     {letter.toUpperCase()}
                   </div>
@@ -582,7 +582,7 @@ export default function AnagramsPage() {
             className="bg-white rounded-2xl shadow-lg p-8 text-center"
           >
             <div className="text-6xl mb-4">✅</div>
-            <h2 className="text-4xl font-bold text-orange-600 mb-4">{t('anagrams.levelComplete', 'Level Complete!')}</h2>
+            <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-orange-600 mb-4">{t('anagrams.levelComplete', 'Level Complete!')}</h2>
             <div className="bg-orange-50 rounded-xl p-6 mb-6">
               <p className="text-gray-700 mb-4 font-medium">{t('anagrams.allWords', 'All words:')}</p>
               <div className="flex flex-wrap justify-center gap-2 mb-4">
@@ -601,17 +601,17 @@ export default function AnagramsPage() {
               <div className="grid grid-cols-2 gap-4 mt-4">
                 <div>
                   <p className="text-gray-700 text-sm font-medium">{t('anagrams.levelScore', 'Level Score')}</p>
-                  <p className="text-3xl font-bold text-orange-600">{Math.round(score)}</p>
+                  <p className="text-xl md:text-2xl lg:text-3xl font-bold text-orange-600">{Math.round(score)}</p>
                 </div>
                 <div>
                   <p className="text-gray-700 text-sm font-medium">{t('anagrams.totalScore', 'Total Score')}</p>
-                  <p className="text-3xl font-bold text-amber-600">{totalScore + Math.round(score)}</p>
+                  <p className="text-xl md:text-2xl lg:text-3xl font-bold text-amber-600">{totalScore + Math.round(score)}</p>
                 </div>
               </div>
             </div>
             <button
               onClick={nextLevel}
-              className="bg-gradient-to-r from-orange-500 to-amber-500 text-white text-2xl font-bold py-4 px-12 rounded-xl hover:from-orange-600 hover:to-amber-600 shadow-lg transition-all w-full"
+              className="bg-gradient-to-r from-orange-500 to-amber-500 text-white text-lg md:text-xl lg:text-2xl font-bold py-4 px-12 rounded-xl hover:from-orange-600 hover:to-amber-600 shadow-lg transition-all w-full"
             >
               {level < MAX_LEVELS ? `Next Level ${level + 1}` : 'View Final Score'}
             </button>
@@ -626,7 +626,7 @@ export default function AnagramsPage() {
             className="bg-white rounded-2xl shadow-lg p-8 text-center"
           >
             <div className="text-6xl mb-4">❌</div>
-            <h2 className="text-4xl font-bold text-gray-800 mb-4">{t('anagrams.gameOver', 'Time\'s Up!')}</h2>
+            <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-800 mb-4">{t('anagrams.gameOver', 'Time\'s Up!')}</h2>
             <div className="bg-orange-50 rounded-xl p-6 mb-6">
               <p className="text-gray-700 mb-4 font-medium">{t('anagrams.allWords', 'All words:')}</p>
               <div className="flex flex-wrap justify-center gap-2 mb-4">
@@ -640,11 +640,11 @@ export default function AnagramsPage() {
                 ))}
               </div>
               <p className="text-gray-700 text-sm font-medium">{t('anagrams.finalScore', 'Final Score')}</p>
-              <p className="text-3xl font-bold text-orange-600">{totalScore}</p>
+              <p className="text-xl md:text-2xl lg:text-3xl font-bold text-orange-600">{totalScore}</p>
             </div>
             <button
               onClick={startGame}
-              className="bg-gradient-to-r from-orange-500 to-red-500 text-white text-2xl font-bold py-4 px-12 rounded-xl hover:from-orange-600 hover:to-red-600 shadow-lg transition-all w-full"
+              className="bg-gradient-to-r from-orange-500 to-red-500 text-white text-lg md:text-xl lg:text-2xl font-bold py-4 px-12 rounded-xl hover:from-orange-600 hover:to-red-600 shadow-lg transition-all w-full"
             >
               {t('tryAgain', 'Try Again')}
             </button>
@@ -659,7 +659,7 @@ export default function AnagramsPage() {
             className="bg-white rounded-2xl shadow-lg p-8 text-center"
           >
             <div className="text-6xl mb-4">🎉</div>
-            <h2 className="text-4xl font-bold text-orange-600 mb-4">{t('anagrams.victory', 'Congratulations!')}</h2>
+            <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-orange-600 mb-4">{t('anagrams.victory', 'Congratulations!')}</h2>
             <p className="text-xl text-gray-700 font-medium mb-6">
               {t('anagrams.victoryMessage', 'You completed all {count} levels!', { count: MAX_LEVELS })}
             </p>
@@ -669,7 +669,7 @@ export default function AnagramsPage() {
             </div>
             <button
               onClick={startGame}
-              className="bg-gradient-to-r from-orange-500 to-amber-500 text-white text-2xl font-bold py-4 px-12 rounded-xl hover:from-orange-600 hover:to-amber-600 shadow-lg transition-all w-full"
+              className="bg-gradient-to-r from-orange-500 to-amber-500 text-white text-lg md:text-xl lg:text-2xl font-bold py-4 px-12 rounded-xl hover:from-orange-600 hover:to-amber-600 shadow-lg transition-all w-full"
             >
               {t('playAgain', 'Play Again')}
             </button>

@@ -229,18 +229,18 @@ export default function FindDifferencePage() {
   }, [differences])
 
   return (
-    <div className="min-h-screen p-4 md:p-8 transition-colors duration-300 {darkMode ? "bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white" : "bg-gradient-to-br from-violet-50 via-white to-purple-50 p-4 md:p-8"}">
+    <div className="min-h-screen p-3 md:p-4 lg:p-8 transition-colors duration-300 {darkMode ? "bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white" : "bg-gradient-to-br from-violet-50 via-white to-purple-50 p-4 md:p-8"}">
       <SettingsPanel />
       <div className="max-w-4xl mx-auto">
         {/* Header */}
         <Link
           href="/attention"
-          className="inline-flex items-center text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white font-medium mb-6 text-lg"
+          className="inline-flex items-center text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white font-medium mb-6 text-sm md:text-base lg:text-lg"
         >
           <span className="mr-2">←</span> {t('back', 'Back')}
         </Link>
 
-        <h1 className="text-3xl md:text-4xl font-bold text-gray-800 dark:text-white mb-2">
+        <h1 className="text-3xl md:text-2xl md:text-3xl lg:text-4xl font-bold text-gray-800 dark:text-white mb-2">
           {t('findDifference.title', 'Find Difference')}
         </h1>
         <p className="text-lg text-gray-700 dark:text-gray-300 font-medium mb-8">
@@ -255,7 +255,7 @@ export default function FindDifferencePage() {
             className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-8 text-center"
           >
             <div className="text-6xl mb-4">🔍</div>
-            <h2 className="text-3xl font-bold text-gray-800 dark:text-white mb-2">
+            <h2 className="text-xl md:text-2xl lg:text-3xl font-bold text-gray-800 dark:text-white mb-2">
               Level {level}
             </h2>
             <div className="bg-violet-50 dark:bg-slate-800 rounded-xl p-4 mb-6 text-left">
@@ -269,7 +269,7 @@ export default function FindDifferencePage() {
             </div>
             <button
               onClick={startGame}
-              className="bg-gradient-to-r from-violet-500 to-purple-500 text-white text-2xl font-bold py-4 px-12 rounded-xl hover:from-violet-600 hover:to-purple-600 shadow-lg transition-all w-full"
+              className="bg-gradient-to-r from-violet-500 to-purple-500 text-white text-lg md:text-xl lg:text-2xl font-bold py-4 px-12 rounded-xl hover:from-violet-600 hover:to-purple-600 shadow-lg transition-all w-full"
             >
               {t('start', 'Start')}
             </button>
@@ -284,29 +284,29 @@ export default function FindDifferencePage() {
               <div className="flex justify-around text-center">
                 <div>
                   <p className="text-gray-700 dark:text-gray-300 text-sm font-medium">{t('findDifference.level', 'Level')}</p>
-                  <p className="text-3xl font-bold text-violet-600">{level}/{MAX_LEVELS}</p>
+                  <p className="text-xl md:text-2xl lg:text-3xl font-bold text-violet-600">{level}/{MAX_LEVELS}</p>
                 </div>
                 <div>
                   <p className="text-gray-700 dark:text-gray-300 text-sm font-medium">{t('findDifference.score', 'Score')}</p>
-                  <p className="text-3xl font-bold text-purple-600">{totalScore}</p>
+                  <p className="text-xl md:text-2xl lg:text-3xl font-bold text-purple-600">{totalScore}</p>
                 </div>
                 <div>
                   <p className="text-gray-700 dark:text-gray-300 text-sm font-medium">{t('findDifference.timeLeft', 'Time')}</p>
-                  <p className={`text-3xl font-bold ${timeLeft <= 10 ? 'text-red-500' : 'text-violet-600'}`}>{timeLeft}s</p>
+                  <p className={`text-xl md:text-2xl lg:text-3xl font-bold ${timeLeft <= 10 ? 'text-red-500' : 'text-violet-600'}`}>{timeLeft}s</p>
                 </div>
                 <div>
                   <p className="text-gray-700 dark:text-gray-300 text-sm font-medium">{t('findDifference.progress', 'Progress')}</p>
-                  <p className="text-3xl font-bold text-violet-600">{foundDifferences.size}/{differences.size}</p>
+                  <p className="text-xl md:text-2xl lg:text-3xl font-bold text-violet-600">{foundDifferences.size}/{differences.size}</p>
                 </div>
                 <div>
                   <p className="text-gray-700 dark:text-gray-300 text-sm font-medium">{t('findDifference.lives', 'Lives')}</p>
-                  <p className={`text-3xl font-bold ${wrongAttempts >= MAX_WRONG_ATTEMPTS - 1 ? 'text-red-500' : 'text-violet-600'}`}>
+                  <p className={`text-xl md:text-2xl lg:text-3xl font-bold ${wrongAttempts >= MAX_WRONG_ATTEMPTS - 1 ? 'text-red-500' : 'text-violet-600'}`}>
                     {MAX_WRONG_ATTEMPTS - wrongAttempts}/{MAX_WRONG_ATTEMPTS}
                   </p>
                 </div>
                 <div>
                   <p className="text-gray-700 dark:text-gray-300 text-sm font-medium">{t('findDifference.hints', 'Hints')}</p>
-                  <p className={`text-3xl font-bold ${hintsUsedCount >= MAX_HINTS_PER_GAME - 1 ? 'text-red-500' : 'text-violet-600'}`}>
+                  <p className={`text-xl md:text-2xl lg:text-3xl font-bold ${hintsUsedCount >= MAX_HINTS_PER_GAME - 1 ? 'text-red-500' : 'text-violet-600'}`}>
                     {MAX_HINTS_PER_GAME - hintsUsedCount}/{MAX_HINTS_PER_GAME}
                   </p>
                 </div>
@@ -322,7 +322,7 @@ export default function FindDifferencePage() {
             </div>
 
             {/* Game Grids */}
-            <div className="grid md:grid-cols-2 gap-6 mb-6">
+            <div className="grid md:grid-cols-2 gap-3 md:gap-4 lg:gap-6 mb-6">
               {/* Left Grid */}
               <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-4">
                 <p className="text-center font-bold text-gray-700 dark:text-gray-300 mb-4">{t('findDifference.original', 'Original')}</p>
@@ -403,22 +403,22 @@ export default function FindDifferencePage() {
             className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-8 text-center"
           >
             <div className="text-6xl mb-4">✅</div>
-            <h2 className="text-4xl font-bold text-violet-600 mb-4">Level {level} Complete!</h2>
+            <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-violet-600 mb-4">Level {level} Complete!</h2>
             <div className="bg-violet-50 dark:bg-slate-800 rounded-xl p-6 mb-6">
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <p className="text-gray-700 dark:text-gray-300 text-sm font-medium">{t('findDifference.levelScore', 'Level Score')}</p>
-                  <p className="text-3xl font-bold text-violet-600">{Math.round(score)}</p>
+                  <p className="text-xl md:text-2xl lg:text-3xl font-bold text-violet-600">{Math.round(score)}</p>
                 </div>
                 <div>
                   <p className="text-gray-700 dark:text-gray-300 text-sm font-medium">{t('findDifference.totalScore', 'Total Score')}</p>
-                  <p className="text-3xl font-bold text-purple-600">{totalScore + Math.round(score)}</p>
+                  <p className="text-xl md:text-2xl lg:text-3xl font-bold text-purple-600">{totalScore + Math.round(score)}</p>
                 </div>
               </div>
             </div>
             <button
               onClick={nextLevel}
-              className="bg-gradient-to-r from-violet-500 to-purple-500 text-white text-2xl font-bold py-4 px-12 rounded-xl hover:from-violet-600 hover:to-purple-600 shadow-lg transition-all w-full"
+              className="bg-gradient-to-r from-violet-500 to-purple-500 text-white text-lg md:text-xl lg:text-2xl font-bold py-4 px-12 rounded-xl hover:from-violet-600 hover:to-purple-600 shadow-lg transition-all w-full"
             >
               {level < MAX_LEVELS ? `Next Level ${level + 1}` : 'View Final Score'}
             </button>
@@ -433,7 +433,7 @@ export default function FindDifferencePage() {
             className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-8 text-center"
           >
             <div className="text-6xl mb-4">{gameOverReason === 'lives' ? '💔' : '❌'}</div>
-            <h2 className="text-4xl font-bold text-gray-800 dark:text-white mb-4">
+            <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-800 dark:text-white mb-4">
               {gameOverReason === 'lives'
                 ? t('findDifference.noLives', 'No Lives Left!')
                 : t('findDifference.gameOver', 'Time\'s Up!')}
@@ -445,11 +445,11 @@ export default function FindDifferencePage() {
             </p>
             <div className="bg-orange-50 dark:bg-slate-800 rounded-xl p-6 mb-6">
               <p className="text-gray-700 dark:text-gray-300 text-sm font-medium">{t('findDifference.finalScore', 'Final Score')}</p>
-              <p className="text-3xl font-bold text-orange-600">{totalScore}</p>
+              <p className="text-xl md:text-2xl lg:text-3xl font-bold text-orange-600">{totalScore}</p>
             </div>
             <button
               onClick={startGame}
-              className="bg-gradient-to-r from-orange-500 to-red-500 text-white text-2xl font-bold py-4 px-12 rounded-xl hover:from-orange-600 hover:to-red-600 shadow-lg transition-all w-full"
+              className="bg-gradient-to-r from-orange-500 to-red-500 text-white text-lg md:text-xl lg:text-2xl font-bold py-4 px-12 rounded-xl hover:from-orange-600 hover:to-red-600 shadow-lg transition-all w-full"
             >
               {t('tryAgain', 'Try Again')}
             </button>
@@ -464,7 +464,7 @@ export default function FindDifferencePage() {
             className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-8 text-center"
           >
             <div className="text-6xl mb-4">🎉</div>
-            <h2 className="text-4xl font-bold text-violet-600 mb-4">{t('findDifference.victory', 'Congratulations!')}</h2>
+            <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-violet-600 mb-4">{t('findDifference.victory', 'Congratulations!')}</h2>
             <p className="text-xl text-gray-700 dark:text-gray-300 font-medium mb-6">
               {t('findDifference.victoryMessage', 'You completed all {count} levels!', { count: MAX_LEVELS })}
             </p>
@@ -474,7 +474,7 @@ export default function FindDifferencePage() {
             </div>
             <button
               onClick={startGame}
-              className="bg-gradient-to-r from-violet-500 to-purple-500 text-white text-2xl font-bold py-4 px-12 rounded-xl hover:from-violet-600 hover:to-purple-600 shadow-lg transition-all w-full"
+              className="bg-gradient-to-r from-violet-500 to-purple-500 text-white text-lg md:text-xl lg:text-2xl font-bold py-4 px-12 rounded-xl hover:from-violet-600 hover:to-purple-600 shadow-lg transition-all w-full"
             >
               {t('playAgain', 'Play Again')}
             </button>

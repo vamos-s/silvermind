@@ -22,47 +22,47 @@ export default function Home() {
 
   return (
     <div className={`min-h-screen ${darkMode ? 'bg-gradient-to-br from-slate-900 to-slate-800' : 'bg-gradient-to-br from-blue-50 to-purple-50'}`}>
-      <header className={`p-6 shadow-sm transition-colors duration-300 ${darkMode ? 'bg-slate-900' : 'bg-white'}`}>
-        <div className="flex justify-between items-center max-w-6xl mx-auto">
+      <header className={`p-4 md:p-6 shadow-sm transition-colors duration-300 ${darkMode ? 'bg-slate-900' : 'bg-white'}`}>
+        <div className="flex flex-col md:flex-row justify-between items-center max-w-6xl mx-auto gap-4">
           <motion.h1
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
-            className={`text-4xl font-bold ${darkMode ? 'text-white' : 'text-gray-800'}`}
+            className={`text-2xl md:text-4xl font-bold ${darkMode ? 'text-white' : 'text-gray-800'}`}
           >
             🧠 SilverMind
           </motion.h1>
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 flex-wrap justify-center">
             <Link href="/leaderboard">
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                className={`px-4 py-2 rounded-lg transition-colors ${
+                className={`px-3 py-2 md:px-4 rounded-lg transition-colors text-sm md:text-base ${
                   darkMode ? 'bg-gray-700 text-gray-200' : 'bg-white text-gray-800 shadow-sm'
                 }`}
               >
-                🏆 {t('leaderboard')}
+                🏆 <span className="hidden sm:inline">{t('leaderboard')}</span>
               </motion.button>
             </Link>
             <Link href="/achievements">
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                className={`px-4 py-2 rounded-lg transition-colors ${
+                className={`px-3 py-2 md:px-4 rounded-lg transition-colors text-sm md:text-base ${
                   darkMode ? 'bg-gray-700 text-gray-200' : 'bg-white text-gray-800 shadow-sm'
                 }`}
               >
-                ⭐ {t('achievements')}
+                ⭐ <span className="hidden sm:inline">{t('achievements')}</span>
               </motion.button>
             </Link>
             <Link href="/challenges">
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                className={`px-4 py-2 rounded-lg transition-colors ${
+                className={`px-3 py-2 md:px-4 rounded-lg transition-colors text-sm md:text-base ${
                   darkMode ? 'bg-gray-700 text-gray-200' : 'bg-white text-gray-800 shadow-sm'
                 }`}
               >
-                📅 {t('challenges')}
+                📅 <span className="hidden sm:inline">{t('challenges')}</span>
               </motion.button>
             </Link>
           </div>

@@ -205,18 +205,18 @@ export default function WordAssociationPage() {
   const currentQuestion = questions[currentQuestionIndex]
 
   return (
-    <div className="min-h-screen p-4 md:p-8 transition-colors duration-300 {darkMode ? "bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white" : "bg-gradient-to-br from-fuchsia-50 via-white to-pink-50 p-4 md:p-8"}">
+    <div className="min-h-screen p-3 md:p-4 lg:p-8 transition-colors duration-300 {darkMode ? "bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white" : "bg-gradient-to-br from-fuchsia-50 via-white to-pink-50 p-4 md:p-8"}">
       <SettingsPanel />
       <div className="max-w-2xl mx-auto">
         {/* Header */}
         <Link
           href="/memory"
-          className="inline-flex items-center text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white font-medium mb-6 text-lg"
+          className="inline-flex items-center text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white font-medium mb-6 text-sm md:text-base lg:text-lg"
         >
           <span className="mr-2">←</span> {t('back', 'Back')}
         </Link>
 
-        <h1 className="text-3xl md:text-4xl font-bold text-gray-800 dark:text-white mb-2">
+        <h1 className="text-3xl md:text-2xl md:text-3xl lg:text-4xl font-bold text-gray-800 dark:text-white mb-2">
           {t('wordAssociation.title', 'Word Association')}
         </h1>
         <p className="text-lg text-gray-700 dark:text-gray-300 font-medium mb-8">
@@ -230,7 +230,7 @@ export default function WordAssociationPage() {
             animate={{ opacity: 1, y: 0 }}
             className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-8 text-center"
           >
-            <h2 className="text-3xl font-bold text-gray-800 dark:text-white mb-2">
+            <h2 className="text-xl md:text-2xl lg:text-3xl font-bold text-gray-800 dark:text-white mb-2">
               Level {level}
             </h2>
             {level > 1 && (
@@ -248,7 +248,7 @@ export default function WordAssociationPage() {
             </div>
             <button
               onClick={startLevel}
-              className="bg-gradient-to-r from-fuchsia-500 to-pink-500 text-white text-2xl font-bold py-4 px-12 rounded-xl hover:from-fuchsia-600 hover:to-pink-600 shadow-lg transition-all w-full"
+              className="bg-gradient-to-r from-fuchsia-500 to-pink-500 text-white text-lg md:text-xl lg:text-2xl font-bold py-4 px-12 rounded-xl hover:from-fuchsia-600 hover:to-pink-600 shadow-lg transition-all w-full"
             >
               {t('start', 'Start')}
             </button>
@@ -279,17 +279,17 @@ export default function WordAssociationPage() {
               <div className="flex justify-between items-center">
                 <div>
                   <p className="text-gray-700 dark:text-gray-300 text-sm font-medium">{t('wordAssociation.question', 'Question')}</p>
-                  <p className="text-3xl font-bold text-fuchsia-600">
+                  <p className="text-xl md:text-2xl lg:text-3xl font-bold text-fuchsia-600">
                     {currentQuestionIndex + 1}/{questions.length}
                   </p>
                 </div>
                 <div>
                   <p className="text-gray-700 dark:text-gray-300 text-sm font-medium">{t('wordAssociation.score', 'Score')}</p>
-                  <p className="text-3xl font-bold text-pink-600">{totalScore}</p>
+                  <p className="text-xl md:text-2xl lg:text-3xl font-bold text-pink-600">{totalScore}</p>
                 </div>
                 <div>
                   <p className="text-gray-700 dark:text-gray-300 text-sm font-medium">{t('wordAssociation.timeLeft', 'Time Left')}</p>
-                  <p className={`text-4xl font-bold ${timeLeft <= 10 ? 'text-red-500' : 'text-fuchsia-600'}`}>
+                  <p className={`text-2xl md:text-3xl lg:text-4xl font-bold ${timeLeft <= 10 ? 'text-red-500' : 'text-fuchsia-600'}`}>
                     {timeLeft}s
                   </p>
                 </div>
@@ -344,7 +344,7 @@ export default function WordAssociationPage() {
                     </div>
                   ) : (
                     <>
-                      <p className="text-2xl font-bold text-gray-800 dark:text-white mb-6">
+                      <p className="text-lg md:text-xl lg:text-2xl font-bold text-gray-800 dark:text-white mb-6">
                         {t('wordAssociation.selectRelated', 'Select the related word!')}
                       </p>
                       <div className="grid grid-cols-2 gap-3 max-w-md mx-auto">
@@ -354,7 +354,7 @@ export default function WordAssociationPage() {
                             whileHover={{ scale: 1.05 }}
                             whileTap={{ scale: 0.95 }}
                             onClick={() => handleAnswerSelect(index)}
-                            className="p-4 bg-fuchsia-100 hover:bg-fuchsia-200 rounded-xl font-bold text-fuchsia-800 transition-colors text-lg"
+                            className="p-4 bg-fuchsia-100 hover:bg-fuchsia-200 rounded-xl font-bold text-fuchsia-800 transition-colors text-sm md:text-base lg:text-lg"
                           >
                             {option}
                           </motion.button>
@@ -378,7 +378,7 @@ export default function WordAssociationPage() {
             <div className="text-6xl mb-4">
               {score > 0 ? '✅' : '❌'}
             </div>
-            <h2 className={`text-4xl font-bold mb-4 ${score > 0 ? 'text-fuchsia-600' : 'text-red-500'}`}>
+            <h2 className={`text-2xl md:text-3xl lg:text-4xl font-bold mb-4 ${score > 0 ? 'text-fuchsia-600' : 'text-red-500'}`}>
               {score > 0 ? `Level ${level} Complete!` : 'Level Failed!'}
             </h2>
             {score > 0 ? (
@@ -394,23 +394,23 @@ export default function WordAssociationPage() {
                 <div className="grid grid-cols-2 gap-4 mt-4">
                   <div>
                     <p className="text-gray-700 dark:text-gray-300 text-sm font-medium">{t('wordAssociation.levelScore', 'Level Score')}</p>
-                    <p className="text-3xl font-bold text-fuchsia-600">{score}</p>
+                    <p className="text-xl md:text-2xl lg:text-3xl font-bold text-fuchsia-600">{score}</p>
                   </div>
                   <div>
                     <p className="text-gray-700 dark:text-gray-300 text-sm font-medium">{t('wordAssociation.totalScore', 'Total Score')}</p>
-                    <p className="text-3xl font-bold text-pink-600">{totalScore + score}</p>
+                    <p className="text-xl md:text-2xl lg:text-3xl font-bold text-pink-600">{totalScore + score}</p>
                   </div>
                 </div>
               </div>
             ) : (
               <div className="bg-red-50 rounded-xl p-6 mb-6">
                 <p className="text-gray-700 dark:text-gray-300 text-sm font-medium">{t('wordAssociation.levelScore', 'Level Score')}</p>
-                <p className="text-3xl font-bold text-red-600">{score}</p>
+                <p className="text-xl md:text-2xl lg:text-3xl font-bold text-red-600">{score}</p>
               </div>
             )}
             <button
               onClick={nextLevel}
-              className="bg-gradient-to-r from-fuchsia-500 to-pink-500 text-white text-2xl font-bold py-4 px-12 rounded-xl hover:from-fuchsia-600 hover:to-pink-600 shadow-lg transition-all w-full mb-3"
+              className="bg-gradient-to-r from-fuchsia-500 to-pink-500 text-white text-lg md:text-xl lg:text-2xl font-bold py-4 px-12 rounded-xl hover:from-fuchsia-600 hover:to-pink-600 shadow-lg transition-all w-full mb-3"
             >
               {level < MAX_LEVELS ? `Next Level ${level + 1}` : 'View Final Score'}
             </button>
@@ -431,7 +431,7 @@ export default function WordAssociationPage() {
             className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-8 text-center"
           >
             <div className="text-6xl mb-4">🎉</div>
-            <h2 className="text-4xl font-bold text-fuchsia-600 mb-4">{t('wordAssociation.victory', 'Congratulations!')}</h2>
+            <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-fuchsia-600 mb-4">{t('wordAssociation.victory', 'Congratulations!')}</h2>
             <p className="text-xl text-gray-700 dark:text-gray-300 font-medium mb-6">
               {t('wordAssociation.victoryMessage', 'You completed all {count} levels!', { count: MAX_LEVELS })}
             </p>
@@ -441,7 +441,7 @@ export default function WordAssociationPage() {
             </div>
             <button
               onClick={startGame}
-              className="bg-gradient-to-r from-fuchsia-500 to-pink-500 text-white text-2xl font-bold py-4 px-12 rounded-xl hover:from-fuchsia-600 hover:to-pink-600 shadow-lg transition-all w-full"
+              className="bg-gradient-to-r from-fuchsia-500 to-pink-500 text-white text-lg md:text-xl lg:text-2xl font-bold py-4 px-12 rounded-xl hover:from-fuchsia-600 hover:to-pink-600 shadow-lg transition-all w-full"
             >
               {t('playAgain', 'Play Again')}
             </button>

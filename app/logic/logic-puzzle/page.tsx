@@ -213,18 +213,18 @@ export default function LogicPuzzlePage() {
   }, [])
 
   return (
-    <div className="min-h-screen p-4 md:p-8 transition-colors duration-300 {darkMode ? "bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white" : "bg-gradient-to-br from-green-50 via-white to-blue-50 p-4 md:p-8"}">
+    <div className="min-h-screen p-3 md:p-4 lg:p-8 transition-colors duration-300 {darkMode ? "bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white" : "bg-gradient-to-br from-green-50 via-white to-blue-50 p-4 md:p-8"}">
       <SettingsPanel />
       <div className="max-w-2xl mx-auto">
         {/* Header */}
         <Link
           href="/logic"
-          className="inline-flex items-center text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white font-medium mb-6 text-lg"
+          className="inline-flex items-center text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white font-medium mb-6 text-sm md:text-base lg:text-lg"
         >
           <span className="mr-2">←</span> {t('back', 'Back')}
         </Link>
 
-        <h1 className="text-3xl md:text-4xl font-bold text-gray-800 dark:text-white mb-2">
+        <h1 className="text-3xl md:text-2xl md:text-3xl lg:text-4xl font-bold text-gray-800 dark:text-white mb-2">
           {t('logicPuzzle.title', 'Logic Puzzle')}
         </h1>
         <p className="text-lg text-gray-700 dark:text-gray-300 font-medium mb-8">
@@ -238,7 +238,7 @@ export default function LogicPuzzlePage() {
             animate={{ opacity: 1, y: 0 }}
             className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-8 text-center"
           >
-            <h2 className="text-3xl font-bold text-gray-800 dark:text-white mb-2">
+            <h2 className="text-xl md:text-2xl lg:text-3xl font-bold text-gray-800 dark:text-white mb-2">
               Level {level}
             </h2>
             {level > 1 && (
@@ -258,7 +258,7 @@ export default function LogicPuzzlePage() {
             </div>
             <button
               onClick={startLevel}
-              className="bg-gradient-to-r from-green-500 to-blue-500 text-white text-2xl font-bold py-4 px-12 rounded-xl hover:from-green-600 hover:to-blue-600 shadow-lg transition-all w-full"
+              className="bg-gradient-to-r from-green-500 to-blue-500 text-white text-lg md:text-xl lg:text-2xl font-bold py-4 px-12 rounded-xl hover:from-green-600 hover:to-blue-600 shadow-lg transition-all w-full"
             >
               {t('start', 'Start')}
             </button>
@@ -273,15 +273,15 @@ export default function LogicPuzzlePage() {
               <div className="flex justify-around text-center">
                 <div>
                   <p className="text-gray-700 dark:text-gray-300 text-sm font-medium">{t('logicPuzzle.level', 'Level')}</p>
-                  <p className="text-3xl font-bold text-green-600">{level}/{MAX_LEVELS}</p>
+                  <p className="text-xl md:text-2xl lg:text-3xl font-bold text-green-600">{level}/{MAX_LEVELS}</p>
                 </div>
                 <div>
                   <p className="text-gray-700 dark:text-gray-300 text-sm font-medium">{t('logicPuzzle.score', 'Score')}</p>
-                  <p className="text-3xl font-bold text-blue-600">{totalScore}</p>
+                  <p className="text-xl md:text-2xl lg:text-3xl font-bold text-blue-600">{totalScore}</p>
                 </div>
                 <div>
                   <p className="text-gray-700 dark:text-gray-300 text-sm font-medium">{t('logicPuzzle.attempts', 'Attempts')}</p>
-                  <p className="text-3xl font-bold text-green-600">{attempts}</p>
+                  <p className="text-xl md:text-2xl lg:text-3xl font-bold text-green-600">{attempts}</p>
                 </div>
               </div>
               {/* Progress Bar */}
@@ -296,7 +296,7 @@ export default function LogicPuzzlePage() {
 
             {/* Clues */}
             <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-6 mb-6">
-              <h2 className="text-2xl font-bold text-gray-800 dark:text-white mb-4">
+              <h2 className="text-lg md:text-xl lg:text-2xl font-bold text-gray-800 dark:text-white mb-4">
                 {t('logicPuzzle.clues', 'Clues')}
               </h2>
               <ul className="space-y-3">
@@ -314,7 +314,7 @@ export default function LogicPuzzlePage() {
             {/* Drag and drop area */}
             <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-6 mb-6">
               <div className="flex justify-between items-center mb-4">
-                <h2 className="text-2xl font-bold text-gray-800 dark:text-white">
+                <h2 className="text-lg md:text-xl lg:text-2xl font-bold text-gray-800 dark:text-white">
                   {t('logicPuzzle.boxes', 'Boxes')}
                 </h2>
                 <button
@@ -342,10 +342,10 @@ export default function LogicPuzzlePage() {
                       className={`${colorInfo.bg} ${colorInfo.border} border-4 rounded-xl p-6 flex items-center justify-between ${showAnswer ? 'cursor-not-allowed opacity-60' : 'cursor-move hover:scale-102'} transition-all`}
                     >
                       <div className="flex items-center gap-4">
-                        <div className={`${colorInfo.bg} rounded-full w-12 h-12 flex items-center justify-center text-2xl font-bold`}>
+                        <div className={`${colorInfo.bg} rounded-full w-12 h-12 flex items-center justify-center text-lg md:text-xl lg:text-2xl font-bold`}>
                           {box.color[0]}
                         </div>
-                        <span className="text-2xl font-bold text-gray-800 dark:text-white">
+                        <span className="text-lg md:text-xl lg:text-2xl font-bold text-gray-800 dark:text-white">
                           {box.color} Box
                         </span>
                       </div>
@@ -365,7 +365,7 @@ export default function LogicPuzzlePage() {
               {!showAnswer && (
                 <button
                   onClick={checkAnswer}
-                  className="w-full mt-6 bg-gradient-to-r from-green-500 to-blue-500 text-white text-2xl font-bold py-4 rounded-xl hover:from-green-600 hover:to-blue-600 shadow-lg transition-all"
+                  className="w-full mt-6 bg-gradient-to-r from-green-500 to-blue-500 text-white text-lg md:text-xl lg:text-2xl font-bold py-4 rounded-xl hover:from-green-600 hover:to-blue-600 shadow-lg transition-all"
                 >
                   {t('logicPuzzle.checkAnswer', 'Check Answer')}
                 </button>
@@ -383,7 +383,7 @@ export default function LogicPuzzlePage() {
                   <div className={`text-6xl font-bold ${isCorrect ? 'text-green-600' : 'text-red-600'} mb-2`}>
                     {isCorrect ? '✓' : '✗'}
                   </div>
-                  <h3 className={`text-3xl font-bold ${isCorrect ? 'text-green-700' : 'text-red-700'}`}>
+                  <h3 className={`text-xl md:text-2xl lg:text-3xl font-bold ${isCorrect ? 'text-green-700' : 'text-red-700'}`}>
                     {isCorrect
                       ? t('logicPuzzle.correct', 'Correct!')
                       : t('logicPuzzle.incorrect', 'Not quite right!')}
@@ -445,7 +445,7 @@ export default function LogicPuzzlePage() {
             className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-8 text-center"
           >
             <div className="text-6xl mb-4">🎉</div>
-            <h2 className="text-4xl font-bold text-green-600 mb-4">{t('logicPuzzle.victory', 'Congratulations!')}</h2>
+            <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-green-600 mb-4">{t('logicPuzzle.victory', 'Congratulations!')}</h2>
             <p className="text-xl text-gray-700 dark:text-gray-300 font-medium mb-6">
               {t('logicPuzzle.victoryMessage', 'You completed all {count} levels!', { count: MAX_LEVELS })}
             </p>
@@ -455,7 +455,7 @@ export default function LogicPuzzlePage() {
             </div>
             <button
               onClick={startGame}
-              className="bg-gradient-to-r from-green-500 to-blue-500 text-white text-2xl font-bold py-4 px-12 rounded-xl hover:from-green-600 hover:to-blue-600 shadow-lg transition-all w-full"
+              className="bg-gradient-to-r from-green-500 to-blue-500 text-white text-lg md:text-xl lg:text-2xl font-bold py-4 px-12 rounded-xl hover:from-green-600 hover:to-blue-600 shadow-lg transition-all w-full"
             >
               {t('playAgain', 'Play Again')}
             </button>
